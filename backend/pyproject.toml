@@ -14,6 +14,7 @@ dependencies = [
   "flask-limiter>=3.12,<5",
   "python-dotenv>=1.1,<2",
   "tzdata>=2025.2",  # timezone database (Windows has none built in)
+  "python-dateutil>=2.9,<3",  # RFC 5545 recurrence rules (RRULE)
 ]
 
 [project.optional-dependencies]

@@ -1,4 +1,5 @@
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 
@@ -15,6 +16,9 @@ import { TasksPage } from '../features/tasks/TasksPage'
 import { ApiError } from '../lib/api'
 import { errorMessage } from '../lib/errors'
 import { AppShell } from './AppShell'
+
+// The calendar library is large; load it only when the Calendar page is opened.
+const CalendarPage = lazy(() => import('../features/calendar/CalendarPage'))
 
 // If any request finds the session has expired, go back to the login screen.
 function onApiError(error: unknown) {
@@ -59,7 +63,14 @@ function Routed() {
       <Route element={<AppShell />}>
         <Route index element={<HomePage />} />
         <Route path="tasks" element={<TasksPage />} />
-        <Route path="calendar" element={<ComingSoonPage feature="calendar" stage={3} />} />
+        <Route
+          path="calendar"
+          element={
+            <Suspense fallback={<ListSkeleton rows={6} />}>
+              <CalendarPage />
+            </Suspense>
+          }
+        />
         <Route path="goals" element={<GoalsPage />} />
         <Route path="goals/:goalId" element={<GoalDetailPage />} />
         <Route path="habits" element={<ComingSoonPage feature="habits" stage={4} />} />

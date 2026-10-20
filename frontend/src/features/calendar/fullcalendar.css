@@ -1,0 +1,96 @@
+/* FullCalendar themed with our design tokens, so it follows light/dark mode automatically. */
+.fc {
+  --fc-border-color: var(--border);
+  --fc-page-bg-color: var(--surface);
+  --fc-neutral-bg-color: var(--surface-sunken);
+  --fc-list-event-hover-bg-color: var(--surface-sunken);
+  --fc-today-bg-color: color-mix(in srgb, var(--accent-soft) 35%, transparent);
+  --fc-now-indicator-color: var(--danger);
+  --fc-highlight-color: color-mix(in srgb, var(--accent) 18%, transparent);
+  --fc-event-bg-color: var(--accent);
+  --fc-event-border-color: var(--accent);
+  --fc-event-text-color: var(--text-on-accent);
+  --fc-button-bg-color: var(--surface);
+  --fc-button-border-color: var(--border);
+  --fc-button-text-color: var(--text);
+  --fc-button-hover-bg-color: var(--surface-sunken);
+  --fc-button-hover-border-color: var(--border-strong);
+  --fc-button-active-bg-color: var(--accent-soft);
+  --fc-button-active-border-color: var(--accent);
+  font-size: 0.8125rem;
+  color: var(--text);
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+.fc .fc-button {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.35rem 0.7rem;
+  box-shadow: none !important;
+}
+.fc .fc-button-primary:not(:disabled).fc-button-active {
+  color: var(--accent);
+}
+.fc .fc-col-header-cell-cushion,
+.fc .fc-daygrid-day-number,
+.fc .fc-timegrid-slot-label-cushion {
+  color: var(--text-muted);
+}
+.fc a {
+  color: inherit;
+}
+
+/* Event kinds */
+.fc .ev-appointment {
+  --fc-event-bg-color: var(--accent);
+  --fc-event-border-color: var(--accent);
+}
+.fc .ev-task_block {
+  background: var(--success-soft);
+  border-color: var(--success);
+  border-left-width: 3px;
+}
+.fc .ev-task_block .fc-event-main,
+.fc .ev-task_block .fc-event-title,
+.fc .ev-task_block .fc-event-time {
+  color: var(--text);
+}
+.fc .ev-preference {
+  background: repeating-linear-gradient(135deg, var(--accent-soft) 0 6px, transparent 6px 12px);
+  border: 1px dashed var(--accent);
+}
+.fc .ev-preference .fc-event-main,
+.fc .ev-preference .fc-event-title,
+.fc .ev-preference .fc-event-time {
+  color: var(--accent);
+}
+.fc .ev-marker {
+  background: var(--warning-soft);
+  border-color: var(--warning);
+}
+.fc .ev-marker .fc-event-main,
+.fc .ev-marker .fc-event-title,
+.fc .ev-marker .fc-event-time {
+  color: var(--warning);
+  font-weight: 600;
+}
+.fc .ev-clash {
+  outline: 2px solid var(--danger);
+  outline-offset: 1px;
+}
+
+.fc .fc-list-event:hover td {
+  background: var(--surface-sunken);
+}
+
+@media (max-width: 767px) {
+  .fc .fc-toolbar {
+    gap: 0.5rem;
+  }
+  .fc .fc-toolbar-title {
+    font-size: 0.95rem;
+  }
+}

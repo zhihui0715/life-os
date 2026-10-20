@@ -57,5 +57,6 @@ class TaskQuery(QueryModel):
     tag: str | None = Field(default=None, max_length=40)
     q: str | None = Field(default=None, max_length=200)  # search title + notes; includes subtasks
     parent_id: uuid.UUID | None = None  # list the subtasks of one task
+    needs_scheduling: bool = False  # open top-level tasks with no time block on the calendar
     limit: int = Field(default=50, ge=1, le=200)
     cursor: str | None = None

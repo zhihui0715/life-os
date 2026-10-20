@@ -76,9 +76,11 @@ interface ConfirmDialogProps {
   busy?: boolean
   onConfirm: () => void
   onCancel: () => void
+  /** Extra controls shown under the message (inside the dialog, so they stay clickable). */
+  children?: ReactNode
 }
 
-export function ConfirmDialog({ open, title, body, confirmLabel, danger, busy, onConfirm, onCancel }: ConfirmDialogProps) {
+export function ConfirmDialog({ open, title, body, confirmLabel, danger, busy, onConfirm, onCancel, children }: ConfirmDialogProps) {
   const { t } = useTranslation()
   return (
     <Dialog
@@ -95,6 +97,7 @@ export function ConfirmDialog({ open, title, body, confirmLabel, danger, busy, o
       }
     >
       <p className="text-muted">{body}</p>
+      {children}
     </Dialog>
   )
 }

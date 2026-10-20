@@ -12,6 +12,7 @@ import { errorMessage } from '../../lib/errors'
 import { LOCALES } from '../../lib/i18n'
 import type { Me, UserSettings } from '../../lib/types'
 import { ME_KEY, useAuth, useMe } from '../auth/AuthProvider'
+import { WorkingHoursCard } from './WorkingHoursCard'
 
 function timezones(current: string): string[] {
   const all = typeof Intl.supportedValuesOf === 'function' ? Intl.supportedValuesOf('timeZone') : []
@@ -91,6 +92,8 @@ export function SettingsPage() {
           </Field>
         </div>
       </Card>
+
+      <WorkingHoursCard />
 
       <Card className="p-5">
         <h2 className="mb-1 font-semibold">{t('sections.account')}</h2>

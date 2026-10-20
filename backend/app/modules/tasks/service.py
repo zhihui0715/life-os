@@ -17,6 +17,7 @@ from app.common.models import utcnow
 from app.common.ownership import get_owned_or_404
 from app.common.timeutil import user_today, user_zone
 from app.extensions import db
+from app.modules.calendar.models import ScheduleEvent
 from app.modules.categories.models import Category
 from app.modules.goals.models import Goal, GoalMilestone
 from app.modules.goals.service import sync_progress
@@ -183,6 +184,11 @@ def list_tasks(user, query: TaskQuery) -> dict:
         filters.append(Task.milestone_id == query.milestone_id)
     if query.tag:
         filters.append(Task.tags.any(func.lower(Tag.name) == query.tag.strip().lower()))
+    if query.needs_scheduling:
+        has_block = select(ScheduleEvent.id).where(
+            ScheduleEvent.task_id == Task.id, ScheduleEvent.kind == "task_block", ScheduleEvent.archived_at.is_(None)
+        ).exists()
+        filters += [Task.status != "done", Task.archived_at.is_(None), Task.status != "inbox", not_(has_block)]
 
     offset = _decode_cursor(query.cursor)
     total = db.session.scalar(select(func.count()).select_from(Task).where(*filters))

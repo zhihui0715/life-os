@@ -7,6 +7,7 @@ import { Button } from '../components/ui/Button'
 import { cn } from '../components/ui/cn'
 import { Dialog } from '../components/ui/Dialog'
 import { QuickAddDialog } from '../features/tasks/QuickAddDialog'
+import { ErrorBoundary } from './ErrorBoundary'
 import { NAV_ITEMS } from './nav'
 
 const STORAGE_KEY = 'lifeos.sidebarCollapsed'
@@ -85,8 +86,10 @@ export function AppShell() {
       </aside>
 
       <main className="min-w-0 flex-1 px-4 pt-5 pb-28 md:px-8 md:pt-8 md:pb-10">
-        <div className="mx-auto max-w-5xl">
-          <Outlet />
+        <div className={cn('mx-auto', location.pathname.startsWith('/calendar') ? 'max-w-7xl' : 'max-w-5xl')}>
+          <ErrorBoundary resetKey={location.pathname}>
+            <Outlet />
+          </ErrorBoundary>
         </div>
       </main>
 

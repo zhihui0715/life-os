@@ -11,6 +11,7 @@ from sqlalchemy import (
     Uuid,
     true,
 )
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.common.models import IdMixin, TimestampMixin, utcnow
@@ -19,6 +20,12 @@ from app.extensions import db
 LOCALES = ("en", "zh-CN")
 THEMES = ("system", "light", "dark")
 DEFAULT_TIMEZONE = "Asia/Kuala_Lumpur"
+WEEKDAYS = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")
+# Used for free-slot finding until the user sets their own hours in Settings.
+DEFAULT_WORKING_HOURS = {
+    **{d: [["09:00", "18:00"]] for d in WEEKDAYS[:5]},
+    **{d: [["10:00", "16:00"]] for d in WEEKDAYS[5:]},
+}
 
 
 class User(IdMixin, TimestampMixin, db.Model):
@@ -50,6 +57,8 @@ class UserSettings(db.Model):
     )
     week_start: Mapped[int] = mapped_column(SmallInteger, nullable=False, default=1, server_default="1")
     theme: Mapped[str] = mapped_column(String(10), nullable=False, default="system", server_default="system")
+    # {"mon": [["09:00", "18:00"]], ...} in the user's timezone. NULL = use DEFAULT_WORKING_HOURS.
+    working_hours: Mapped[dict | None] = mapped_column(JSONB)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=utcnow, onupdate=utcnow
     )

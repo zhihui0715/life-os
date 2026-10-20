@@ -1,0 +1,108 @@
+{
+  "title": "日历",
+  "newEvent": "新建日程",
+  "editEvent": "编辑日程",
+  "kind": {
+    "label": "类型",
+    "appointment": "约定日程",
+    "task_block": "任务时间",
+    "preference": "偏好时段",
+    "help_appointment": "固定的安排，例如上课或会议。",
+    "help_task_block": "为某个任务预留的工作时间。",
+    "help_preference": "灵活的时间窗口，例如学习时段。不算作占用时间，推荐时会优先使用。"
+  },
+  "fields": {
+    "title": "标题",
+    "task": "任务",
+    "chooseTask": "选择任务…",
+    "allDay": "全天",
+    "date": "日期",
+    "startDate": "开始日期",
+    "endDate": "结束日期",
+    "start": "开始",
+    "end": "结束",
+    "isHard": "固定安排（不可移动）",
+    "description": "备注"
+  },
+  "repeat": {
+    "label": "重复",
+    "none": "不重复",
+    "daily": "每天",
+    "weekdays": "每个工作日（周一至周五）",
+    "weekly": "每周的这一天",
+    "monthly": "每月的这一天",
+    "custom": "自定义规则",
+    "ends": "结束",
+    "never": "永不",
+    "until": "于日期",
+    "count": "重复",
+    "times": "次后"
+  },
+  "scope": {
+    "label": "应用于",
+    "this": "仅此日程",
+    "all": "整个系列",
+    "allWarning": "修改整个系列的时间会清除你对单次日程所做的修改。"
+  },
+  "delete": {
+    "title": "删除此日程？",
+    "body": "它将从你的日历中移除。",
+    "occurrence": "仅删除这一次",
+    "series": "删除整个系列"
+  },
+  "move": {
+    "title": "移动此日程？",
+    "body": "将“{{title}}”移动到 {{when}}？",
+    "confirm": "移动"
+  },
+  "attention": {
+    "title": "需要注意",
+    "empty": "当前视图中没有时间冲突，也没有面临风险的截止时间。",
+    "overlap": "{{a}} 与 {{b}} 时间重叠",
+    "overlapMinutes": "重叠 {{minutes}} 分钟",
+    "hard": "固定冲突",
+    "soft": "可调整",
+    "moveTo": "将“{{title}}”移到 {{when}}",
+    "atRisk": "有风险",
+    "needsTime": "需要安排",
+    "workload": "还需 {{remaining}} · {{due}} 前空闲 {{free}}"
+  },
+  "toSchedule": {
+    "title": "待安排",
+    "empty": "所有未完成任务都已安排时间。",
+    "help": "把任务拖到日历上，或让应用推荐时间。",
+    "findTime": "找时间",
+    "estimate": "约 {{time}}"
+  },
+  "suggest": {
+    "title": "为“{{title}}”找时间",
+    "summary": "还需安排 {{remaining}}",
+    "assumed": "未设置预计用时——按 1 小时推荐。",
+    "due": "需在 {{when}} 前完成",
+    "none": "到期前你的工作时间里没有空闲时段。可以考虑调整截止时间或腾出时间。",
+    "preferred_time": "在你的偏好时段内",
+    "earliest_free": "最早的空闲时间",
+    "partial": "只覆盖部分剩余时间",
+    "pick": "安排在这里",
+    "confirmTitle": "添加这个时间块？",
+    "confirmBody": "为“{{title}}”预留 {{when}}？日历上的其他内容不会改变。",
+    "added": "已预留时间"
+  },
+  "markers": {
+    "due": "到期：{{title}}",
+    "deadline": "截止：{{title}}"
+  },
+  "toast": {
+    "created": "已添加日程",
+    "updated": "已更新日程",
+    "moved": "已移动日程",
+    "deleted": "已删除日程",
+    "dropped": "已重置 {{count}} 处单次日程修改"
+  },
+  "workingHours": {
+    "title": "工作时间",
+    "help": "用于计算空闲时间和推荐时段。工作时间以外不会推荐。",
+    "off": "休息",
+    "saved": "工作时间已保存"
+  }
+}

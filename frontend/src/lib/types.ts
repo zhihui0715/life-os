@@ -3,11 +3,15 @@
 import type { Locale } from './i18n'
 import type { ThemeSetting } from './theme'
 
+export type Weekday = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
+export type WorkingHours = Record<Weekday, [string, string][]>
+
 export interface UserSettings {
   locale: Locale
   timezone: string
   week_start: number
   theme: ThemeSetting
+  working_hours: WorkingHours
 }
 
 export interface Me {
@@ -65,6 +69,7 @@ export interface TaskFilters {
   goal_id?: string
   milestone_id?: string
   parent_id?: string
+  needs_scheduling?: string
 }
 
 export interface TagSummary {
@@ -120,4 +125,101 @@ export interface GoalUpdate {
 export interface GoalDetail extends Goal {
   milestones: Milestone[]
   updates: GoalUpdate[]
+}
+
+export type EventKind = 'appointment' | 'task_block' | 'preference'
+
+export interface CalendarEvent {
+  id: string
+  title: string
+  description: string | null
+  kind: EventKind
+  is_hard: boolean
+  all_day: boolean
+  starts_at: string
+  ends_at: string
+  start_date?: string
+  end_date?: string
+  tzid: string
+  rrule: string | null
+  task_id: string | null
+  category_id: string | null
+  exception_count: number
+  archived_at: string | null
+  updated_at: string
+}
+
+export interface Occurrence {
+  id: string
+  event_id: string
+  title: string
+  kind: EventKind
+  is_hard: boolean
+  all_day: boolean
+  starts_at: string
+  ends_at: string
+  start_date?: string
+  end_date?: string
+  original_start: string
+  recurring: boolean
+  is_exception: boolean
+  task_id: string | null
+  category_id: string | null
+}
+
+export interface TaskMarker {
+  task_id: string
+  title: string
+  kind: 'due' | 'deadline'
+  date?: string
+  at?: string
+  priority: number
+}
+
+export interface OccurrenceBrief {
+  event_id: string
+  title: string
+  kind: EventKind
+  is_hard: boolean
+  starts_at: string
+  ends_at: string
+  original_start: string
+  recurring: boolean
+}
+
+export interface Overlap {
+  a: OccurrenceBrief
+  b: OccurrenceBrief
+  overlap_minutes: number
+  severity: 'hard' | 'soft'
+  suggestion: { occurrence: OccurrenceBrief; starts_at: string; ends_at: string } | null
+}
+
+export interface WorkloadItem {
+  task_id: string
+  title: string
+  due_by: string
+  estimate_minutes: number
+  scheduled_minutes: number
+  remaining_minutes: number
+  free_minutes: number
+  status: 'at_risk' | 'needs_time'
+}
+
+export interface SlotSuggestion {
+  starts_at: string
+  ends_at: string
+  minutes: number
+  reason: 'preferred_time' | 'earliest_free'
+  covers_remaining: boolean
+}
+
+export interface Suggestions {
+  task_id: string
+  estimate_minutes: number | null
+  assumed_estimate: boolean
+  scheduled_minutes: number
+  remaining_minutes: number
+  due_by: string | null
+  slots: SlotSuggestion[]
 }

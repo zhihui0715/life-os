@@ -17,7 +17,8 @@ def test_login_success_returns_user_settings_and_csrf(anon, user):
     body = res.get_json()
     assert res.status_code == 200
     assert body["user"]["email"] == "me@example.test"
-    assert body["settings"] == {"locale": "en", "timezone": "Asia/Kuala_Lumpur", "week_start": 1, "theme": "system"}
+    assert {k: body["settings"][k] for k in ("locale", "timezone", "week_start", "theme")} == {"locale": "en", "timezone": "Asia/Kuala_Lumpur", "week_start": 1, "theme": "system"}
+    assert body["settings"]["working_hours"]["mon"] == [["09:00", "18:00"]]  # default until set
     assert len(body["csrf_token"]) == 64
     cookie = res.headers["Set-Cookie"]
     assert "HttpOnly" in cookie and "SameSite=Lax" in cookie

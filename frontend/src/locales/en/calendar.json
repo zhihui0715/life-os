@@ -1,0 +1,108 @@
+{
+  "title": "Calendar",
+  "newEvent": "New event",
+  "editEvent": "Edit event",
+  "kind": {
+    "label": "Type",
+    "appointment": "Appointment",
+    "task_block": "Time for a task",
+    "preference": "Preferred time",
+    "help_appointment": "A commitment such as a class or meeting.",
+    "help_task_block": "Time you set aside to work on one task.",
+    "help_preference": "A soft window, e.g. study hours. Never counts as busy; suggestions prefer it."
+  },
+  "fields": {
+    "title": "Title",
+    "task": "Task",
+    "chooseTask": "Choose a task…",
+    "allDay": "All day",
+    "date": "Date",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "start": "Starts",
+    "end": "Ends",
+    "isHard": "Fixed commitment (can't be moved)",
+    "description": "Notes"
+  },
+  "repeat": {
+    "label": "Repeat",
+    "none": "Does not repeat",
+    "daily": "Every day",
+    "weekdays": "Every weekday (Mon–Fri)",
+    "weekly": "Every week on this day",
+    "monthly": "Every month on this date",
+    "custom": "Custom rule",
+    "ends": "Ends",
+    "never": "Never",
+    "until": "On date",
+    "count": "After",
+    "times": "times"
+  },
+  "scope": {
+    "label": "Apply to",
+    "this": "This event only",
+    "all": "All events in the series",
+    "allWarning": "Changing the time of the whole series removes changes you made to single events."
+  },
+  "delete": {
+    "title": "Delete this event?",
+    "body": "It will be removed from your calendar.",
+    "occurrence": "Delete this one",
+    "series": "Delete the whole series"
+  },
+  "move": {
+    "title": "Move this event?",
+    "body": "Move “{{title}}” to {{when}}?",
+    "confirm": "Move"
+  },
+  "attention": {
+    "title": "Needs attention",
+    "empty": "No clashes and no deadlines at risk in this view.",
+    "overlap": "{{a}} overlaps {{b}}",
+    "overlapMinutes": "{{minutes}} min overlap",
+    "hard": "Fixed clash",
+    "soft": "Flexible",
+    "moveTo": "Move “{{title}}” to {{when}}",
+    "atRisk": "At risk",
+    "needsTime": "Needs time",
+    "workload": "{{remaining}} still needed · {{free}} free before {{due}}"
+  },
+  "toSchedule": {
+    "title": "To schedule",
+    "empty": "Every open task has time on the calendar.",
+    "help": "Drag a task onto the calendar, or let the app suggest a time.",
+    "findTime": "Find time",
+    "estimate": "~{{time}}"
+  },
+  "suggest": {
+    "title": "Find time for “{{title}}”",
+    "summary": "{{remaining}} still to schedule",
+    "assumed": "No estimate set — suggesting 1 hour.",
+    "due": "Due by {{when}}",
+    "none": "No free slot in your working hours before it's due. Consider moving the deadline or freeing up time.",
+    "preferred_time": "In your preferred time",
+    "earliest_free": "Earliest free time",
+    "partial": "Covers part of the remaining time",
+    "pick": "Schedule here",
+    "confirmTitle": "Add this time block?",
+    "confirmBody": "Block {{when}} for “{{title}}”? Nothing else on your calendar changes.",
+    "added": "Time blocked"
+  },
+  "markers": {
+    "due": "Due: {{title}}",
+    "deadline": "Deadline: {{title}}"
+  },
+  "toast": {
+    "created": "Event added",
+    "updated": "Event updated",
+    "moved": "Event moved",
+    "deleted": "Event deleted",
+    "dropped": "{{count}} single-event changes were reset"
+  },
+  "workingHours": {
+    "title": "Working hours",
+    "help": "Used to find free time and suggest slots. Outside these hours nothing is suggested.",
+    "off": "Off",
+    "saved": "Working hours saved"
+  }
+}
