@@ -1,15 +1,19 @@
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router'
 
 import { ToastProvider } from '../components/ui/Toast'
 import { ErrorState, ListSkeleton } from '../components/ui/states'
 import { AuthProvider, ME_KEY, useAuth } from '../features/auth/AuthProvider'
 import { LoginPage } from '../features/auth/LoginPage'
+import { FocusPage } from '../features/focus/FocusPage'
 import { GoalDetailPage } from '../features/goals/GoalDetailPage'
 import { GoalsPage } from '../features/goals/GoalsPage'
+import { HabitDetailPage } from '../features/habits/HabitDetailPage'
+import { HabitsPage } from '../features/habits/HabitsPage'
 import { HomePage } from '../features/home/HomePage'
+import { JournalPage } from '../features/journal/JournalPage'
 import { ComingSoonPage } from '../features/placeholder/ComingSoonPage'
 import { SettingsPage } from '../features/settings/SettingsPage'
 import { TasksPage } from '../features/tasks/TasksPage'
@@ -37,7 +41,8 @@ const queryClient: QueryClient = new QueryClient({
   },
 })
 
-function Routed() {
+/** Shows the login page, a loading state, or the app — depending on whether you're signed in. */
+function AuthGate() {
   const { me, meError, retryMe } = useAuth()
   const { t } = useTranslation()
 
@@ -57,41 +62,56 @@ function Routed() {
     )
   }
   if (me === null) return <LoginPage />
+  return <AppShell />
+}
 
+function Root() {
   return (
-    <Routes>
-      <Route element={<AppShell />}>
-        <Route index element={<HomePage />} />
-        <Route path="tasks" element={<TasksPage />} />
-        <Route
-          path="calendar"
-          element={
-            <Suspense fallback={<ListSkeleton rows={6} />}>
-              <CalendarPage />
-            </Suspense>
-          }
-        />
-        <Route path="goals" element={<GoalsPage />} />
-        <Route path="goals/:goalId" element={<GoalDetailPage />} />
-        <Route path="habits" element={<ComingSoonPage feature="habits" stage={4} />} />
-        <Route path="insights" element={<ComingSoonPage feature="insights" stage={5} />} />
-        <Route path="journal" element={<ComingSoonPage feature="journal" stage={4} />} />
-        <Route path="settings" element={<SettingsPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Route>
-    </Routes>
+    <AuthProvider>
+      <Outlet />
+    </AuthProvider>
   )
 }
+
+// A "data router" (rather than <BrowserRouter>) is needed for features such as warning before leaving
+// a page with unsaved writing (useBlocker on the Journal page).
+const router = createBrowserRouter([
+  {
+    element: <Root />,
+    children: [
+      {
+        element: <AuthGate />,
+        children: [
+          { index: true, element: <HomePage /> },
+          { path: 'tasks', element: <TasksPage /> },
+          {
+            path: 'calendar',
+            element: (
+              <Suspense fallback={<ListSkeleton rows={6} />}>
+                <CalendarPage />
+              </Suspense>
+            ),
+          },
+          { path: 'goals', element: <GoalsPage /> },
+          { path: 'goals/:goalId', element: <GoalDetailPage /> },
+          { path: 'habits', element: <HabitsPage /> },
+          { path: 'habits/:habitId', element: <HabitDetailPage /> },
+          { path: 'focus', element: <FocusPage /> },
+          { path: 'journal', element: <JournalPage /> },
+          { path: 'insights', element: <ComingSoonPage feature="insights" stage={5} /> },
+          { path: 'settings', element: <SettingsPage /> },
+          { path: '*', element: <Navigate to="/" replace /> },
+        ],
+      },
+    ],
+  },
+])
 
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
-        <BrowserRouter>
-          <AuthProvider>
-            <Routed />
-          </AuthProvider>
-        </BrowserRouter>
+        <RouterProvider router={router} />
       </ToastProvider>
     </QueryClientProvider>
   )

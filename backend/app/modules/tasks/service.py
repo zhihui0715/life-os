@@ -17,6 +17,7 @@ from app.common.models import utcnow
 from app.common.ownership import get_owned_or_404
 from app.common.timeutil import user_today, user_zone
 from app.extensions import db
+from app.modules.activity.service import tracked_minutes
 from app.modules.calendar.models import ScheduleEvent
 from app.modules.categories.models import Category
 from app.modules.goals.models import Goal, GoalMilestone
@@ -47,7 +48,7 @@ def subtask_counts(task_ids) -> dict:
     return {r[0]: (r[1], r[2]) for r in rows}
 
 
-def task_to_dict(t: Task, user, now: datetime | None = None, counts: dict | None = None) -> dict:
+def task_to_dict(t: Task, user, now: datetime | None = None, counts: dict | None = None, tracked: dict | None = None) -> dict:
     now = now or utcnow()
     today = user_today(user, now)
     is_open = t.status != "done" and t.archived_at is None
@@ -55,6 +56,8 @@ def task_to_dict(t: Task, user, now: datetime | None = None, counts: dict | None
     if counts is None:
         counts = subtask_counts([t.id])
     sub_done, sub_total = counts.get(t.id, (0, 0))
+    if tracked is None:
+        tracked = tracked_minutes([t.id])
     return {
         "id": str(t.id),
         "title": t.title,
@@ -65,6 +68,8 @@ def task_to_dict(t: Task, user, now: datetime | None = None, counts: dict | None
         "deadline": _iso(t.deadline),
         "estimate_minutes": t.estimate_minutes,
         "actual_minutes_manual": t.actual_minutes_manual,
+        # Logged time (activity logs + stopped focus sessions). The manual value, if set, overrides it for display.
+        "tracked_minutes": tracked.get(t.id, 0),
         "category_id": str(t.category_id) if t.category_id else None,
         "goal_id": str(t.goal_id) if t.goal_id else None,
         "milestone_id": str(t.milestone_id) if t.milestone_id else None,
@@ -196,9 +201,10 @@ def list_tasks(user, query: TaskQuery) -> dict:
         select(Task).where(*filters).order_by(*order, Task.id).offset(offset).limit(query.limit)
     ).all()
     counts = subtask_counts([t.id for t in rows])
+    tracked = tracked_minutes([t.id for t in rows])
     next_offset = offset + len(rows)
     return {
-        "items": [task_to_dict(t, user, now, counts) for t in rows],
+        "items": [task_to_dict(t, user, now, counts, tracked) for t in rows],
         "next_cursor": _encode_cursor(next_offset) if next_offset < total else None,
         "total": total,
     }

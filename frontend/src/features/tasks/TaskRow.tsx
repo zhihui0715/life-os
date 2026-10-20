@@ -75,10 +75,13 @@ export function TaskRow({ task, category, goal, onOpen }: Props) {
               {t('meta.deadline', { date: formatInstant(task.deadline, lang, me.settings.timezone) })}
             </span>
           )}
-          {task.estimate_minutes != null && task.estimate_minutes > 0 && (
+          {(task.tracked_minutes > 0 || (task.estimate_minutes != null && task.estimate_minutes > 0)) && (
             <span className="inline-flex items-center gap-1">
               <Clock size={12} aria-hidden />
-              {formatMinutes(task.estimate_minutes, lang)}
+              {/* time logged so far / estimate */}
+              {task.tracked_minutes > 0 && formatMinutes(task.tracked_minutes, lang)}
+              {task.tracked_minutes > 0 && task.estimate_minutes ? ' / ' : ''}
+              {task.estimate_minutes ? formatMinutes(task.estimate_minutes, lang) : ''}
             </span>
           )}
           {task.subtasks_total > 0 && (

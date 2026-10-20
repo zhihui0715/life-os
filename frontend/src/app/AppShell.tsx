@@ -6,6 +6,7 @@ import { NavLink, Outlet, useLocation } from 'react-router'
 import { Button } from '../components/ui/Button'
 import { cn } from '../components/ui/cn'
 import { Dialog } from '../components/ui/Dialog'
+import { FocusWidget } from '../features/focus/FocusWidget'
 import { QuickAddDialog } from '../features/tasks/QuickAddDialog'
 import { ErrorBoundary } from './ErrorBoundary'
 import { NAV_ITEMS } from './nav'
@@ -148,6 +149,7 @@ export function AppShell() {
       </Dialog>
 
       <QuickAddDialog open={quickAddOpen} onClose={() => setQuickAddOpen(false)} />
+      <FocusWidget />
     </div>
   )
 }

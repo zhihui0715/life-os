@@ -1,0 +1,55 @@
+{
+  "title": "日记",
+  "private": "私密——只有你能看到。",
+  "prev": "前一天",
+  "next": "后一天",
+  "today": "今天",
+  "pickDate": "选择日期",
+  "fields": {
+    "body": "随笔",
+    "went_well": "今天哪些做得好？",
+    "to_improve": "哪些可以更好？",
+    "challenges": "主要挑战",
+    "lessons": "学到的经验",
+    "gratitude": "感恩的事",
+    "tomorrow_priorities": "明天的重点"
+  },
+  "placeholder": {
+    "body": "随意写。每一项都是可选的。"
+  },
+  "prompts": "每日回顾提示",
+  "mood": {
+    "label": "心情",
+    "energy": "精力",
+    "1": "很差",
+    "2": "较差",
+    "3": "一般",
+    "4": "不错",
+    "5": "很好",
+    "set": "{{label}}：{{value}}/5",
+    "clear": "清除"
+  },
+  "status": {
+    "saved": "已保存",
+    "unsaved": "有未保存的修改",
+    "saving": "保存中…",
+    "new": "这一天还没有日记"
+  },
+  "delete": {
+    "button": "删除日记",
+    "title": "删除这篇日记？",
+    "body": "这会永久删除 {{date}} 的日记。"
+  },
+  "search": {
+    "label": "搜索日记",
+    "placeholder": "搜索你的日记…",
+    "none": "没有匹配的日记。"
+  },
+  "recent": "最近的日记",
+  "noEntries": "还没有日记。今天就是开始的好日子。",
+  "leave": "有未保存的修改，确定要离开吗？",
+  "toast": {
+    "saved": "日记已保存",
+    "deleted": "日记已删除"
+  }
+}

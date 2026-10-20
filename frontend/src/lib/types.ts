@@ -41,6 +41,7 @@ export interface Task {
   deadline: string | null
   estimate_minutes: number | null
   actual_minutes_manual: number | null
+  tracked_minutes: number
   category_id: string | null
   goal_id: string | null
   milestone_id: string | null
@@ -222,4 +223,103 @@ export interface Suggestions {
   remaining_minutes: number
   due_by: string | null
   slots: SlotSuggestion[]
+}
+
+export type HabitScheduleType = 'daily' | 'weekdays' | 'x_per_week'
+export type HabitDayState = 'done' | 'skipped'
+
+export interface HabitStats {
+  unit: 'days' | 'weeks'
+  current_streak: number
+  best_streak: number
+  /** 0–1, null = not enough data yet */
+  consistency: number | null
+  eligible: number
+  done_this_week: number
+  target_this_week: number | null
+}
+
+export interface Habit {
+  id: string
+  name: string
+  description: string | null
+  category_id: string | null
+  goal_id: string | null
+  target_value: number | null
+  target_unit: string | null
+  start_date: string
+  schedule_type: HabitScheduleType
+  weekday_mask: number
+  times_per_week: number
+  scheduled_today: boolean
+  today: { state: HabitDayState; value: number | null; note: string | null } | null
+  stats: HabitStats
+  last7: { date: string; scheduled: boolean; state: HabitDayState | null }[]
+  archived_at: string | null
+  updated_at: string
+}
+
+export interface HabitDetail extends Habit {
+  history: { date: string; status: 'done' | 'skipped' | 'missed' | 'open' | 'rest'; scheduled: boolean; value: number | null; note: string | null }[]
+  schedule_changes: { effective_from: string; schedule_type: HabitScheduleType; weekday_mask: number; times_per_week: number }[]
+}
+
+export const JOURNAL_TEXT_FIELDS = ['body', 'went_well', 'to_improve', 'challenges', 'lessons', 'gratitude', 'tomorrow_priorities'] as const
+export type JournalTextField = (typeof JOURNAL_TEXT_FIELDS)[number]
+
+export type JournalEntry = Record<JournalTextField, string | null> & {
+  id: string
+  entry_date: string
+  mood: number | null
+  energy: number | null
+  updated_at: string
+}
+
+export interface JournalSummary {
+  entry_date: string
+  preview: string
+  filled: JournalTextField[]
+  mood: number | null
+  energy: number | null
+}
+
+export interface ActivityLog {
+  id: string
+  title: string
+  category_id: string | null
+  log_date: string
+  started_at: string | null
+  ended_at: string | null
+  duration_minutes: number
+  notes: string | null
+  outcome: string | null
+  goal_id: string | null
+  task_id: string | null
+  focus_session_id: string | null
+}
+
+export interface ActivitySummary {
+  start: string
+  end: string
+  total_minutes: number
+  learning_minutes: number
+  by_category: { category_id: string | null; name: string | null; kind: string | null; color: string | null; minutes: number }[]
+  by_day: { date: string; minutes: number }[]
+}
+
+export interface FocusSession {
+  id: string
+  task_id: string | null
+  task_title: string | null
+  label: string | null
+  planned_minutes: number
+  break_minutes: number
+  state: 'running' | 'paused' | 'completed' | 'interrupted'
+  started_at: string
+  paused_at: string | null
+  ended_at: string | null
+  paused_seconds: number
+  focused_seconds: number
+  actual_minutes: number | null
+  server_time: string
 }

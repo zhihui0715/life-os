@@ -10,6 +10,7 @@ import { useCategories } from '../tasks/api'
 import { QuickAddInput } from '../tasks/QuickAddInput'
 import { TaskDrawer } from '../tasks/TaskDrawer'
 import { TaskList, useTaskTotal } from '../tasks/TaskList'
+import { HabitsTodayCard, MoodCheckInCard } from './TodayCards'
 
 function greetingKey(timeZone: string) {
   const hour = Number(new Intl.DateTimeFormat('en-US', { timeZone, hour: 'numeric', hourCycle: 'h23' }).format(new Date()))
@@ -17,8 +18,8 @@ function greetingKey(timeZone: string) {
 }
 
 /**
- * Stage 1 home: only sections backed by real data (today's and overdue tasks).
- * Schedule, habits, goals and insights are added as those modules are built (Stage 5 completes the dashboard).
+ * Home: only sections backed by real data — tasks due, today's habits and a mood check-in.
+ * Stage 5 adds today's schedule, goal progress and insights, and lets you arrange the sections.
  */
 export function HomePage() {
   const { t, i18n } = useTranslation()
@@ -39,21 +40,29 @@ export function HomePage() {
         <QuickAddInput view="today" />
       </div>
 
-      {!!overdueTotal && (
-        <Card className="mb-4 overflow-hidden">
-          <SectionHeader title={t('home.overdue')} count={overdueTotal} to="/tasks?view=overdue" tone="danger" />
-          <TaskList filters={{ view: 'overdue' }} categories={categories} onOpen={setOpen} limit={5} compact />
-        </Card>
-      )}
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
+        <div className="flex min-w-0 flex-col gap-4">
+          {!!overdueTotal && (
+            <Card className="overflow-hidden">
+              <SectionHeader title={t('home.overdue')} count={overdueTotal} to="/tasks?view=overdue" tone="danger" />
+              <TaskList filters={{ view: 'overdue' }} categories={categories} onOpen={setOpen} limit={5} compact />
+            </Card>
+          )}
 
-      <Card className="overflow-hidden">
-        <SectionHeader title={t('home.today')} count={todayTotal} to="/tasks?view=today" />
-        {todayTotal === 0 ? (
-          <EmptyState icon={Sun} title={t('home.todayEmptyTitle')} body={t('home.todayEmptyBody')} />
-        ) : (
-          <TaskList filters={{ view: 'today' }} categories={categories} onOpen={setOpen} limit={10} compact />
-        )}
-      </Card>
+          <Card className="overflow-hidden">
+            <SectionHeader title={t('home.today')} count={todayTotal} to="/tasks?view=today" />
+            {todayTotal === 0 ? (
+              <EmptyState icon={Sun} title={t('home.todayEmptyTitle')} body={t('home.todayEmptyBody')} />
+            ) : (
+              <TaskList filters={{ view: 'today' }} categories={categories} onOpen={setOpen} limit={10} compact />
+            )}
+          </Card>
+        </div>
+        <div className="flex flex-col gap-4">
+          <MoodCheckInCard />
+          <HabitsTodayCard />
+        </div>
+      </div>
 
       <p className="text-subtle mt-6 text-center text-xs">{t('home.laterNote')}</p>
 

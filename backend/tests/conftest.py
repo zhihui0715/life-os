@@ -62,6 +62,9 @@ class ApiClient:
     def patch(self, url, json):
         return self.client.patch(url, json=json, headers=self._headers())
 
+    def put(self, url, json):
+        return self.client.put(url, json=json, headers=self._headers())
+
     def delete(self, url):
         return self.client.delete(url, headers=self._headers())
 

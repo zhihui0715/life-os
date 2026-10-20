@@ -7,6 +7,7 @@ import {
   Home,
   Settings,
   Target,
+  Timer,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -23,6 +24,7 @@ export const NAV_ITEMS: NavItem[] = [
   { to: '/calendar', key: 'calendar', icon: CalendarDays, mobilePrimary: true },
   { to: '/goals', key: 'goals', icon: Target },
   { to: '/habits', key: 'habits', icon: Flame, mobilePrimary: true },
+  { to: '/focus', key: 'focus', icon: Timer },
   { to: '/insights', key: 'insights', icon: BarChart3 },
   { to: '/journal', key: 'journal', icon: BookOpen },
   { to: '/settings', key: 'settings', icon: Settings },

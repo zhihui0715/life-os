@@ -1,0 +1,78 @@
+{
+  "title": "专注",
+  "timer": {
+    "start": "开始专注",
+    "pause": "暂停",
+    "resume": "继续",
+    "stop": "结束",
+    "focusOn": "专注于",
+    "noTask": "不指定任务",
+    "label": "或者描述一下",
+    "labelPlaceholder": "例如：读第四章",
+    "length": "专注时长",
+    "break": "休息",
+    "minutes": "{{count}} 分钟",
+    "running": "专注中",
+    "paused": "已暂停",
+    "overtime": "时间到了——准备好就结束吧",
+    "breakTime": "休息 {{count}} 分钟吧。",
+    "remaining": "剩余",
+    "planned": "计划 {{count}} 分钟",
+    "stopTitle": "结束这次专注？",
+    "stopBody": "你专注了 {{time}}。达到计划时长 80% 的专注算作完成。",
+    "markComplete": "仍然算作完成",
+    "rule": "专注时间不包括暂停。达到计划的 80% 即为完成；较短的专注仍会计入用时。"
+  },
+  "widget": "专注计时：剩余 {{time}}",
+  "today": "今天的专注",
+  "noSessions": "今天还没有专注记录。",
+  "state": {
+    "completed": "已完成",
+    "interrupted": "已中断",
+    "running": "进行中",
+    "paused": "已暂停"
+  },
+  "correct": {
+    "button": "修正",
+    "title": "修正这次专注",
+    "minutes": "专注分钟数",
+    "help": "忘了停止计时？在这里填写实际时间，对应的活动记录也会更新。"
+  },
+  "log": {
+    "title": "活动记录",
+    "add": "记录时间",
+    "addTitle": "记录一项活动",
+    "editTitle": "编辑活动",
+    "what": "做了什么？",
+    "category": "分类",
+    "date": "日期",
+    "duration": "分钟",
+    "start": "开始（可选）",
+    "end": "结束（可选）",
+    "timesHelp": "如果填写了开始和结束时间，分钟数会自动计算。",
+    "task": "相关任务（可选）",
+    "goal": "相关目标（可选）",
+    "outcome": "成果（可选）",
+    "notes": "备注（可选）",
+    "empty": "这段时间没有记录。",
+    "fromFocus": "来自专注计时",
+    "deleteTitle": "删除这条活动？",
+    "deleteBody": "这会删除 {{minutes}} 的记录时间。"
+  },
+  "summary": {
+    "title": "最近 7 天",
+    "total": "合计",
+    "learning": "学习",
+    "uncategorised": "未分类",
+    "focus": "专注次数",
+    "focusDetail": "完成 {{completed}} 次 · 中断 {{interrupted}} 次"
+  },
+  "toast": {
+    "started": "开始专注",
+    "stopped": "专注已保存",
+    "corrected": "已修正",
+    "logged": "已记录时间",
+    "updated": "已更新活动",
+    "deleted": "已删除活动"
+  }
+}

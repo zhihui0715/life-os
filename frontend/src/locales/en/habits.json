@@ -1,0 +1,80 @@
+{
+  "title": "Habits",
+  "new": "New habit",
+  "edit": "Edit habit",
+  "back": "All habits",
+  "today": "Today",
+  "empty": { "title": "No habits yet", "body": "Start small: one habit you can do on most days." },
+  "archivedEmpty": "No archived habits.",
+  "showArchived": "Archived",
+  "showActive": "Active",
+  "fields": {
+    "name": "Habit",
+    "description": "Why it matters (optional)",
+    "schedule": "How often",
+    "days": "On these days",
+    "timesPerWeek": "Times per week",
+    "target": "Amount per check-in (optional)",
+    "unit": "Unit, e.g. pages",
+    "startDate": "Start date",
+    "goal": "Supports goal (optional)"
+  },
+  "schedule": {
+    "daily": "Every day",
+    "weekdays": "On chosen days",
+    "x_per_week": "A number of times per week",
+    "summary_daily": "Every day",
+    "summary_weekdays": "{{days}}",
+    "summary_x_per_week": "{{count}}× per week",
+    "changeNote": "A new schedule applies from today. Past days keep the schedule they had."
+  },
+  "state": {
+    "done": "Done",
+    "skipped": "Skipped",
+    "missed": "Missed",
+    "open": "Not checked in",
+    "rest": "Not scheduled"
+  },
+  "actions": {
+    "done": "Mark “{{name}}” done today",
+    "undo": "Undo today's check-in for “{{name}}”",
+    "skip": "Skip today (rest day)",
+    "clear": "Clear"
+  },
+  "stats": {
+    "streak_days_one": "{{count}} day streak",
+    "streak_days_other": "{{count}} day streak",
+    "streak_weeks_one": "{{count}} week streak",
+    "streak_weeks_other": "{{count}} week streak",
+    "best_days": "Best: {{count}} days",
+    "best_weeks": "Best: {{count}} weeks",
+    "consistency": "{{value}}% consistent",
+    "consistencyHelp_days": "Last 30 days: done ÷ (scheduled − skipped). Based on {{count}} days.",
+    "consistencyHelp_weeks": "Last 4 full weeks that met the target. Based on {{count}} weeks.",
+    "noData": "Not enough data yet",
+    "thisWeek": "{{done}}/{{target}} this week"
+  },
+  "history": {
+    "title": "Last 12 weeks",
+    "help": "Tap a day to correct it.",
+    "legend": "Legend"
+  },
+  "rules": {
+    "title": "How streaks work",
+    "items": [
+      "Only scheduled days count.",
+      "Skipping is a rest day: it doesn't break your streak.",
+      "A scheduled day with no check-in is missed and resets the streak — your best streak is kept.",
+      "Today never counts as missed until it's over."
+    ]
+  },
+  "toast": {
+    "created": "Habit created",
+    "updated": "Habit updated",
+    "archived": "Habit archived",
+    "restored": "Habit restored",
+    "checked": "Checked in",
+    "skipped": "Marked as rest day",
+    "cleared": "Check-in removed"
+  }
+}

@@ -173,72 +173,31 @@ Index: `(user_id, starts_at)`, `(user_id, recurrence_until)`, `(task_id)`.
 - Suggestions: free slots before the task is due (or within 7 days), preferring preference windows, then earliest; blocks ≤ 3 h; no estimate → assume 1 h and say so.
 - Nothing in conflicts/free-slots/suggestions writes data. Moves and new blocks happen only after a confirm dialog; dragging also asks first and snaps back if you cancel.
 
-### 2.6 Habits
+### 2.6 Habits (built in Stage 4, migration 0004)
 
-**habits**
-| Column | Type | Notes |
-|---|---|---|
-| id, user_id | uuid | |
-| name | varchar(120) | |
-| description | text | |
-| category_id, goal_id | uuid | FK SET NULL |
-| schedule_type | varchar(12) | `'daily'` \| `'weekdays'` (with mask) \| `'x_per_week'` |
-| weekday_mask | smallint | bits Mon=1 … Sun=64; used when `weekdays` |
-| times_per_week | smallint | used when `x_per_week` |
-| target_value, target_unit | numeric, varchar(20) | optional, e.g. 20 "pages" |
-| start_date | date | |
-| archived_at | timestamptz | |
+**habits** — `id, user_id, name varchar(120), description, category_id (SET NULL), goal_id (SET NULL), target_value numeric(10,2), target_unit varchar(20), start_date date, archived_at`.
+The schedule is **not** a column on habits: it lives only in `habit_schedule_changes`, so there is one source of truth.
 
-**habit_schedule_changes** — keeps old schedules so past consistency is computed against the schedule *that applied then*: `id, habit_id 🔗, effective_from date, schedule_type, weekday_mask, times_per_week`.
+**habit_schedule_changes** (🔗 CASCADE with habit) — `id, habit_id, effective_from date, schedule_type ('daily'|'weekdays'|'x_per_week'), weekday_mask (Mon=1 … Sun=64), times_per_week (1–7)`. UNIQUE (habit_id, effective_from). The first row is written at creation (effective from the start date); a schedule edit adds a row effective **today**, so past days are always judged by the schedule in force then. Unused fields hold neutral values (mask 127, times 7).
 
-**habit_logs**
-| Column | Type | Notes |
-|---|---|---|
-| id, user_id, habit_id | uuid | habit FK RESTRICT |
-| log_date | date | UNIQUE (habit_id, log_date) |
-| state | varchar(8) | `'done'` \| `'skipped'` (intentional rest) |
-| value | numeric | optional amount toward target |
-| note | text | |
-"Missed" is **not stored** — it is computed: a scheduled day in the past with no log. This avoids a nightly job and makes corrections trivial.
+**habit_logs** (RESTRICT — history) — `id, user_id, habit_id, log_date (UNIQUE per habit), state ('done'|'skipped'), value, note`.
+"Missed" is **not stored**: it's a scheduled past day with no log, so correcting history is just adding/removing a log. No check-ins for future days or before the start date.
 
-### 2.7 Activity, focus, journal
+**Streak rules** (`backend/app/modules/habits/streaks.py`, pure functions with 11 unit tests, shown in the app):
+- Only scheduled days count. `done` extends the streak; `skipped` is a rest day (neither extends nor breaks); a missed day resets it. The best streak is kept.
+- Today is never missed until it's over. Check-ins on unscheduled days are kept as extras and don't affect the streak.
+- `x_per_week` habits count in weeks (week start from Settings): a week is met when done ≥ target; the current week can only help.
+- Consistency: last 30 days done ÷ (scheduled − skipped), today excluded unless logged; weekly habits: share of the last 4 completed weeks met. No eligible days → `null` ("not enough data"), never 0%.
 
-**activity_logs** (learning + life activities)
-| Column | Type | Notes |
-|---|---|---|
-| id, user_id | uuid | |
-| title | varchar(200) | |
-| category_id | uuid | FK SET NULL; category kind decides if it counts as learning |
-| log_date | date | local day |
-| started_at, ended_at | timestamptz | optional |
-| duration_minutes | integer | NOT NULL, > 0; if both times given, API checks they agree |
-| notes, outcome | text | |
-| goal_id, task_id | uuid | FK SET NULL |
-| focus_session_id | uuid | FK SET NULL — set when created from a focus session (prevents double counting) |
-Index: `(user_id, log_date)`.
+### 2.7 Activity, focus, journal (built in Stage 4)
 
-**focus_sessions**
-| Column | Type | Notes |
-|---|---|---|
-| id, user_id | uuid | |
-| task_id | uuid | FK SET NULL |
-| planned_minutes | integer | |
-| started_at | timestamptz | |
-| ended_at | timestamptz | NULL while running |
-| paused_seconds | integer | total paused time |
-| actual_minutes | integer | computed on stop, user-correctable |
-| state | varchar(12) | `'running'` \| `'paused'` \| `'completed'` \| `'interrupted'` |
-Rule: **completed** only if actual ≥ 80% of planned or user explicitly marks it complete; otherwise **interrupted**. Interrupted minutes still count as time spent, but not as a completed session.
+**activity_logs** — `title, category_id, log_date (local day), started_at, ended_at (optional), duration_minutes (1–1440, CHECK), notes, outcome, goal_id, task_id, focus_session_id (UNIQUE, SET NULL)`. Index `(user_id, log_date)`.
+If both times are given the duration is calculated (a different `duration_minutes` is rejected). Nothing is recorded automatically. Learning time = logs whose category kind is `learning`. A task's `tracked_minutes` = sum of its activity logs.
 
-**journal_entries**
-| Column | Type | Notes |
-|---|---|---|
-| id, user_id | uuid | |
-| entry_date | date | UNIQUE (user_id, entry_date) |
-| body | text | free writing |
-| went_well, to_improve, challenges, lessons, gratitude, tomorrow_priorities | text | all optional |
-| mood, energy | smallint | 1–5, NULL allowed |
-Mood/energy can also be recorded from the dashboard quick check-in; it writes to that day's entry (creating an empty one if needed). Journal text is never written to application logs.
+**focus_sessions** — `task_id, label, planned_minutes (1–240), break_minutes, started_at, paused_at, paused_seconds, ended_at, actual_minutes, state ('running'|'paused'|'completed'|'interrupted')`. CHECKs: open ⇔ no `ended_at`; paused ⇔ `paused_at` set.
+Rules: the server keeps the clock (refresh/devices don't lose it); focused time excludes pauses; **completed** when ≥ 80% of planned or marked complete, else **interrupted** (minutes still count). Stopping with ≥ 1 minute creates exactly one linked activity log; correcting the minutes updates (or removes, at 0) that log. One open session at a time.
+
+**journal_entries** — `entry_date (UNIQUE per user), body, went_well, to_improve, challenges, lessons, gratitude, tomorrow_priorities, mood (1–5), energy (1–5)`. All optional; clearing every field deletes the row. Writing for tomorrow is allowed (priorities), further ahead is not. The Home mood check-in writes to today's entry. Journal text is never logged (tested).
 
 ### 2.8 AI (Stage 7)
 
@@ -263,7 +222,7 @@ Mood/energy can also be recorded from the dashboard quick check-in; it writes to
 2. **Stage 2 `0002_goals_tags`** ✅: goals, goal_milestones, goal_progress_updates, tags, task_tags; add `goal_id`, `milestone_id`, `parent_task_id` to tasks. (Autogenerated, then reviewed.)
    Remaining `user_settings` columns (working hours, score weights, learning target, dashboard layout, AI settings) are added in the stage that first uses them.
 3. **Stage 3 `0003_calendar`** ✅: schedule_events, event_exceptions, user_settings.working_hours. (Autogenerated, then reviewed.)
-4. **Stage 4 `0004_tracking`**: habits, habit_schedule_changes, habit_logs, activity_logs, focus_sessions, journal_entries.
+4. **Stage 4 `0004_tracking`** ✅: habits, habit_schedule_changes, habit_logs, activity_logs, focus_sessions, journal_entries. (Autogenerated, then reviewed.)
 5. **Stage 7 `0005_ai`**: ai_runs.
 
 Rules:

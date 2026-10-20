@@ -1,0 +1,78 @@
+{
+  "title": "Focus",
+  "timer": {
+    "start": "Start focus",
+    "pause": "Pause",
+    "resume": "Resume",
+    "stop": "Stop",
+    "focusOn": "Focus on",
+    "noTask": "Nothing specific",
+    "label": "Or describe it",
+    "labelPlaceholder": "e.g. Read chapter 4",
+    "length": "Focus length",
+    "break": "Break",
+    "minutes": "{{count}} min",
+    "running": "Focusing",
+    "paused": "Paused",
+    "overtime": "Time's up — stop when you're ready",
+    "breakTime": "Take a {{count}}-minute break.",
+    "remaining": "remaining",
+    "planned": "of {{count}} min",
+    "stopTitle": "Stop this session?",
+    "stopBody": "You focused for {{time}}. Sessions of at least 80% of the plan count as completed.",
+    "markComplete": "Count it as completed anyway",
+    "rule": "Focused time excludes pauses. ≥ 80% of the plan = completed; shorter sessions still count as time spent."
+  },
+  "widget": "Focus timer: {{time}} left",
+  "today": "Today's sessions",
+  "noSessions": "No sessions yet today.",
+  "state": {
+    "completed": "Completed",
+    "interrupted": "Interrupted",
+    "running": "Running",
+    "paused": "Paused"
+  },
+  "correct": {
+    "button": "Correct",
+    "title": "Correct this session",
+    "minutes": "Focused minutes",
+    "help": "Forgot to stop the timer? Set the real time here. Its activity log updates too."
+  },
+  "log": {
+    "title": "Activity log",
+    "add": "Log time",
+    "addTitle": "Log an activity",
+    "editTitle": "Edit activity",
+    "what": "What did you do?",
+    "category": "Category",
+    "date": "Date",
+    "duration": "Minutes",
+    "start": "Start (optional)",
+    "end": "End (optional)",
+    "timesHelp": "If you give both times, the minutes are calculated for you.",
+    "task": "Related task (optional)",
+    "goal": "Related goal (optional)",
+    "outcome": "Outcome (optional)",
+    "notes": "Notes (optional)",
+    "empty": "Nothing logged in this period.",
+    "fromFocus": "From a focus session",
+    "deleteTitle": "Delete this activity?",
+    "deleteBody": "This removes {{minutes}} of logged time."
+  },
+  "summary": {
+    "title": "Last 7 days",
+    "total": "Total",
+    "learning": "Learning",
+    "uncategorised": "No category",
+    "focus": "Focus sessions",
+    "focusDetail": "{{completed}} completed · {{interrupted}} interrupted"
+  },
+  "toast": {
+    "started": "Focus started",
+    "stopped": "Session saved",
+    "corrected": "Session corrected",
+    "logged": "Time logged",
+    "updated": "Activity updated",
+    "deleted": "Activity deleted"
+  }
+}

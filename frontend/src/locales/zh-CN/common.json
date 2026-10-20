@@ -7,6 +7,7 @@
     "calendar": "日历",
     "goals": "目标",
     "habits": "习惯",
+    "focus": "专注",
     "insights": "洞察",
     "journal": "日记",
     "settings": "设置",
@@ -45,7 +46,11 @@
     "todayEmptyTitle": "今天没有到期的任务",
     "todayEmptyBody": "在下方添加任务，或到任务页面提前规划。",
     "viewAll": "查看全部",
-    "laterNote": "日程、习惯、目标和洞察模块完成后会显示在这里。"
+    "laterNote": "洞察和完整的仪表盘将在下一阶段推出。",
+    "habits": "今天的习惯",
+    "noHabits": "今天没有计划的习惯。",
+    "checkIn": "今天感觉怎么样？",
+    "moodSaved": "已记录"
   },
   "comingSoon": {
     "title": "{{feature}}尚未开发",

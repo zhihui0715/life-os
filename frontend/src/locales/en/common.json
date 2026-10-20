@@ -7,6 +7,7 @@
     "calendar": "Calendar",
     "goals": "Goals",
     "habits": "Habits",
+    "focus": "Focus",
     "insights": "Insights",
     "journal": "Journal",
     "settings": "Settings",
@@ -45,7 +46,11 @@
     "todayEmptyTitle": "Nothing due today",
     "todayEmptyBody": "Add a task below, or plan ahead in Tasks.",
     "viewAll": "View all",
-    "laterNote": "Schedule, habits, goals and insights will appear here as those modules are built."
+    "laterNote": "Insights and your full dashboard arrive in the next stage.",
+    "habits": "Habits today",
+    "noHabits": "No habits scheduled today.",
+    "checkIn": "How are you today?",
+    "moodSaved": "Check-in saved"
   },
   "comingSoon": {
     "title": "{{feature}} is not built yet",

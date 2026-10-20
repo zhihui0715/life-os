@@ -1,0 +1,78 @@
+{
+  "title": "习惯",
+  "new": "新建习惯",
+  "edit": "编辑习惯",
+  "back": "全部习惯",
+  "today": "今天",
+  "empty": { "title": "还没有习惯", "body": "从小处开始：选一个大多数日子都能做到的习惯。" },
+  "archivedEmpty": "没有已归档的习惯。",
+  "showArchived": "已归档",
+  "showActive": "进行中",
+  "fields": {
+    "name": "习惯",
+    "description": "为什么重要（可选）",
+    "schedule": "频率",
+    "days": "在这些日子",
+    "timesPerWeek": "每周次数",
+    "target": "每次的量（可选）",
+    "unit": "单位，例如：页",
+    "startDate": "开始日期",
+    "goal": "支持的目标（可选）"
+  },
+  "schedule": {
+    "daily": "每天",
+    "weekdays": "指定的日子",
+    "x_per_week": "每周若干次",
+    "summary_daily": "每天",
+    "summary_weekdays": "{{days}}",
+    "summary_x_per_week": "每周 {{count}} 次",
+    "changeNote": "新的频率从今天开始生效，过去的日子保持原来的频率。"
+  },
+  "state": {
+    "done": "已完成",
+    "skipped": "已跳过",
+    "missed": "错过",
+    "open": "未打卡",
+    "rest": "非计划日"
+  },
+  "actions": {
+    "done": "将“{{name}}”标记为今天已完成",
+    "undo": "撤销“{{name}}”今天的打卡",
+    "skip": "今天跳过（休息日）",
+    "clear": "清除"
+  },
+  "stats": {
+    "streak_days_other": "连续 {{count}} 天",
+    "streak_weeks_other": "连续 {{count}} 周",
+    "best_days": "最长：{{count}} 天",
+    "best_weeks": "最长：{{count}} 周",
+    "consistency": "完成率 {{value}}%",
+    "consistencyHelp_days": "最近 30 天：完成 ÷（计划 − 跳过）。基于 {{count}} 天。",
+    "consistencyHelp_weeks": "最近 4 个完整周中达标的比例。基于 {{count}} 周。",
+    "noData": "数据还不够",
+    "thisWeek": "本周 {{done}}/{{target}}"
+  },
+  "history": {
+    "title": "最近 12 周",
+    "help": "点击某一天可以修改。",
+    "legend": "图例"
+  },
+  "rules": {
+    "title": "连续天数怎么算",
+    "items": [
+      "只计算计划内的日子。",
+      "跳过是休息日，不会中断连续记录。",
+      "计划内的日子没有打卡算作错过，会重置连续记录——最长记录会保留。",
+      "今天结束之前不会算作错过。"
+    ]
+  },
+  "toast": {
+    "created": "已创建习惯",
+    "updated": "已更新习惯",
+    "archived": "已归档习惯",
+    "restored": "已恢复习惯",
+    "checked": "已打卡",
+    "skipped": "已标记为休息日",
+    "cleared": "已取消打卡"
+  }
+}

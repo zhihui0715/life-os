@@ -1,0 +1,55 @@
+{
+  "title": "Journal",
+  "private": "Private — only you can see this.",
+  "prev": "Previous day",
+  "next": "Next day",
+  "today": "Today",
+  "pickDate": "Choose a date",
+  "fields": {
+    "body": "Notes",
+    "went_well": "What went well?",
+    "to_improve": "What could be better?",
+    "challenges": "Main challenges",
+    "lessons": "Lessons learned",
+    "gratitude": "Grateful for",
+    "tomorrow_priorities": "Tomorrow's priorities"
+  },
+  "placeholder": {
+    "body": "Write freely. Every field is optional."
+  },
+  "prompts": "Daily review prompts",
+  "mood": {
+    "label": "Mood",
+    "energy": "Energy",
+    "1": "Very low",
+    "2": "Low",
+    "3": "Okay",
+    "4": "Good",
+    "5": "Great",
+    "set": "{{label}}: {{value}} of 5",
+    "clear": "Clear"
+  },
+  "status": {
+    "saved": "Saved",
+    "unsaved": "Unsaved changes",
+    "saving": "Saving…",
+    "new": "No entry for this day yet"
+  },
+  "delete": {
+    "button": "Delete entry",
+    "title": "Delete this journal entry?",
+    "body": "This permanently deletes the entry for {{date}}."
+  },
+  "search": {
+    "label": "Search journal",
+    "placeholder": "Search your entries…",
+    "none": "No entries match."
+  },
+  "recent": "Recent entries",
+  "noEntries": "No entries yet. Today is a good day to start.",
+  "leave": "You have unsaved changes. Leave anyway?",
+  "toast": {
+    "saved": "Journal saved",
+    "deleted": "Entry deleted"
+  }
+}
