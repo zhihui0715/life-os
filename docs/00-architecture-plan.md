@@ -356,7 +356,7 @@ Components with no data are **removed and remaining weights renormalised**; the 
 ## 11. Proposed project structure (preview only — not created yet)
 
 ```
-HUAA/
+life-os/
 ├─ backend/
 │  ├─ app/
 │  │  ├─ __init__.py          # app factory

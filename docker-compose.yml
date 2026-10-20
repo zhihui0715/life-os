@@ -1,6 +1,10 @@
 # Local development database only. Start:  docker compose up -d   Stop:  docker compose stop
 # Data lives in the named volume "lifeos_pgdata" and survives restarts.
 # `docker compose down -v` DELETES that volume (all local data) — don't run it casually.
+
+# Fixed project name, so renaming or moving the folder doesn't create a second, empty database.
+name: lifeos
+
 services:
   db:
     image: postgres:16-alpine
@@ -24,3 +28,5 @@ services:
 
 volumes:
   lifeos_pgdata:
+    # Created when the folder was still called HUAA; the name is pinned so your existing data is reused.
+    name: huaa_lifeos_pgdata
