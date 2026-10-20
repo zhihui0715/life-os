@@ -1,0 +1,92 @@
+{
+  "appName": "Life OS",
+  "nav": {
+    "main": "主导航",
+    "home": "首页",
+    "tasks": "任务",
+    "calendar": "日历",
+    "goals": "目标",
+    "habits": "习惯",
+    "insights": "洞察",
+    "journal": "日记",
+    "settings": "设置",
+    "more": "更多",
+    "collapse": "收起侧边栏",
+    "expand": "展开侧边栏"
+  },
+  "actions": {
+    "save": "保存",
+    "saving": "保存中…",
+    "cancel": "取消",
+    "close": "关闭",
+    "delete": "删除",
+    "archive": "归档",
+    "restore": "恢复",
+    "retry": "重试",
+    "loadMore": "加载更多",
+    "add": "添加",
+    "quickAdd": "快速添加",
+    "logout": "退出登录"
+  },
+  "state": {
+    "loading": "加载中…",
+    "errorTitle": "出了点问题",
+    "errorBody": "无法加载内容，请检查网络后重试。",
+    "saved": "已保存"
+  },
+  "greeting": {
+    "morning": "早上好，{{name}}",
+    "afternoon": "下午好，{{name}}",
+    "evening": "晚上好，{{name}}"
+  },
+  "home": {
+    "today": "今天",
+    "overdue": "已逾期",
+    "todayEmptyTitle": "今天没有到期的任务",
+    "todayEmptyBody": "在下方添加任务，或到任务页面提前规划。",
+    "viewAll": "查看全部",
+    "laterNote": "日程、习惯、目标和洞察模块完成后会显示在这里。"
+  },
+  "comingSoon": {
+    "title": "{{feature}}尚未开发",
+    "body": "该模块计划在路线图的第 {{stage}} 阶段完成。目前这里不会保存任何数据。"
+  },
+  "auth": {
+    "title": "欢迎回来",
+    "subtitle": "登录你的个人工作区。",
+    "email": "邮箱",
+    "password": "密码",
+    "signIn": "登录",
+    "signingIn": "登录中…"
+  },
+  "language": {
+    "label": "语言",
+    "en": "English",
+    "zh-CN": "简体中文"
+  },
+  "errors": {
+    "network_error": "无法连接服务器，请检查网络。",
+    "unauthenticated": "登录已过期，请重新登录。",
+    "invalid_credentials": "邮箱或密码不正确。",
+    "csrf_failed": "安全校验失败，请刷新页面后重试。",
+    "not_found": "该项目已不存在。",
+    "conflict": "与现有项目冲突。",
+    "stale_update": "该内容已在别处被修改，请刷新查看最新版本。",
+    "rule_violation": "不允许执行此操作。",
+    "validation_error": "请修正标出的字段。",
+    "rate_limited": "尝试次数过多，请稍等一分钟再试。",
+    "internal_error": "服务器出错了。",
+    "unknown": "出了点问题。"
+  },
+  "validation": {
+    "missing": "此项为必填。",
+    "required": "此项为必填。",
+    "string_too_short": "此项为必填。",
+    "string_too_long": "内容过长。",
+    "greater_than_equal": "数值太小。",
+    "less_than_equal": "数值太大。",
+    "duplicate": "该名称已被使用。",
+    "email": "请输入有效的邮箱地址。",
+    "invalid": "该值无效。"
+  }
+}

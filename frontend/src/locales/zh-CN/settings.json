@@ -1,0 +1,23 @@
+{
+  "title": "设置",
+  "sections": {
+    "preferences": "偏好",
+    "account": "账户"
+  },
+  "theme": {
+    "label": "主题",
+    "system": "跟随系统",
+    "light": "浅色",
+    "dark": "深色"
+  },
+  "timezone": {
+    "label": "时区",
+    "help": "决定到期日和习惯打卡中“一天”的起止时间。"
+  },
+  "weekStart": {
+    "label": "每周开始于",
+    "1": "星期一",
+    "7": "星期日"
+  },
+  "signedInAs": "当前登录：{{email}}"
+}

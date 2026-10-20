@@ -1,0 +1,23 @@
+{
+  "title": "Settings",
+  "sections": {
+    "preferences": "Preferences",
+    "account": "Account"
+  },
+  "theme": {
+    "label": "Theme",
+    "system": "Match system",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "timezone": {
+    "label": "Timezone",
+    "help": "Decides when your day starts and ends for due dates and habits."
+  },
+  "weekStart": {
+    "label": "Week starts on",
+    "1": "Monday",
+    "7": "Sunday"
+  },
+  "signedInAs": "Signed in as {{email}}"
+}

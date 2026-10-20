@@ -1,0 +1,78 @@
+/* Design tokens (docs/03-design-and-i18n.md §2). Components use these via Tailwind classes, never raw hex. */
+:root {
+  --bg: #f6f6f8;
+  --surface: #ffffff;
+  --surface-sunken: #f0f0f3;
+  --border: #e4e4e9;
+  --border-strong: #cdcdd5;
+
+  --text: #18181b;
+  --text-muted: #52525b;
+  --text-subtle: #6b6b74;
+
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-soft: #eef2ff;
+  --text-on-accent: #ffffff;
+
+  --success: #15803d;
+  --success-soft: #ecfdf3;
+  --warning: #b45309;
+  --warning-soft: #fffbeb;
+  --danger: #b91c1c;
+  --danger-soft: #fef2f2;
+
+  --p1: #dc2626;
+  --p2: #ea580c;
+  --p3: #2563eb;
+  --p4: #71717a;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 12px 32px rgb(0 0 0 / 0.14);
+
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #0e0e11;
+  --surface: #17171b;
+  --surface-sunken: #121215;
+  --border: #29292f;
+  --border-strong: #3b3b44;
+
+  --text: #f4f4f5;
+  --text-muted: #b4b4bc;
+  --text-subtle: #8f8f99;
+
+  --accent: #818cf8;
+  --accent-hover: #a5b4fc;
+  --accent-soft: #1f1d47;
+  --text-on-accent: #0e0e11;
+
+  --success: #4ade80;
+  --success-soft: #0f2a1a;
+  --warning: #fbbf24;
+  --warning-soft: #2a2110;
+  --danger: #f87171;
+  --danger-soft: #2c1414;
+
+  --p1: #f87171;
+  --p2: #fb923c;
+  --p3: #60a5fa;
+  --p4: #a1a1aa;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 12px 32px rgb(0 0 0 / 0.5);
+
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+  }
+}

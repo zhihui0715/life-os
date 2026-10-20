@@ -1,0 +1,92 @@
+{
+  "appName": "Life OS",
+  "nav": {
+    "main": "Main navigation",
+    "home": "Home",
+    "tasks": "Tasks",
+    "calendar": "Calendar",
+    "goals": "Goals",
+    "habits": "Habits",
+    "insights": "Insights",
+    "journal": "Journal",
+    "settings": "Settings",
+    "more": "More",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar"
+  },
+  "actions": {
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "close": "Close",
+    "delete": "Delete",
+    "archive": "Archive",
+    "restore": "Restore",
+    "retry": "Try again",
+    "loadMore": "Load more",
+    "add": "Add",
+    "quickAdd": "Quick add",
+    "logout": "Log out"
+  },
+  "state": {
+    "loading": "Loading…",
+    "errorTitle": "Something went wrong",
+    "errorBody": "We couldn't load this. Check your connection and try again.",
+    "saved": "Saved"
+  },
+  "greeting": {
+    "morning": "Good morning, {{name}}",
+    "afternoon": "Good afternoon, {{name}}",
+    "evening": "Good evening, {{name}}"
+  },
+  "home": {
+    "today": "Today",
+    "overdue": "Overdue",
+    "todayEmptyTitle": "Nothing due today",
+    "todayEmptyBody": "Add a task below, or plan ahead in Tasks.",
+    "viewAll": "View all",
+    "laterNote": "Schedule, habits, goals and insights will appear here as those modules are built."
+  },
+  "comingSoon": {
+    "title": "{{feature}} is not built yet",
+    "body": "This module is planned for stage {{stage}} of the roadmap. Nothing here stores data yet."
+  },
+  "auth": {
+    "title": "Welcome back",
+    "subtitle": "Sign in to your personal workspace.",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signingIn": "Signing in…"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "zh-CN": "简体中文"
+  },
+  "errors": {
+    "network_error": "Can't reach the server. Check your connection.",
+    "unauthenticated": "Your session has ended. Please sign in again.",
+    "invalid_credentials": "Email or password is incorrect.",
+    "csrf_failed": "Security check failed. Reload the page and try again.",
+    "not_found": "This item no longer exists.",
+    "conflict": "This conflicts with an existing item.",
+    "stale_update": "This was changed elsewhere. Reload to see the latest version.",
+    "rule_violation": "This action isn't allowed.",
+    "validation_error": "Please fix the highlighted fields.",
+    "rate_limited": "Too many attempts. Please wait a minute and try again.",
+    "internal_error": "Something went wrong on the server.",
+    "unknown": "Something went wrong."
+  },
+  "validation": {
+    "missing": "This field is required.",
+    "required": "This field is required.",
+    "string_too_short": "This field is required.",
+    "string_too_long": "This is too long.",
+    "greater_than_equal": "Value is too small.",
+    "less_than_equal": "Value is too large.",
+    "duplicate": "This name is already in use.",
+    "email": "Enter a valid email address.",
+    "invalid": "This value is not valid."
+  }
+}

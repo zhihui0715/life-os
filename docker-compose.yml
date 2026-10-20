@@ -1,0 +1,26 @@
+# Local development database only. Start:  docker compose up -d   Stop:  docker compose stop
+# Data lives in the named volume "lifeos_pgdata" and survives restarts.
+# `docker compose down -v` DELETES that volume (all local data) — don't run it casually.
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: lifeos-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: lifeos
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lifeos_dev_only}
+      POSTGRES_DB: lifeos
+      TZ: UTC
+    ports:
+      - "127.0.0.1:5432:5432" # only reachable from this computer
+    volumes:
+      - lifeos_pgdata:/var/lib/postgresql/data
+      - ./infra/db-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lifeos -d lifeos"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  lifeos_pgdata:

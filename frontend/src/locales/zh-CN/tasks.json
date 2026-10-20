@@ -1,0 +1,79 @@
+{
+  "title": "任务",
+  "count_other": "{{count}} 个任务",
+  "views": {
+    "label": "任务视图",
+    "all": "全部",
+    "inbox": "收件箱",
+    "today": "今天",
+    "upcoming": "即将到期",
+    "overdue": "已逾期",
+    "unscheduled": "无日期",
+    "completed": "已完成",
+    "archived": "已归档"
+  },
+  "empty": {
+    "all": { "title": "还没有任务", "body": "在上方添加你的第一个任务。" },
+    "inbox": { "title": "收件箱已清空", "body": "新想法会先放在这里，等你整理。" },
+    "today": { "title": "今天没有到期的任务", "body": "享受空闲，或者提前处理一些任务。" },
+    "upcoming": { "title": "暂无即将到期的任务", "body": "设有未来到期日的任务会显示在这里。" },
+    "overdue": { "title": "没有逾期任务", "body": "一切尽在掌握。" },
+    "unscheduled": { "title": "所有任务都有日期", "body": "没有到期日或截止时间的任务会显示在这里。" },
+    "completed": { "title": "还没有已完成的任务", "body": "完成的任务会保留在这里，作为你的记录。" },
+    "archived": { "title": "归档为空", "body": "归档的任务会被隐藏，但不会丢失。" }
+  },
+  "quickAdd": {
+    "label": "新任务标题",
+    "placeholder": "输入任务，按回车添加"
+  },
+  "status": {
+    "inbox": "收件箱",
+    "todo": "待办",
+    "in_progress": "进行中",
+    "done": "已完成"
+  },
+  "priority": {
+    "label": "优先级",
+    "1": "紧急",
+    "2": "高",
+    "3": "普通",
+    "4": "低"
+  },
+  "fields": {
+    "title": "标题",
+    "notes": "备注",
+    "status": "状态",
+    "dueDate": "到期日",
+    "dueDateHelp": "你计划完成的日期。",
+    "deadline": "截止时间",
+    "deadlineHelp": "必须完成的时间（可选）。",
+    "estimate": "预计用时（分钟）",
+    "category": "分类",
+    "none": "无"
+  },
+  "meta": {
+    "due": "{{date}} 到期",
+    "deadline": "截止 {{date}}",
+    "overdue": "已逾期",
+    "completedOn": "{{date}} 完成"
+  },
+  "actions": {
+    "complete": "将“{{title}}”标记为完成",
+    "reopen": "将“{{title}}”标记为未完成",
+    "edit": "编辑任务",
+    "newTask": "新建任务"
+  },
+  "confirmDelete": {
+    "title": "删除此任务？",
+    "body": "这会永久删除该任务。已完成的任务只能归档。"
+  },
+  "toast": {
+    "created": "已添加任务",
+    "updated": "已更新任务",
+    "archived": "已归档任务",
+    "restored": "已恢复任务",
+    "deleted": "已删除任务",
+    "completed": "任务已完成",
+    "reopened": "任务已重新打开"
+  }
+}

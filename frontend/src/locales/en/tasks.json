@@ -1,0 +1,80 @@
+{
+  "title": "Tasks",
+  "count_one": "{{count}} task",
+  "count_other": "{{count}} tasks",
+  "views": {
+    "label": "Task views",
+    "all": "All",
+    "inbox": "Inbox",
+    "today": "Today",
+    "upcoming": "Upcoming",
+    "overdue": "Overdue",
+    "unscheduled": "No date",
+    "completed": "Completed",
+    "archived": "Archived"
+  },
+  "empty": {
+    "all": { "title": "No tasks yet", "body": "Add your first task above." },
+    "inbox": { "title": "Inbox is clear", "body": "New ideas land here until you sort them." },
+    "today": { "title": "Nothing due today", "body": "Enjoy the space, or pull something forward." },
+    "upcoming": { "title": "Nothing upcoming", "body": "Tasks with a future due date appear here." },
+    "overdue": { "title": "Nothing overdue", "body": "You're on top of things." },
+    "unscheduled": { "title": "Every task has a date", "body": "Tasks without a due date or deadline appear here." },
+    "completed": { "title": "No completed tasks yet", "body": "Finished tasks are kept here as your history." },
+    "archived": { "title": "Archive is empty", "body": "Archived tasks are hidden but never lost." }
+  },
+  "quickAdd": {
+    "label": "New task title",
+    "placeholder": "Add a task, then press Enter"
+  },
+  "status": {
+    "inbox": "Inbox",
+    "todo": "To do",
+    "in_progress": "In progress",
+    "done": "Done"
+  },
+  "priority": {
+    "label": "Priority",
+    "1": "Urgent",
+    "2": "High",
+    "3": "Normal",
+    "4": "Low"
+  },
+  "fields": {
+    "title": "Title",
+    "notes": "Notes",
+    "status": "Status",
+    "dueDate": "Due date",
+    "dueDateHelp": "The day you aim to finish.",
+    "deadline": "Deadline",
+    "deadlineHelp": "When it must be done by (optional).",
+    "estimate": "Estimate (minutes)",
+    "category": "Category",
+    "none": "None"
+  },
+  "meta": {
+    "due": "Due {{date}}",
+    "deadline": "Deadline {{date}}",
+    "overdue": "Overdue",
+    "completedOn": "Completed {{date}}"
+  },
+  "actions": {
+    "complete": "Mark “{{title}}” complete",
+    "reopen": "Mark “{{title}}” not done",
+    "edit": "Edit task",
+    "newTask": "New task"
+  },
+  "confirmDelete": {
+    "title": "Delete this task?",
+    "body": "This permanently removes the task. Completed tasks can only be archived."
+  },
+  "toast": {
+    "created": "Task added",
+    "updated": "Task updated",
+    "archived": "Task archived",
+    "restored": "Task restored",
+    "deleted": "Task deleted",
+    "completed": "Task completed",
+    "reopened": "Task reopened"
+  }
+}
