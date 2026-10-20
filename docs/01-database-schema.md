@@ -69,7 +69,7 @@ This document is the source of truth for table design. When a migration changes 
 
 Default categories are **seeded per user** in the user's chosen language at account creation (e.g. Programming/编程, Cybersecurity/网络安全, Study/学习, Reading/阅读, Health/健康, Personal/个人). After seeding they are ordinary user data and are not re-translated.
 
-**tags** — `id, user_id, name varchar(40)`, UNIQUE (user_id, lower(name)).
+**tags** — `id, user_id, name varchar(40)`, UNIQUE (user_id, lower(name)). Created on the fly when a task is saved with a new tag name; "Exam" and "exam" are the same tag (the first spelling is kept).
 **task_tags** — `task_id 🔗, tag_id 🔗`, PK (task_id, tag_id).
 
 ### 2.3 Goals
@@ -87,8 +87,14 @@ Default categories are **seeded per user** in the user's chosen language at acco
 | progress_mode | varchar(12) | `'milestones'` \| `'tasks'` \| `'manual'` — how % is computed |
 | manual_progress | smallint | 0–100, used only when mode = manual |
 | start_date, target_date | date | target_date ≥ start_date (CHECK) |
-| completed_at, archived_at | timestamptz | |
-Index: `(user_id, status)`.
+| completed_at, archived_at | timestamptz | CHECK: `(status = 'completed') = (completed_at IS NOT NULL)` |
+Index: `(user_id, status)`. Default `progress_mode` is `'tasks'`.
+
+**Progress rules** (implemented in `backend/app/modules/goals/service.py`, explained in the app next to the number):
+- `tasks`: completed linked tasks ÷ linked tasks. Archived tasks that were never completed are left out (dropped work doesn't count against you); completed ones always count. Subtasks never count (only their parent can link to a goal).
+- `milestones`: completed milestone weight ÷ total milestone weight.
+- `manual`: the last value the user set.
+- Nothing to measure (no linked tasks / no milestones / no value) → progress is `null` ("No data yet"), never 0%.
 
 **goal_milestones** (🔗 CASCADE from goal is *not* used — RESTRICT; milestones are history)
 | Column | Type | Notes |
@@ -101,7 +107,8 @@ Index: `(user_id, status)`.
 | completed_at | timestamptz | NULL = open |
 
 **goal_progress_updates** — the goal's history timeline
-`id, user_id, goal_id (RESTRICT), progress smallint 0–100 NULL, note text, created_at`. Written automatically when progress changes and manually when the user adds a note.
+`id, user_id, goal_id (RESTRICT), kind, progress smallint 0–100 NULL, status NULL, note text NULL, created_at`.
+`kind`: `auto` (calculated progress moved — written whenever a task/milestone change shifts the number), `manual` (user set a value), `note` (free note), `status` (goal status changed). Index `(goal_id, created_at)`.
 
 ### 2.4 Tasks
 
@@ -117,15 +124,17 @@ Index: `(user_id, status)`.
 | deadline | timestamptz | hard deadline, optional |
 | estimate_minutes | integer | ≥ 0 |
 | actual_minutes_manual | integer | user override; NULL = derive from focus sessions + activity logs |
-| parent_task_id | uuid | FK RESTRICT (subtasks, max depth 2 enforced by API) |
-| goal_id | uuid | FK SET NULL |
-| milestone_id | uuid | FK SET NULL; must belong to `goal_id` (checked by service) |
+| parent_task_id | uuid | FK RESTRICT. Subtasks are one level deep; a task with subtasks can't become a subtask; a parent with subtasks can't be deleted (all enforced by the API) |
+| goal_id | uuid | FK SET NULL. Not allowed on subtasks (link the parent) so goal progress never double-counts |
+| milestone_id | uuid | FK SET NULL; must belong to `goal_id`. Choosing a milestone fills in its goal; changing the goal clears a milestone from the old goal |
 | category_id | uuid | FK SET NULL |
 | position | integer | manual ordering in lists |
 | completed_at | timestamptz | set when status → done, cleared on reopen |
 | archived_at | timestamptz | |
 CHECK: `(status = 'done') = (completed_at IS NOT NULL)`.
-Indexes: `(user_id, status, due_date)`, `(user_id, goal_id)`, `(parent_task_id)`, GIN full-text on `title || notes` (`simple` config, works for English and Chinese characters at a basic level).
+Indexes: `(user_id, status, due_date)`, `(goal_id)`, `(milestone_id)`, `(parent_task_id)`.
+List views show top-level tasks only (with `subtasks_done/subtasks_total`); `?parent_id=` lists a task's subtasks; search (`?q=`) covers subtasks too.
+**Search** is a case-insensitive substring match (`ILIKE`) on title and notes, with `%`/`_` escaped. It works for Chinese without word segmentation. No search index yet — fine for one person's data; add a `pg_trgm` index if it ever gets slow.
 
 > **Deadline vs. due date vs. scheduled time**: `due_date` = "I aim to finish this day"; `deadline` = "it must be done by this instant"; scheduled time lives in `schedule_events` (a task can have zero, one or several time blocks).
 
@@ -239,7 +248,7 @@ Mood/energy can also be recorded from the dashboard quick check-in; it writes to
 ## 4. Migration plan
 
 1. **Stage 1 migration `0001_foundation`** ✅ written: users, user_settings (locale, timezone, week_start, theme only), auth_sessions, categories, tasks (without goal/milestone/parent links).
-2. **Stage 2 `0002_goals`**: goals, goal_milestones, goal_progress_updates, tags, task_tags; add `goal_id`, `milestone_id`, `parent_task_id` to tasks.
+2. **Stage 2 `0002_goals_tags`** ✅: goals, goal_milestones, goal_progress_updates, tags, task_tags; add `goal_id`, `milestone_id`, `parent_task_id` to tasks. (Autogenerated, then reviewed.)
    Remaining `user_settings` columns (working hours, score weights, learning target, dashboard layout, AI settings) are added in the stage that first uses them.
 3. **Stage 3 `0003_calendar`**: schedule_events, event_exceptions.
 4. **Stage 4 `0004_tracking`**: habits, habit_schedule_changes, habit_logs, activity_logs, focus_sessions, journal_entries.

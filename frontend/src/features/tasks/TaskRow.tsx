@@ -1,11 +1,12 @@
-import { AlertCircle, CalendarClock, Check, Clock, Flag } from 'lucide-react'
+import { AlertCircle, CalendarClock, Check, Clock, Flag, ListChecks, Target } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 
 import { cn } from '../../components/ui/cn'
 import { useToast } from '../../components/ui/Toast'
 import { formatDay, formatInstant, formatMinutes } from '../../lib/dates'
 import { errorMessage } from '../../lib/errors'
-import type { Category, Task } from '../../lib/types'
+import type { Category, Goal, Task } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
 import { useTaskAction } from './api'
 
@@ -14,10 +15,11 @@ const PRIORITY_COLOR = { 1: 'text-p1', 2: 'text-p2', 3: 'text-p3', 4: 'text-p4' 
 interface Props {
   task: Task
   category?: Category
+  goal?: Goal
   onOpen: (task: Task) => void
 }
 
-export function TaskRow({ task, category, onOpen }: Props) {
+export function TaskRow({ task, category, goal, onOpen }: Props) {
   const { t, i18n } = useTranslation('tasks')
   const me = useMe()
   const toast = useToast()
@@ -35,7 +37,7 @@ export function TaskRow({ task, category, onOpen }: Props) {
     )
 
   return (
-    <li className="group hover:bg-sunken/60 flex items-start gap-3 px-3 py-2.5 transition-colors sm:px-4">
+    <li className="group hover:bg-sunken/60 flex flex-wrap items-start gap-x-3 gap-y-1.5 px-3 py-2.5 transition-colors sm:flex-nowrap sm:px-4">
       <button
         type="button"
         role="checkbox"
@@ -79,6 +81,12 @@ export function TaskRow({ task, category, onOpen }: Props) {
               {formatMinutes(task.estimate_minutes, lang)}
             </span>
           )}
+          {task.subtasks_total > 0 && (
+            <span className="inline-flex items-center gap-1">
+              <ListChecks size={12} aria-hidden />
+              {t('subtasks.progress', { done: task.subtasks_done, total: task.subtasks_total })}
+            </span>
+          )}
           {category && (
             <span className="inline-flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full" style={{ background: category.color }} aria-hidden />
@@ -87,6 +95,22 @@ export function TaskRow({ task, category, onOpen }: Props) {
           )}
         </span>
       </button>
+
+      {(goal || task.tags.length > 0) && (
+        <span className="order-last flex w-full flex-wrap items-center gap-1.5 pl-8 text-xs sm:order-none sm:w-auto sm:max-w-[40%] sm:justify-end sm:pt-0.5 sm:pl-0">
+          {goal && (
+            <Link to={`/goals/${goal.id}`} className="bg-accent-soft text-accent inline-flex max-w-full items-center gap-1 truncate rounded px-1.5 py-0.5 hover:underline">
+              <Target size={11} aria-hidden className="shrink-0" />
+              <span className="truncate">{goal.title}</span>
+            </Link>
+          )}
+          {task.tags.map((tag) => (
+            <Link key={tag} to={`/tasks?view=all&tag=${encodeURIComponent(tag)}`} className="bg-sunken text-muted hover:text-fg rounded px-1.5 py-0.5">
+              #{tag}
+            </Link>
+          ))}
+        </span>
+      )}
 
       {task.priority < 3 && !done && (
         <span className={cn('mt-0.5 shrink-0 text-xs font-medium', PRIORITY_COLOR[task.priority])}>

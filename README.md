@@ -3,9 +3,9 @@
 A private, bilingual (English / 简体中文) personal management system: tasks, calendar, goals, habits, journal and insights.
 Architecture and decisions: [`docs/00-architecture-plan.md`](docs/00-architecture-plan.md).
 
-**Current stage: 1 — Foundation + Tasks.** Working: login, settings (language, theme, timezone), categories, tasks
-(create, edit, complete, reopen, archive, restore, delete, views). Calendar, goals, habits, journal and insights show a
-"not built yet" page.
+**Current stage: 2 — Goals.** Working: login, settings (language, theme, timezone), categories, tasks
+(create, edit, complete, reopen, archive, restore, delete, views, subtasks, tags, search), goals (milestones, linked
+tasks, explained progress, progress history). Calendar, habits, journal and insights show a "not built yet" page.
 
 ## Requirements (Windows)
 

@@ -22,7 +22,17 @@ export function defaultsForView(view: TaskView, timeZone: string): TaskInput {
   }
 }
 
-export function QuickAddInput({ view, autoFocus, onAdded }: { view: TaskView; autoFocus?: boolean; onAdded?: () => void }) {
+interface Props {
+  view: TaskView
+  /** Extra fields for every task added here, e.g. { goal_id } on a goal page or { parent_task_id } for subtasks. */
+  extra?: TaskInput
+  label?: string
+  placeholder?: string
+  autoFocus?: boolean
+  onAdded?: () => void
+}
+
+export function QuickAddInput({ view, extra, label, placeholder, autoFocus, onAdded }: Props) {
   const { t } = useTranslation('tasks')
   const me = useMe()
   const toast = useToast()
@@ -35,7 +45,7 @@ export function QuickAddInput({ view, autoFocus, onAdded }: { view: TaskView; au
     if (!value) return
     setTitle('')
     create.mutate(
-      { title: value, ...defaultsForView(view, me.settings.timezone) },
+      { title: value, ...defaultsForView(view, me.settings.timezone), ...extra },
       {
         onSuccess: () => {
           toast(t('toast.created'))
@@ -64,8 +74,8 @@ export function QuickAddInput({ view, autoFocus, onAdded }: { view: TaskView; au
         maxLength={200}
         autoFocus={autoFocus}
         data-autofocus={autoFocus || undefined}
-        aria-label={t('quickAdd.label')}
-        placeholder={t('quickAdd.placeholder')}
+        aria-label={label ?? t('quickAdd.label')}
+        placeholder={placeholder ?? t('quickAdd.placeholder')}
         className="placeholder:text-subtle h-11 min-w-0 flex-1 bg-transparent focus:outline-none"
       />
     </form>

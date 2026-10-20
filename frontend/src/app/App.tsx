@@ -6,6 +6,8 @@ import { ToastProvider } from '../components/ui/Toast'
 import { ErrorState, ListSkeleton } from '../components/ui/states'
 import { AuthProvider, ME_KEY, useAuth } from '../features/auth/AuthProvider'
 import { LoginPage } from '../features/auth/LoginPage'
+import { GoalDetailPage } from '../features/goals/GoalDetailPage'
+import { GoalsPage } from '../features/goals/GoalsPage'
 import { HomePage } from '../features/home/HomePage'
 import { ComingSoonPage } from '../features/placeholder/ComingSoonPage'
 import { SettingsPage } from '../features/settings/SettingsPage'
@@ -58,7 +60,8 @@ function Routed() {
         <Route index element={<HomePage />} />
         <Route path="tasks" element={<TasksPage />} />
         <Route path="calendar" element={<ComingSoonPage feature="calendar" stage={3} />} />
-        <Route path="goals" element={<ComingSoonPage feature="goals" stage={2} />} />
+        <Route path="goals" element={<GoalsPage />} />
+        <Route path="goals/:goalId" element={<GoalDetailPage />} />
         <Route path="habits" element={<ComingSoonPage feature="habits" stage={4} />} />
         <Route path="insights" element={<ComingSoonPage feature="insights" stage={5} />} />
         <Route path="journal" element={<ComingSoonPage feature="journal" stage={4} />} />

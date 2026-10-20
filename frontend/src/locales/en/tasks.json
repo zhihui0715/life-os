@@ -14,14 +14,38 @@
     "archived": "Archived"
   },
   "empty": {
-    "all": { "title": "No tasks yet", "body": "Add your first task above." },
-    "inbox": { "title": "Inbox is clear", "body": "New ideas land here until you sort them." },
-    "today": { "title": "Nothing due today", "body": "Enjoy the space, or pull something forward." },
-    "upcoming": { "title": "Nothing upcoming", "body": "Tasks with a future due date appear here." },
-    "overdue": { "title": "Nothing overdue", "body": "You're on top of things." },
-    "unscheduled": { "title": "Every task has a date", "body": "Tasks without a due date or deadline appear here." },
-    "completed": { "title": "No completed tasks yet", "body": "Finished tasks are kept here as your history." },
-    "archived": { "title": "Archive is empty", "body": "Archived tasks are hidden but never lost." }
+    "all": {
+      "title": "No tasks yet",
+      "body": "Add your first task above."
+    },
+    "inbox": {
+      "title": "Inbox is clear",
+      "body": "New ideas land here until you sort them."
+    },
+    "today": {
+      "title": "Nothing due today",
+      "body": "Enjoy the space, or pull something forward."
+    },
+    "upcoming": {
+      "title": "Nothing upcoming",
+      "body": "Tasks with a future due date appear here."
+    },
+    "overdue": {
+      "title": "Nothing overdue",
+      "body": "You're on top of things."
+    },
+    "unscheduled": {
+      "title": "Every task has a date",
+      "body": "Tasks without a due date or deadline appear here."
+    },
+    "completed": {
+      "title": "No completed tasks yet",
+      "body": "Finished tasks are kept here as your history."
+    },
+    "archived": {
+      "title": "Archive is empty",
+      "body": "Archived tasks are hidden but never lost."
+    }
   },
   "quickAdd": {
     "label": "New task title",
@@ -50,7 +74,12 @@
     "deadlineHelp": "When it must be done by (optional).",
     "estimate": "Estimate (minutes)",
     "category": "Category",
-    "none": "None"
+    "none": "None",
+    "goal": "Goal",
+    "milestone": "Milestone",
+    "tags": "Tags",
+    "tagsHelp": "Separate with commas, e.g. exam, networking",
+    "noGoal": "No goal"
   },
   "meta": {
     "due": "Due {{date}}",
@@ -76,5 +105,23 @@
     "deleted": "Task deleted",
     "completed": "Task completed",
     "reopened": "Task reopened"
+  },
+  "subtasks": {
+    "title": "Subtasks",
+    "add": "Add a subtask, then press Enter",
+    "addLabel": "New subtask title",
+    "progress": "{{done}}/{{total}} subtasks",
+    "parentNote": "This is a subtask. Link the parent task to a goal instead."
+  },
+  "search": {
+    "label": "Search tasks",
+    "placeholder": "Search titles and notes…",
+    "results_one": "{{count}} result for “{{q}}”",
+    "results_other": "{{count}} results for “{{q}}”",
+    "clear": "Clear search"
+  },
+  "tagFilter": {
+    "active": "Tag: {{tag}}",
+    "clear": "Remove tag filter"
   }
 }

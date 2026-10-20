@@ -1,18 +1,49 @@
 import uuid
 from datetime import date, datetime
 
-from sqlalchemy import CheckConstraint, Date, DateTime, ForeignKey, Index, Integer, SmallInteger, String, Text, Uuid
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import (
+    CheckConstraint,
+    Column,
+    Date,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    SmallInteger,
+    String,
+    Table,
+    Text,
+    Uuid,
+    func,
+)
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.common.models import IdMixin, OwnedMixin, TimestampMixin
 from app.extensions import db
 
 TASK_STATUSES = ("inbox", "todo", "in_progress", "done")
 
+# Many-to-many link. CASCADE is safe here: a link row means nothing once its task or tag is gone.
+task_tags = Table(
+    "task_tags",
+    db.metadata,
+    Column("task_id", Uuid, ForeignKey("tasks.id", ondelete="CASCADE"), primary_key=True),
+    Column("tag_id", Uuid, ForeignKey("tags.id", ondelete="CASCADE"), primary_key=True, index=True),
+)
+
+
+class Tag(IdMixin, OwnedMixin, TimestampMixin, db.Model):
+    __tablename__ = "tags"
+
+    name: Mapped[str] = mapped_column(String(40), nullable=False)
+
+
+Index("uq_tags_user_id_lower_name", Tag.user_id, func.lower(Tag.name), unique=True)
+
 
 class Task(IdMixin, OwnedMixin, TimestampMixin, db.Model):
     """A unit of work. Deadline vs due date vs scheduled time: see docs/01-database-schema.md §2.4.
-    goal_id / milestone_id / parent_task_id arrive in the Stage 2 migration."""
+    Subtasks are one level deep and are not linked to goals themselves (their parent is)."""
 
     __tablename__ = "tasks"
     __table_args__ = (
@@ -38,6 +69,16 @@ class Task(IdMixin, OwnedMixin, TimestampMixin, db.Model):
     category_id: Mapped[uuid.UUID | None] = mapped_column(
         Uuid, ForeignKey("categories.id", ondelete="SET NULL"), index=True
     )
+    goal_id: Mapped[uuid.UUID | None] = mapped_column(Uuid, ForeignKey("goals.id", ondelete="SET NULL"), index=True)
+    milestone_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid, ForeignKey("goal_milestones.id", ondelete="SET NULL"), index=True
+    )
+    # RESTRICT: a parent with subtasks can't be deleted out from under them.
+    parent_task_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid, ForeignKey("tasks.id", ondelete="RESTRICT"), index=True
+    )
     position: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     archived_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+    tags: Mapped[list[Tag]] = relationship(secondary=task_tags, order_by=func.lower(Tag.name), lazy="selectin")

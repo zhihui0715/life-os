@@ -2,4 +2,5 @@
 
 from app.modules.auth.models import AuthSession, User, UserSettings  # noqa: F401
 from app.modules.categories.models import Category  # noqa: F401
-from app.modules.tasks.models import Task  # noqa: F401
+from app.modules.goals.models import Goal, GoalMilestone, GoalProgressUpdate  # noqa: F401
+from app.modules.tasks.models import Tag, Task, task_tags  # noqa: F401

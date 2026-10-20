@@ -79,8 +79,8 @@ Domain actions are separate endpoints (rather than "PATCH status") because they 
 | Group | Stage | Main resources |
 |---|---|---|
 | `/auth`, `/settings` | 1 | session, user settings (incl. `locale`, `timezone`) |
-| `/categories`, `/tags`, `/tasks` | 1–2 | tasks + subtasks, search `?q=` |
-| `/goals`, `/goals/{id}/milestones`, `/goals/{id}/progress` | 2 | |
+| `/categories`, `/tags`, `/tasks` | 1–2 ✅ | `/tasks` filters: `view`, `q` (search), `tag`, `goal_id`, `milestone_id`, `category_id`, `parent_id` (subtasks). Body fields `goal_id`, `milestone_id`, `parent_task_id`, `tags` (list of names; PATCH replaces the list) |
+| `/goals` (`?status=`, `?archived_only=true`), `/goals/{id}` (+ `/archive`, `/restore`), `/goals/{id}/updates`, `/goals/{id}/milestones`, `/milestones/{id}` (+ `/complete`, `/reopen`, DELETE) | 2 ✅ | goal responses include `progress` (`null` = no data) and `progress_detail`; detail adds `milestones` and `updates` |
 | `/calendar/events`, `/calendar/occurrences?from=&to=`, `/calendar/conflicts`, `/calendar/free-slots`, `/calendar/suggestions` (+ `/apply`) | 3 | suggestions are never applied without a separate confirm call |
 | `/habits`, `/habits/{id}/logs`, `/activity-logs`, `/focus-sessions`, `/journal` | 4 | |
 | `/dashboard/today`, `/analytics/*`, `/analytics/life-balance` | 5 | every metric response includes `formula_key` and `coverage` |

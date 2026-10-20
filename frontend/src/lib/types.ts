@@ -38,6 +38,12 @@ export interface Task {
   estimate_minutes: number | null
   actual_minutes_manual: number | null
   category_id: string | null
+  goal_id: string | null
+  milestone_id: string | null
+  parent_task_id: string | null
+  tags: string[]
+  subtasks_done: number
+  subtasks_total: number
   position: number
   is_overdue: boolean
   completed_at: string | null
@@ -50,4 +56,68 @@ export interface Page<T> {
   items: T[]
   next_cursor: string | null
   total: number
+}
+
+export interface TaskFilters {
+  view?: TaskView
+  q?: string
+  tag?: string
+  goal_id?: string
+  milestone_id?: string
+  parent_id?: string
+}
+
+export interface TagSummary {
+  name: string
+  task_count: number
+}
+
+export type GoalStatus = 'active' | 'paused' | 'completed' | 'abandoned'
+export type ProgressMode = 'milestones' | 'tasks' | 'manual'
+
+export interface Goal {
+  id: string
+  title: string
+  description: string | null
+  success_criteria: string | null
+  category_id: string | null
+  horizon: 'short' | 'long'
+  status: GoalStatus
+  progress_mode: ProgressMode
+  manual_progress: number | null
+  /** null = not enough data to calculate (never shown as 0%) */
+  progress: number | null
+  progress_detail: { tasks_done: number; tasks_total: number; milestones_done: number; milestones_total: number }
+  start_date: string | null
+  target_date: string | null
+  completed_at: string | null
+  archived_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface Milestone {
+  id: string
+  goal_id: string
+  title: string
+  position: number
+  weight: number
+  target_date: string | null
+  completed_at: string | null
+  tasks_done: number
+  tasks_total: number
+}
+
+export interface GoalUpdate {
+  id: string
+  kind: 'auto' | 'manual' | 'note' | 'status'
+  progress: number | null
+  status: GoalStatus | null
+  note: string | null
+  created_at: string
+}
+
+export interface GoalDetail extends Goal {
+  milestones: Milestone[]
+  updates: GoalUpdate[]
 }

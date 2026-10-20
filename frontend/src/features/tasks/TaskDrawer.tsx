@@ -1,19 +1,23 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Archive, ArchiveRestore, Trash2 } from 'lucide-react'
+import { Archive, ArchiveRestore, Info, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import { Button } from '../../components/ui/Button'
 import { ConfirmDialog, Dialog } from '../../components/ui/Dialog'
 import { Field, Input, Select, Textarea } from '../../components/ui/Field'
+import { Card } from '../../components/ui/states'
 import { useToast } from '../../components/ui/Toast'
 import { utcIsoToWallTime, wallTimeToUtcIso } from '../../lib/dates'
 import { errorMessage, fieldError } from '../../lib/errors'
 import type { Category, Task } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
+import { useGoal, useGoals } from '../goals/api'
 import { useDeleteTask, useTaskAction, useUpdateTask } from './api'
+import { QuickAddInput } from './QuickAddInput'
+import { TaskList } from './TaskList'
 
 const schema = z.object({
   title: z.string().trim().min(1, 'required').max(200, 'string_too_long'),
@@ -24,7 +28,18 @@ const schema = z.object({
   deadline: z.string(),
   estimate_minutes: z.string().regex(/^\d{0,5}$/, 'invalid'),
   category_id: z.string(),
+  goal_id: z.string(),
+  milestone_id: z.string(),
+  tags: z.string(),
 })
+
+/** "exam, networking，考试" → ["exam", "networking", "考试"] (accepts English and Chinese commas). */
+export function parseTags(text: string): string[] {
+  return text
+    .split(/[,，]/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+}
 type FormValues = z.infer<typeof schema>
 
 function toForm(task: Task, timeZone: string): FormValues {
@@ -37,6 +52,9 @@ function toForm(task: Task, timeZone: string): FormValues {
     deadline: task.deadline ? utcIsoToWallTime(task.deadline, timeZone) : '',
     estimate_minutes: task.estimate_minutes != null ? String(task.estimate_minutes) : '',
     category_id: task.category_id ?? '',
+    goal_id: task.goal_id ?? '',
+    milestone_id: task.milestone_id ?? '',
+    tags: task.tags.join(', '),
   }
 }
 
@@ -44,9 +62,11 @@ interface Props {
   task: Task | null
   categories: Category[]
   onClose: () => void
+  /** Switch the drawer to another task (used when a subtask is clicked). */
+  onOpenTask?: (task: Task) => void
 }
 
-export function TaskDrawer({ task, categories, onClose }: Props) {
+export function TaskDrawer({ task, categories, onClose, onOpenTask }: Props) {
   const { t } = useTranslation('tasks')
   const me = useMe()
   const tz = me.settings.timezone
@@ -56,7 +76,10 @@ export function TaskDrawer({ task, categories, onClose }: Props) {
   const remove = useDeleteTask()
   const [confirmDelete, setConfirmDelete] = useState(false)
 
-  const { register, handleSubmit, reset, formState } = useForm<FormValues>({ resolver: zodResolver(schema) })
+  const { register, handleSubmit, reset, formState, control, setValue } = useForm<FormValues>({ resolver: zodResolver(schema) })
+  const goalId = useWatch({ control, name: 'goal_id' })
+  const goals = useGoals().data ?? []
+  const milestones = useGoal(goalId || null).data?.milestones ?? []
   useEffect(() => {
     if (task) reset(toForm(task, tz))
     update.reset()
@@ -66,6 +89,9 @@ export function TaskDrawer({ task, categories, onClose }: Props) {
   if (!task) return null
 
   const done = task.status === 'done'
+  const isSubtask = !!task.parent_task_id
+  // Goals you can link to: active or paused, plus whatever is linked now.
+  const goalOptions = goals.filter((g) => g.status === 'active' || g.status === 'paused' || g.id === task.goal_id)
   const err = (f: keyof FormValues) => {
     const local = formState.errors[f]?.message
     return local ? t(`common:validation.${local}`) : fieldError(t, update.error, f)
@@ -84,6 +110,8 @@ export function TaskDrawer({ task, categories, onClose }: Props) {
         deadline: v.deadline ? wallTimeToUtcIso(v.deadline, tz) : null,
         estimate_minutes: v.estimate_minutes ? Number(v.estimate_minutes) : null,
         category_id: v.category_id || null,
+        ...(isSubtask ? {} : { goal_id: v.goal_id || null, milestone_id: v.milestone_id || null }),
+        tags: parseTags(v.tags),
       },
       {
         onSuccess: () => {
@@ -193,8 +221,61 @@ export function TaskDrawer({ task, categories, onClose }: Props) {
               )}
             </Field>
           </div>
+          {isSubtask ? (
+            <p className="text-subtle flex items-start gap-2 text-xs">
+              <Info size={14} aria-hidden className="mt-px shrink-0" />
+              {t('subtasks.parentNote')}
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 gap-3">
+              <Field label={t('fields.goal')} error={err('goal_id')}>
+                {(a) => (
+                  <Select {...a} {...register('goal_id', { onChange: () => setValue('milestone_id', '') })}>
+                    <option value="">{t('fields.noGoal')}</option>
+                    {goalOptions.map((g) => (
+                      <option key={g.id} value={g.id}>
+                        {g.title}
+                      </option>
+                    ))}
+                  </Select>
+                )}
+              </Field>
+              <Field label={t('fields.milestone')} error={err('milestone_id')}>
+                {(a) => (
+                  <Select {...a} disabled={!goalId || milestones.length === 0} {...register('milestone_id')}>
+                    <option value="">{t('fields.none')}</option>
+                    {milestones.map((m) => (
+                      <option key={m.id} value={m.id}>
+                        {m.title}
+                      </option>
+                    ))}
+                  </Select>
+                )}
+              </Field>
+            </div>
+          )}
+          <Field label={t('fields.tags')} help={t('fields.tagsHelp')} error={err('tags')}>
+            {(a) => <Input {...a} {...register('tags')} />}
+          </Field>
           <button type="submit" hidden />
         </form>
+
+        {!isSubtask && (
+          <section className="mt-6">
+            <h3 className="mb-2 text-sm font-semibold">{t('subtasks.title')}</h3>
+            <Card className="overflow-hidden">
+              <TaskList filters={{ parent_id: task.id }} categories={categories} onOpen={(sub) => onOpenTask?.(sub)} compact />
+              <div className="border-border border-t p-2">
+                <QuickAddInput
+                  view="all"
+                  extra={{ parent_task_id: task.id, status: 'todo' }}
+                  label={t('subtasks.addLabel')}
+                  placeholder={t('subtasks.add')}
+                />
+              </div>
+            </Card>
+          </section>
+        )}
       </Dialog>
 
       <ConfirmDialog

@@ -8,6 +8,12 @@ from app.modules.tasks.models import Task
 from app.modules.tasks.schemas import TaskCreate, TaskPatch, TaskQuery
 
 bp = Blueprint("tasks", __name__, url_prefix="/api/v1/tasks")
+tags_bp = Blueprint("tags", __name__, url_prefix="/api/v1/tags")
+
+
+@tags_bp.get("")
+def list_tags():
+    return {"items": service.list_tags(current_user())}
 
 
 def _get(task_id) -> Task:

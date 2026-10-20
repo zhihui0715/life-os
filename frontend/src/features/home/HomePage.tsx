@@ -26,8 +26,8 @@ export function HomePage() {
   const tz = me.settings.timezone
   const categories = useCategories().data ?? []
   const [open, setOpen] = useState<Task | null>(null)
-  const overdueTotal = useTaskTotal('overdue')
-  const todayTotal = useTaskTotal('today')
+  const overdueTotal = useTaskTotal({ view: 'overdue' })
+  const todayTotal = useTaskTotal({ view: 'today' })
 
   const dateLine = new Intl.DateTimeFormat(i18n.language, { timeZone: tz, weekday: 'long', month: 'long', day: 'numeric' }).format(new Date())
 
@@ -42,7 +42,7 @@ export function HomePage() {
       {!!overdueTotal && (
         <Card className="mb-4 overflow-hidden">
           <SectionHeader title={t('home.overdue')} count={overdueTotal} to="/tasks?view=overdue" tone="danger" />
-          <TaskList view="overdue" categories={categories} onOpen={setOpen} limit={5} compact />
+          <TaskList filters={{ view: 'overdue' }} categories={categories} onOpen={setOpen} limit={5} compact />
         </Card>
       )}
 
@@ -51,13 +51,13 @@ export function HomePage() {
         {todayTotal === 0 ? (
           <EmptyState icon={Sun} title={t('home.todayEmptyTitle')} body={t('home.todayEmptyBody')} />
         ) : (
-          <TaskList view="today" categories={categories} onOpen={setOpen} limit={10} compact />
+          <TaskList filters={{ view: 'today' }} categories={categories} onOpen={setOpen} limit={10} compact />
         )}
       </Card>
 
       <p className="text-subtle mt-6 text-center text-xs">{t('home.laterNote')}</p>
 
-      <TaskDrawer task={open} categories={categories} onClose={() => setOpen(null)} />
+      <TaskDrawer task={open} categories={categories} onClose={() => setOpen(null)} onOpenTask={setOpen} />
     </>
   )
 }

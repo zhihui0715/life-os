@@ -1,0 +1,102 @@
+{
+  "title": "Goals",
+  "new": "New goal",
+  "edit": "Edit goal",
+  "back": "All goals",
+  "filters": {
+    "label": "Goal filters",
+    "active": "Active",
+    "paused": "Paused",
+    "completed": "Completed",
+    "abandoned": "Abandoned",
+    "archived": "Archived"
+  },
+  "empty": {
+    "active": { "title": "No active goals", "body": "Set a goal, then link tasks or milestones to track progress." },
+    "paused": { "title": "No paused goals", "body": "Pause a goal when it's on hold but not abandoned." },
+    "completed": { "title": "No completed goals yet", "body": "Finished goals stay here as your record." },
+    "abandoned": { "title": "No abandoned goals", "body": "Letting go of a goal is a valid decision. They're kept here." },
+    "archived": { "title": "Archive is empty", "body": "Archived goals are hidden but keep all their history." }
+  },
+  "status": {
+    "label": "Status",
+    "active": "Active",
+    "paused": "Paused",
+    "completed": "Completed",
+    "abandoned": "Abandoned"
+  },
+  "horizon": {
+    "label": "Time frame",
+    "short": "Short-term",
+    "long": "Long-term"
+  },
+  "mode": {
+    "label": "Measure progress by",
+    "tasks": "Linked tasks",
+    "milestones": "Milestones",
+    "manual": "Manual updates",
+    "help_tasks": "Completed linked tasks ÷ all linked tasks. Archived unfinished tasks don't count.",
+    "help_milestones": "Completed milestones, weighted by importance.",
+    "help_manual": "You set the percentage yourself — best when tasks don't reflect real progress."
+  },
+  "fields": {
+    "title": "Goal",
+    "description": "Why it matters",
+    "successCriteria": "What does success look like?",
+    "successCriteriaHelp": "A measurable finish line, e.g. “Pass the exam with 800+”.",
+    "startDate": "Start date",
+    "targetDate": "Target date"
+  },
+  "progress": {
+    "noData": "No data yet",
+    "noDataHelp_tasks": "Link a task to this goal to start measuring.",
+    "noDataHelp_milestones": "Add a milestone to start measuring.",
+    "noDataHelp_manual": "Add a progress update to set a value.",
+    "source_tasks": "{{done}} of {{total}} linked tasks done",
+    "source_milestones": "{{done}} of {{total}} milestones done (weighted)",
+    "source_manual": "Set manually",
+    "aria": "Progress: {{value}}%"
+  },
+  "meta": {
+    "target": "Target {{date}}",
+    "completedOn": "Completed {{date}}"
+  },
+  "milestones": {
+    "title": "Milestones",
+    "add": "Add a milestone, then press Enter",
+    "addLabel": "New milestone title",
+    "weight": "Weight",
+    "weightHelp": "Higher weight = counts more toward progress.",
+    "tasks": "{{done}}/{{total}} tasks",
+    "complete": "Mark milestone “{{title}}” complete",
+    "reopen": "Mark milestone “{{title}}” not done",
+    "deleteTitle": "Delete this milestone?",
+    "deleteBody": "This removes the milestone. Milestones with linked tasks can't be deleted.",
+    "empty": "No milestones yet."
+  },
+  "tasks": {
+    "title": "Linked tasks",
+    "add": "Add a task to this goal",
+    "empty": "No tasks linked yet."
+  },
+  "timeline": {
+    "title": "Progress history",
+    "empty": "Nothing recorded yet.",
+    "notePlaceholder": "Write a progress note…",
+    "noteLabel": "Progress note",
+    "progressLabel": "Progress (%)",
+    "add": "Add update",
+    "auto": "Progress changed to {{value}}%",
+    "manual": "Progress set to {{value}}%",
+    "status": "Marked as {{status}}"
+  },
+  "toast": {
+    "created": "Goal created",
+    "updated": "Goal updated",
+    "archived": "Goal archived",
+    "restored": "Goal restored",
+    "updateAdded": "Update added",
+    "milestoneAdded": "Milestone added",
+    "milestoneDeleted": "Milestone deleted"
+  }
+}

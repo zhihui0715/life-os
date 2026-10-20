@@ -1,4 +1,9 @@
-"""Task business rules. Routes call these functions; nothing else writes to the tasks table."""
+"""Task business rules. Routes call these functions; nothing else writes to the tasks table.
+
+Subtasks: one level deep. They live inside their parent (list views show top-level tasks only, with subtask
+counts; search shows everything). Subtasks are not linked to goals — the parent is — so goal progress never
+counts the same work twice.
+"""
 
 import base64
 import binascii
@@ -13,8 +18,14 @@ from app.common.ownership import get_owned_or_404
 from app.common.timeutil import user_today, user_zone
 from app.extensions import db
 from app.modules.categories.models import Category
-from app.modules.tasks.models import Task
+from app.modules.goals.models import Goal, GoalMilestone
+from app.modules.goals.service import sync_progress
+from app.modules.tasks.models import Tag, Task
 from app.modules.tasks.schemas import TaskCreate, TaskPatch, TaskQuery
+
+
+def _rule(message: str) -> ApiError:
+    return ApiError(422, "rule_violation", message)
 
 
 # ---------- serialisation ----------
@@ -23,11 +34,26 @@ def _iso(dt: datetime | None) -> str | None:
     return dt.isoformat() if dt else None
 
 
-def task_to_dict(t: Task, user, now: datetime | None = None) -> dict:
+def subtask_counts(task_ids) -> dict:
+    """{parent_id: (done, total)} for the given tasks, in one query."""
+    if not task_ids:
+        return {}
+    rows = db.session.execute(
+        select(Task.parent_task_id, func.count().filter(Task.status == "done"), func.count())
+        .where(Task.parent_task_id.in_(task_ids), Task.archived_at.is_(None))
+        .group_by(Task.parent_task_id)
+    ).all()
+    return {r[0]: (r[1], r[2]) for r in rows}
+
+
+def task_to_dict(t: Task, user, now: datetime | None = None, counts: dict | None = None) -> dict:
     now = now or utcnow()
     today = user_today(user, now)
     is_open = t.status != "done" and t.archived_at is None
     overdue = is_open and ((t.due_date is not None and t.due_date < today) or (t.deadline is not None and t.deadline < now))
+    if counts is None:
+        counts = subtask_counts([t.id])
+    sub_done, sub_total = counts.get(t.id, (0, 0))
     return {
         "id": str(t.id),
         "title": t.title,
@@ -39,6 +65,12 @@ def task_to_dict(t: Task, user, now: datetime | None = None) -> dict:
         "estimate_minutes": t.estimate_minutes,
         "actual_minutes_manual": t.actual_minutes_manual,
         "category_id": str(t.category_id) if t.category_id else None,
+        "goal_id": str(t.goal_id) if t.goal_id else None,
+        "milestone_id": str(t.milestone_id) if t.milestone_id else None,
+        "parent_task_id": str(t.parent_task_id) if t.parent_task_id else None,
+        "tags": [tag.name for tag in t.tags],
+        "subtasks_done": sub_done,
+        "subtasks_total": sub_total,
         "position": t.position,
         "is_overdue": overdue,
         "completed_at": _iso(t.completed_at),
@@ -119,39 +151,145 @@ def _view_order(view: str):
     ]
 
 
+def _like_pattern(text: str) -> str:
+    """Escape SQL wildcard characters so a search for "50%" means the literal text."""
+    escaped = text.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+    return f"%{escaped}%"
+
+
 def list_tasks(user, query: TaskQuery) -> dict:
     now = utcnow()
-    filters = [Task.user_id == user.id, *_view_filters(query.view, user, now)]
+    filters = [Task.user_id == user.id]
+    order = _view_order(query.view)
+
+    if query.parent_id:
+        # Subtasks of one task, in their own order.
+        filters += [Task.parent_task_id == query.parent_id, Task.archived_at.is_(None)]
+        order = [Task.position.asc(), Task.created_at.asc()]
+    else:
+        filters += _view_filters(query.view, user, now)
+        if query.q and query.q.strip():
+            # ILIKE matches substrings, which also works for Chinese (no word splitting needed).
+            pattern = _like_pattern(query.q.strip())
+            filters.append(or_(Task.title.ilike(pattern, escape="\\"), Task.notes.ilike(pattern, escape="\\")))
+        else:
+            filters.append(Task.parent_task_id.is_(None))
+
     if query.category_id:
         filters.append(Task.category_id == query.category_id)
+    if query.goal_id:
+        filters.append(Task.goal_id == query.goal_id)
+    if query.milestone_id:
+        filters.append(Task.milestone_id == query.milestone_id)
+    if query.tag:
+        filters.append(Task.tags.any(func.lower(Tag.name) == query.tag.strip().lower()))
 
     offset = _decode_cursor(query.cursor)
     total = db.session.scalar(select(func.count()).select_from(Task).where(*filters))
     rows = db.session.scalars(
-        select(Task).where(*filters).order_by(*_view_order(query.view), Task.id).offset(offset).limit(query.limit)
+        select(Task).where(*filters).order_by(*order, Task.id).offset(offset).limit(query.limit)
     ).all()
+    counts = subtask_counts([t.id for t in rows])
     next_offset = offset + len(rows)
     return {
-        "items": [task_to_dict(t, user, now) for t in rows],
+        "items": [task_to_dict(t, user, now, counts) for t in rows],
         "next_cursor": _encode_cursor(next_offset) if next_offset < total else None,
         "total": total,
     }
 
 
-# ---------- writes ----------
+def list_tags(user) -> list[dict]:
+    """Tags in use, with how many open (not archived) tasks carry each one."""
+    from app.modules.tasks.models import task_tags
 
-def _check_category(user, category_id) -> None:
+    rows = db.session.execute(
+        select(Tag.name, func.count(Task.id))
+        .select_from(Tag)
+        .outerjoin(task_tags, task_tags.c.tag_id == Tag.id)
+        .outerjoin(Task, and_(Task.id == task_tags.c.task_id, Task.archived_at.is_(None)))
+        .where(Tag.user_id == user.id)
+        .group_by(Tag.id, Tag.name)
+        .order_by(func.lower(Tag.name))
+    ).all()
+    return [{"name": r[0], "task_count": r[1]} for r in rows]
+
+
+# ---------- link validation ----------
+
+def _check_category(category_id) -> None:
     if category_id is not None:
         get_owned_or_404(Category, category_id, "Category")
 
 
+def _apply_links(user, task: Task, changes: dict) -> None:
+    """Validate and apply goal / milestone / parent changes. `changes` holds only the fields being set."""
+    if "parent_task_id" in changes:
+        parent_id = changes["parent_task_id"]
+        if parent_id is not None:
+            parent = get_owned_or_404(Task, parent_id, "Parent task")
+            if parent.id == task.id:
+                raise _rule("A task can't be its own subtask.")
+            if parent.parent_task_id is not None:
+                raise _rule("Subtasks can only be one level deep.")
+            if task.id and subtask_counts([task.id]).get(task.id, (0, 0))[1]:
+                raise _rule("A task that has subtasks can't become a subtask.")
+        task.parent_task_id = parent_id
+
+    goal_id = changes.get("goal_id", task.goal_id)
+    milestone_id = changes.get("milestone_id", task.milestone_id)
+
+    if milestone_id is not None:
+        milestone = get_owned_or_404(GoalMilestone, milestone_id, "Milestone")
+        if "milestone_id" in changes and "goal_id" not in changes:
+            goal_id = milestone.goal_id  # picking a milestone implies its goal
+        if goal_id != milestone.goal_id:
+            if "milestone_id" in changes:
+                raise _rule("That milestone belongs to a different goal.")
+            milestone_id = None  # goal changed: the old milestone no longer applies
+    if goal_id is not None and ("goal_id" in changes or "milestone_id" in changes):
+        goal = get_owned_or_404(Goal, goal_id, "Goal")
+        if goal.archived_at is not None:
+            raise _rule("That goal is archived.")
+
+    if task.parent_task_id is not None and (goal_id is not None or milestone_id is not None):
+        raise _rule("Link the parent task to a goal instead of the subtask.")
+
+    task.goal_id = goal_id
+    task.milestone_id = milestone_id
+
+
+def _set_tags(user, task: Task, names: list[str]) -> None:
+    unique: dict[str, str] = {}
+    for name in names:
+        unique.setdefault(name.lower(), name)  # case-insensitive: "Exam" and "exam" are one tag
+    existing = {
+        t.name.lower(): t
+        for t in db.session.scalars(
+            select(Tag).where(Tag.user_id == user.id, func.lower(Tag.name).in_(list(unique)))
+        )
+    }
+    tags = []
+    for key, name in unique.items():
+        tag = existing.get(key)
+        if tag is None:
+            tag = Tag(user_id=user.id, name=name)
+            db.session.add(tag)
+        tags.append(tag)
+    task.tags = tags
+
+
+# ---------- writes ----------
+
 def create_task(user, data: TaskCreate) -> Task:
     if data.id and db.session.get(Task, data.id):
         raise ApiError(409, "conflict", "A task with this id already exists.")
-    _check_category(user, data.category_id)
-    values = data.model_dump(exclude_none=True)
+    _check_category(data.category_id)
+    values = data.model_dump(exclude_none=True, exclude={"goal_id", "milestone_id", "parent_task_id", "tags"})
     task = Task(user_id=user.id, **values)
+    _apply_links(user, task, data.model_dump(include={"goal_id", "milestone_id", "parent_task_id"}, exclude_none=True))
+    _set_tags(user, task, data.tags)
     db.session.add(task)
+    sync_progress(task.goal_id)
     db.session.commit()
     return task
 
@@ -164,15 +302,23 @@ def update_task(user, task: Task, data: TaskPatch) -> Task:
             409, "stale_update", "This task was changed elsewhere since you opened it.",
             extra={"current": task_to_dict(task, user)},
         )
-    for required in ("title", "status", "priority", "position"):
+    for required in ("title", "status", "priority", "position", "tags"):
         if required in changes and changes[required] is None:
             raise ApiError(422, "validation_error", "Some fields are invalid.", fields={required: [{"type": "missing", "message": "Cannot be null"}]})
     if "status" in changes and task.status == "done":
-        raise ApiError(422, "rule_violation", "Reopen a completed task before changing its status.")
+        raise _rule("Reopen a completed task before changing its status.")
     if "category_id" in changes:
-        _check_category(user, changes["category_id"])
+        _check_category(changes["category_id"])
+
+    old_goal = task.goal_id
+    links = {k: changes.pop(k) for k in ("goal_id", "milestone_id", "parent_task_id") if k in changes}
+    if links:
+        _apply_links(user, task, links)
+    if "tags" in changes:
+        _set_tags(user, task, changes.pop("tags"))
     for field, value in changes.items():
         setattr(task, field, value)
+    sync_progress(old_goal, task.goal_id)
     db.session.commit()
     return task
 
@@ -181,6 +327,7 @@ def complete_task(task: Task) -> Task:
     if task.status != "done":
         task.status = "done"
         task.completed_at = utcnow()
+        sync_progress(task.goal_id)
         db.session.commit()
     return task
 
@@ -189,6 +336,7 @@ def reopen_task(task: Task) -> Task:
     if task.status == "done":
         task.status = "todo"
         task.completed_at = None
+        sync_progress(task.goal_id)
         db.session.commit()
     return task
 
@@ -196,6 +344,7 @@ def reopen_task(task: Task) -> Task:
 def archive_task(task: Task) -> Task:
     if task.archived_at is None:
         task.archived_at = utcnow()
+        sync_progress(task.goal_id)
         db.session.commit()
     return task
 
@@ -203,6 +352,7 @@ def archive_task(task: Task) -> Task:
 def restore_task(task: Task) -> Task:
     if task.archived_at is not None:
         task.archived_at = None
+        sync_progress(task.goal_id)
         db.session.commit()
     return task
 
@@ -210,6 +360,10 @@ def restore_task(task: Task) -> Task:
 def delete_task(task: Task) -> None:
     """Hard delete only for tasks with no history; anything completed must be archived instead."""
     if task.status == "done":
-        raise ApiError(422, "rule_violation", "Completed tasks are part of your history. Archive it instead.")
+        raise _rule("Completed tasks are part of your history. Archive it instead.")
+    if db.session.scalar(select(func.count()).select_from(Task).where(Task.parent_task_id == task.id)):
+        raise _rule("This task has subtasks. Delete or move them first, or archive the task.")
+    goal_id = task.goal_id
     db.session.delete(task)
+    sync_progress(goal_id)
     db.session.commit()

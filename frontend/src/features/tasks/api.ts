@@ -2,7 +2,7 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { api } from '../../lib/api'
-import type { Category, Page, Task, TaskStatus, TaskView } from '../../lib/types'
+import type { Category, Page, TagSummary, Task, TaskFilters, TaskStatus } from '../../lib/types'
 
 export interface TaskInput {
   title?: string
@@ -13,15 +13,25 @@ export interface TaskInput {
   deadline?: string | null
   estimate_minutes?: number | null
   category_id?: string | null
+  goal_id?: string | null
+  milestone_id?: string | null
+  parent_task_id?: string | null
+  tags?: string[]
 }
 
 const TASKS = ['tasks']
 
-export function useTaskList(view: TaskView, limit = 50) {
+function toQueryString(filters: TaskFilters, limit: number, cursor: string) {
+  const params = new URLSearchParams({ limit: String(limit) })
+  for (const [key, value] of Object.entries(filters)) if (value) params.set(key, value)
+  if (cursor) params.set('cursor', cursor)
+  return params.toString()
+}
+
+export function useTaskList(filters: TaskFilters, limit = 50) {
   return useInfiniteQuery({
-    queryKey: [...TASKS, 'list', view, limit],
-    queryFn: ({ pageParam }) =>
-      api<Page<Task>>(`/tasks?view=${view}&limit=${limit}${pageParam ? `&cursor=${encodeURIComponent(pageParam)}` : ''}`),
+    queryKey: [...TASKS, 'list', filters, limit],
+    queryFn: ({ pageParam }) => api<Page<Task>>(`/tasks?${toQueryString(filters, limit, pageParam)}`),
     initialPageParam: '',
     getNextPageParam: (last) => last.next_cursor ?? undefined,
   })
@@ -36,9 +46,18 @@ export function useCategories() {
   })
 }
 
+export function useTags() {
+  return useQuery({
+    queryKey: [...TASKS, 'tags'],
+    queryFn: () => api<{ items: TagSummary[] }>('/tags'),
+    select: (d) => d.items,
+  })
+}
+
+/** Task changes can move goal progress, so goals are refreshed too. */
 function useInvalidateTasks() {
   const qc = useQueryClient()
-  return () => qc.invalidateQueries({ queryKey: TASKS })
+  return () => Promise.all([qc.invalidateQueries({ queryKey: TASKS }), qc.invalidateQueries({ queryKey: ['goals'] })])
 }
 
 export function useCreateTask() {
@@ -83,7 +102,7 @@ export function useTaskAction() {
         },
       )
     },
-    onSettled: () => qc.invalidateQueries({ queryKey: TASKS }),
+    onSettled: () => Promise.all([qc.invalidateQueries({ queryKey: TASKS }), qc.invalidateQueries({ queryKey: ['goals'] })]),
   })
 }
 

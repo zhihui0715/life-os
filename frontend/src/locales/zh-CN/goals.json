@@ -1,0 +1,102 @@
+{
+  "title": "目标",
+  "new": "新建目标",
+  "edit": "编辑目标",
+  "back": "全部目标",
+  "filters": {
+    "label": "目标筛选",
+    "active": "进行中",
+    "paused": "已暂停",
+    "completed": "已完成",
+    "abandoned": "已放弃",
+    "archived": "已归档"
+  },
+  "empty": {
+    "active": { "title": "没有进行中的目标", "body": "设定一个目标，然后关联任务或里程碑来跟踪进度。" },
+    "paused": { "title": "没有暂停的目标", "body": "目标暂时搁置但不想放弃时，可以先暂停。" },
+    "completed": { "title": "还没有完成的目标", "body": "完成的目标会保留在这里，作为你的记录。" },
+    "abandoned": { "title": "没有放弃的目标", "body": "放下一个目标也是合理的决定，它们会保留在这里。" },
+    "archived": { "title": "归档为空", "body": "归档的目标会被隐藏，但保留全部历史记录。" }
+  },
+  "status": {
+    "label": "状态",
+    "active": "进行中",
+    "paused": "已暂停",
+    "completed": "已完成",
+    "abandoned": "已放弃"
+  },
+  "horizon": {
+    "label": "时间范围",
+    "short": "短期",
+    "long": "长期"
+  },
+  "mode": {
+    "label": "进度计算方式",
+    "tasks": "关联任务",
+    "milestones": "里程碑",
+    "manual": "手动更新",
+    "help_tasks": "已完成的关联任务 ÷ 全部关联任务。已归档且未完成的任务不计入。",
+    "help_milestones": "已完成的里程碑，按重要程度加权。",
+    "help_manual": "由你自己设置百分比——适合任务数量无法反映真实进度的情况。"
+  },
+  "fields": {
+    "title": "目标",
+    "description": "为什么重要",
+    "successCriteria": "怎样才算成功？",
+    "successCriteriaHelp": "一个可衡量的终点，例如“考试成绩达到 800 分以上”。",
+    "startDate": "开始日期",
+    "targetDate": "目标日期"
+  },
+  "progress": {
+    "noData": "暂无数据",
+    "noDataHelp_tasks": "为此目标关联一个任务后即可开始计算。",
+    "noDataHelp_milestones": "添加一个里程碑后即可开始计算。",
+    "noDataHelp_manual": "添加一次进度更新来设置数值。",
+    "source_tasks": "已完成 {{done}}/{{total}} 个关联任务",
+    "source_milestones": "已完成 {{done}}/{{total}} 个里程碑（加权）",
+    "source_manual": "手动设置",
+    "aria": "进度：{{value}}%"
+  },
+  "meta": {
+    "target": "目标日期 {{date}}",
+    "completedOn": "{{date}} 完成"
+  },
+  "milestones": {
+    "title": "里程碑",
+    "add": "输入里程碑，按回车添加",
+    "addLabel": "新里程碑标题",
+    "weight": "权重",
+    "weightHelp": "权重越高，对进度的影响越大。",
+    "tasks": "{{done}}/{{total}} 个任务",
+    "complete": "将里程碑“{{title}}”标记为完成",
+    "reopen": "将里程碑“{{title}}”标记为未完成",
+    "deleteTitle": "删除此里程碑？",
+    "deleteBody": "这会删除该里程碑。有关联任务的里程碑无法删除。",
+    "empty": "还没有里程碑。"
+  },
+  "tasks": {
+    "title": "关联任务",
+    "add": "为此目标添加任务",
+    "empty": "还没有关联任务。"
+  },
+  "timeline": {
+    "title": "进度记录",
+    "empty": "暂无记录。",
+    "notePlaceholder": "写一条进度备注…",
+    "noteLabel": "进度备注",
+    "progressLabel": "进度（%）",
+    "add": "添加更新",
+    "auto": "进度变为 {{value}}%",
+    "manual": "进度设为 {{value}}%",
+    "status": "标记为{{status}}"
+  },
+  "toast": {
+    "created": "已创建目标",
+    "updated": "已更新目标",
+    "archived": "已归档目标",
+    "restored": "已恢复目标",
+    "updateAdded": "已添加更新",
+    "milestoneAdded": "已添加里程碑",
+    "milestoneDeleted": "已删除里程碑"
+  }
+}
