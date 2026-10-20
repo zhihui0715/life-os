@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="992" viewBox="0 0 1760 992">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94A3B8"/></marker></defs>
+<rect width="1760" height="992" fill="#FFFFFF"/>
+<text x="40" y="62" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="32" font-weight="700" fill="#0F172A" text-anchor="start" >Personal Life OS — Build Plan</text>
+<text x="40" y="96" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="16" font-weight="400" fill="#475569" text-anchor="start" >From Stage 0 to launch. Each stage is a small, usable slice that is tested before the next one starts.</text>
+<rect x="40" y="132" width="1680" height="204" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+<text x="64" y="176" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="24" font-weight="700" fill="#16A34A" text-anchor="start" >Done</text>
+<text x="64" y="202" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#64748B" text-anchor="start" >Stages 0–2</text>
+<rect x="240" y="150" width="334" height="168" rx="12" fill="#ECFDF3" stroke="#16A34A" stroke-width="1.5"/>
+<text x="258" y="182" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="17.5" font-weight="700" fill="#0F172A" text-anchor="start" >0 · Plan</text>
+<rect x="515.6" y="165" width="44.4" height="22" rx="11" fill="#16A34A"/><text x="537.8000000000001" y="180.5" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.4">DONE</text>
+<circle cx="262" cy="207.5" r="2.6" fill="#64748B"/>
+<text x="272" y="212" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Architecture + tech stack</text>
+<circle cx="262" cy="230.5" r="2.6" fill="#64748B"/>
+<text x="272" y="235" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Database schema + API rules</text>
+<circle cx="262" cy="253.5" r="2.6" fill="#64748B"/>
+<text x="272" y="258" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Design tokens + EN / 中文 plan</text>
+<line x1="256" y1="284" x2="558" y2="284" stroke="#16A34A" stroke-opacity="0.35"/>
+<text x="258" y="305" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#475569" text-anchor="start" font-style="italic">Done when: you approved the scope</text>
+<rect x="608" y="150" width="334" height="168" rx="12" fill="#ECFDF3" stroke="#16A34A" stroke-width="1.5"/>
+<text x="626" y="182" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="17.5" font-weight="700" fill="#0F172A" text-anchor="start" >1 · Foundation + Tasks</text>
+<rect x="883.6" y="165" width="44.4" height="22" rx="11" fill="#16A34A"/><text x="905.8000000000001" y="180.5" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.4">DONE</text>
+<circle cx="630" cy="207.5" r="2.6" fill="#64748B"/>
+<text x="640" y="212" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Flask API, PostgreSQL, migrations</text>
+<circle cx="630" cy="230.5" r="2.6" fill="#64748B"/>
+<text x="640" y="235" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Login, CSRF, settings</text>
+<circle cx="630" cy="253.5" r="2.6" fill="#64748B"/>
+<text x="640" y="258" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >React shell, tasks + views</text>
+<line x1="624" y1="284" x2="926" y2="284" stroke="#16A34A" stroke-opacity="0.35"/>
+<text x="626" y="305" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#475569" text-anchor="start" font-style="italic">Done when: tests green at 375px + 1440px</text>
+<rect x="976" y="150" width="334" height="168" rx="12" fill="#ECFDF3" stroke="#16A34A" stroke-width="1.5"/>
+<text x="994" y="182" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="17.5" font-weight="700" fill="#0F172A" text-anchor="start" >2 · Goals</text>
+<rect x="1251.6" y="165" width="44.4" height="22" rx="11" fill="#16A34A"/><text x="1273.8" y="180.5" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.4">DONE</text>
+<circle cx="998" cy="207.5" r="2.6" fill="#64748B"/>
+<text x="1008" y="212" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Goals, milestones, history</text>
+<circle cx="998" cy="230.5" r="2.6" fill="#64748B"/>
+<text x="1008" y="235" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Subtasks, tags, search</text>
+<circle cx="998" cy="253.5" r="2.6" fill="#64748B"/>
+<text x="1008" y="258" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Tasks linked to goals</text>
+<line x1="992" y1="284" x2="1294" y2="284" stroke="#16A34A" stroke-opacity="0.35"/>
+<text x="994" y="305" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#475569" text-anchor="start" font-style="italic">Done when: progress explained, never faked</text>
+<rect x="40" y="358" width="1680" height="204" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+<text x="64" y="402" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="24" font-weight="700" fill="#0F172A" text-anchor="start" >P0</text>
+<text x="64" y="428" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#64748B" text-anchor="start" >First full release</text>
+<rect x="240" y="376" width="334" height="168" rx="12" fill="#EFF6FF" stroke="#2563EB" stroke-width="3"/>
+<text x="258" y="408" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="17.5" font-weight="700" fill="#0F172A" text-anchor="start" >3 · Calendar</text>
+<circle cx="262" cy="433.5" r="2.6" fill="#64748B"/>
+<text x="272" y="438" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Day / week / month views</text>
+<circle cx="262" cy="456.5" r="2.6" fill="#64748B"/>
+<text x="272" y="461" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Events, repeats, task time-blocks</text>
+<circle cx="262" cy="479.5" r="2.6" fill="#64748B"/>
+<text x="272" y="484" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Conflicts + free-slot finder</text>
+<line x1="256" y1="510" x2="558" y2="510" stroke="#2563EB" stroke-opacity="0.35"/>
+<text x="258" y="531" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#475569" text-anchor="start" font-style="italic">Done when: nothing moves without your OK</text>
+<rect x="409.1" y="365" width="150.9" height="22" rx="11" fill="#2563EB"/><text x="484.55" y="380.5" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.4">NEXT · YOU ARE HERE</text>
+<rect x="608" y="376" width="334" height="168" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+<text x="626" y="408" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="17.5" font-weight="700" fill="#0F172A" text-anchor="start" >4 · Tracking</text>
+<rect x="897.8" y="391" width="30.2" height="22" rx="11" fill="#64748B"/><text x="912.9" y="406.5" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.4">P0</text>
+<circle cx="630" cy="433.5" r="2.6" fill="#64748B"/>
+<text x="640" y="438" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Habits + streaks</text>
+<circle cx="630" cy="456.5" r="2.6" fill="#64748B"/>
+<text x="640" y="461" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Activity + learning logs</text>
+<circle cx="630" cy="479.5" r="2.6" fill="#64748B"/>
+<text x="640" y="484" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Journal, daily review, focus timer</text>
+<line x1="624" y1="510" x2="926" y2="510" stroke="#CBD5E1" stroke-opacity="0.35"/>
+<text x="626" y="531" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#475569" text-anchor="start" font-style="italic">Done when: streak rules tested</text>
+<rect x="976" y="376" width="334" height="168" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+<text x="994" y="408" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="17.5" font-weight="700" fill="#0F172A" text-anchor="start" >5 · Insights</text>
+<rect x="1265.8" y="391" width="30.2" height="22" rx="11" fill="#64748B"/><text x="1280.8999999999999" y="406.5" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.4">P0</text>
+<circle cx="998" cy="433.5" r="2.6" fill="#64748B"/>
+<text x="1008" y="438" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Home dashboard</text>
+<circle cx="998" cy="456.5" r="2.6" fill="#64748B"/>
+<text x="1008" y="461" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Metrics with written formulas</text>
+<circle cx="998" cy="479.5" r="2.6" fill="#64748B"/>
+<text x="1008" y="484" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Life Balance Score v0</text>
+<line x1="992" y1="510" x2="1294" y2="510" stroke="#CBD5E1" stroke-opacity="0.35"/>
+<text x="994" y="531" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#475569" text-anchor="start" font-style="italic">Done when: missing data shows &quot;no data&quot;</text>
+<rect x="1344" y="376" width="334" height="168" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+<text x="1362" y="408" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="17.5" font-weight="700" fill="#0F172A" text-anchor="start" >6 · Backup</text>
+<rect x="1633.8" y="391" width="30.2" height="22" rx="11" fill="#64748B"/><text x="1648.8999999999999" y="406.5" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.4">P0</text>
+<circle cx="1366" cy="433.5" r="2.6" fill="#64748B"/>
+<text x="1376" y="438" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Export everything as JSON</text>
+<circle cx="1366" cy="456.5" r="2.6" fill="#64748B"/>
+<text x="1376" y="461" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Checked restore (dry run first)</text>
+<circle cx="1366" cy="479.5" r="2.6" fill="#64748B"/>
+<text x="1376" y="484" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >CSV for tasks + activity</text>
+<line x1="1360" y1="510" x2="1662" y2="510" stroke="#CBD5E1" stroke-opacity="0.35"/>
+<text x="1362" y="531" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#475569" text-anchor="start" font-style="italic">Done when: export → wipe → restore matches</text>
+<rect x="40" y="584" width="1680" height="204" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+<text x="64" y="628" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="24" font-weight="700" fill="#0F172A" text-anchor="start" >P1</text>
+<text x="64" y="654" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#64748B" text-anchor="start" >Enhanced experience</text>
+<rect x="240" y="602" width="334" height="168" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+<text x="258" y="634" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="17.5" font-weight="700" fill="#0F172A" text-anchor="start" >7 · AI assist</text>
+<rect x="529.8" y="617" width="30.2" height="22" rx="11" fill="#B45309"/><text x="544.9" y="632.5" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.4">P1</text>
+<circle cx="262" cy="659.5" r="2.6" fill="#64748B"/>
+<text x="272" y="664" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Daily plan suggestions</text>
+<circle cx="262" cy="682.5" r="2.6" fill="#64748B"/>
+<text x="272" y="687" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Weekly review</text>
+<circle cx="262" cy="705.5" r="2.6" fill="#64748B"/>
+<text x="272" y="710" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Choose what data is sent</text>
+<line x1="256" y1="736" x2="558" y2="736" stroke="#CBD5E1" stroke-opacity="0.35"/>
+<text x="258" y="757" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#475569" text-anchor="start" font-style="italic">Done when: works with no API key</text>
+<rect x="608" y="602" width="334" height="168" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+<text x="626" y="634" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="17.5" font-weight="700" fill="#0F172A" text-anchor="start" >8 · PWA + offline</text>
+<rect x="897.8" y="617" width="30.2" height="22" rx="11" fill="#B45309"/><text x="912.9" y="632.5" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.4">P1</text>
+<circle cx="630" cy="659.5" r="2.6" fill="#64748B"/>
+<text x="640" y="664" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Install on phone + desktop</text>
+<circle cx="630" cy="682.5" r="2.6" fill="#64748B"/>
+<text x="640" y="687" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Today&#x27;s view offline</text>
+<circle cx="630" cy="705.5" r="2.6" fill="#64748B"/>
+<text x="640" y="710" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Offline queue, safe sync</text>
+<line x1="624" y1="736" x2="926" y2="736" stroke="#CBD5E1" stroke-opacity="0.35"/>
+<text x="626" y="757" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#475569" text-anchor="start" font-style="italic">Done when: airplane-mode test passes</text>
+<rect x="976" y="602" width="334" height="168" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+<text x="994" y="634" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="17.5" font-weight="700" fill="#0F172A" text-anchor="start" >9 · Quality + deploy</text>
+<rect x="1265.8" y="617" width="30.2" height="22" rx="11" fill="#B45309"/><text x="1280.8999999999999" y="632.5" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.4">P1</text>
+<circle cx="998" cy="659.5" r="2.6" fill="#64748B"/>
+<text x="1008" y="664" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >End-to-end + accessibility tests</text>
+<circle cx="998" cy="682.5" r="2.6" fill="#64748B"/>
+<text x="1008" y="687" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Security review</text>
+<circle cx="998" cy="705.5" r="2.6" fill="#64748B"/>
+<text x="1008" y="710" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="start" >Go live + database backups</text>
+<line x1="992" y1="736" x2="1294" y2="736" stroke="#CBD5E1" stroke-opacity="0.35"/>
+<text x="994" y="757" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#475569" text-anchor="start" font-style="italic">Done when: a real restore is tested</text>
+<path d="M577,234.0 L604,234.0" fill="none" stroke="#94A3B8" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M945,234.0 L972,234.0" fill="none" stroke="#94A3B8" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M1143.0,321 L1143.0,347.0 L407.0,347.0 L407.0,362" fill="none" stroke="#2563EB" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M577,460.0 L604,460.0" fill="none" stroke="#94A3B8" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M945,460.0 L972,460.0" fill="none" stroke="#94A3B8" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M1313,460.0 L1340,460.0" fill="none" stroke="#94A3B8" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M1511.0,547 L1511.0,573.0 L407.0,573.0 L407.0,588" fill="none" stroke="#94A3B8" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M577,686.0 L604,686.0" fill="none" stroke="#94A3B8" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M945,686.0 L972,686.0" fill="none" stroke="#94A3B8" stroke-width="2.2" marker-end="url(#arrow)"/>
+<rect x="40" y="810" width="1680" height="112" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-dasharray="8 6"/>
+<text x="64" y="854" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="24" font-weight="700" fill="#64748B" text-anchor="start" >P2</text>
+<text x="64" y="880" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#64748B" text-anchor="start" >Only if real use needs it</text>
+<rect x="240" y="846" width="168" height="40" rx="20" fill="#F1F5F9" stroke="#CBD5E1"/>
+<text x="324.2" y="871" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="middle" >Desktop app (Tauri)</text>
+<rect x="424.4" y="846" width="153" height="40" rx="20" fill="#F1F5F9" stroke="#CBD5E1"/>
+<text x="501.0" y="871" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="middle" >Native mobile app</text>
+<rect x="593.5999999999999" y="846" width="252" height="40" rx="20" fill="#F1F5F9" stroke="#CBD5E1"/>
+<text x="719.5999999999999" y="871" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="middle" >Google / Outlook calendar sync</text>
+<rect x="861.5999999999999" y="846" width="168" height="40" rx="20" fill="#F1F5F9" stroke="#CBD5E1"/>
+<text x="945.8" y="871" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="middle" >Multi-user accounts</text>
+<rect x="1046.0" y="846" width="146" height="40" rx="20" fill="#F1F5F9" stroke="#CBD5E1"/>
+<text x="1118.8" y="871" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="middle" >Finance tracking</text>
+<path d="M1143.0,773 L1143.0,806" fill="none" stroke="#94A3B8" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<text x="40" y="956" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="15" font-weight="700" fill="#0F172A" text-anchor="start" >Every stage ends the same way:</text>
+<rect x="290" y="936" width="59" height="30" rx="8" fill="#EEF2FF" stroke="#C7D2FE"/>
+<text x="319.5" y="956" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="13.5" font-weight="400" fill="#3730A3" text-anchor="middle" >Build</text>
+<text x="362.0" y="956" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="16" font-weight="400" fill="#6366F1" text-anchor="middle" >→</text>
+<rect x="375.0" y="936" width="133" height="30" rx="8" fill="#EEF2FF" stroke="#C7D2FE"/>
+<text x="441.5" y="956" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="13.5" font-weight="400" fill="#3730A3" text-anchor="middle" >Automated tests</text>
+<text x="521.0" y="956" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="16" font-weight="400" fill="#6366F1" text-anchor="middle" >→</text>
+<rect x="534.0" y="936" width="311" height="30" rx="8" fill="#EEF2FF" stroke="#C7D2FE"/>
+<text x="689.3" y="956" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="13.5" font-weight="400" fill="#3730A3" text-anchor="middle" >Browser check (desktop, phone, EN / 中文)</text>
+<text x="857.6" y="956" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="16" font-weight="400" fill="#6366F1" text-anchor="middle" >→</text>
+<rect x="870.6" y="936" width="118" height="30" rx="8" fill="#EEF2FF" stroke="#C7D2FE"/>
+<text x="929.7" y="956" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="13.5" font-weight="400" fill="#3730A3" text-anchor="middle" >Your approval</text>
+<text x="1001.8000000000001" y="956" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="16" font-weight="400" fill="#6366F1" text-anchor="middle" >→</text>
+<rect x="1014.8000000000001" y="936" width="192" height="30" rx="8" fill="#EEF2FF" stroke="#C7D2FE"/>
+<text x="1110.9" y="956" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="13.5" font-weight="400" fill="#3730A3" text-anchor="middle" >Commit + push to GitHub</text>
+<text x="1720" y="956" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif" font-size="13.5" font-weight="400" fill="#64748B" text-anchor="end" >Cost: US$0 while building · about US$5–15/month once live</text>
+</svg>

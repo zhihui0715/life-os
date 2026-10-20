@@ -26,3 +26,6 @@ Thumbs.db
 
 # Local backups / exports
 backups/
+
+# Diagram tool working files (rendered copies live in docs/diagrams)
+.archify/
