@@ -14,7 +14,6 @@ import { HabitDetailPage } from '../features/habits/HabitDetailPage'
 import { HabitsPage } from '../features/habits/HabitsPage'
 import { HomePage } from '../features/home/HomePage'
 import { JournalPage } from '../features/journal/JournalPage'
-import { ComingSoonPage } from '../features/placeholder/ComingSoonPage'
 import { SettingsPage } from '../features/settings/SettingsPage'
 import { TasksPage } from '../features/tasks/TasksPage'
 import { ApiError } from '../lib/api'
@@ -23,6 +22,7 @@ import { AppShell } from './AppShell'
 
 // The calendar library is large; load it only when the Calendar page is opened.
 const CalendarPage = lazy(() => import('../features/calendar/CalendarPage'))
+const InsightsPage = lazy(() => import('../features/insights/InsightsPage').then((m) => ({ default: m.InsightsPage })))
 
 // If any request finds the session has expired, go back to the login screen.
 function onApiError(error: unknown) {
@@ -98,7 +98,14 @@ const router = createBrowserRouter([
           { path: 'habits/:habitId', element: <HabitDetailPage /> },
           { path: 'focus', element: <FocusPage /> },
           { path: 'journal', element: <JournalPage /> },
-          { path: 'insights', element: <ComingSoonPage feature="insights" stage={5} /> },
+          {
+            path: 'insights',
+            element: (
+              <Suspense fallback={<ListSkeleton rows={6} />}>
+                <InsightsPage />
+              </Suspense>
+            ),
+          },
           { path: 'settings', element: <SettingsPage /> },
           { path: '*', element: <Navigate to="/" replace /> },
         ],

@@ -30,6 +30,13 @@
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05);
   --shadow-lg: 0 12px 32px rgb(0 0 0 / 0.14);
 
+  /* Charts — validated with the dataviz palette checker (CVD + contrast) on these surfaces */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --chart-grid: #ececf0;
+  --chart-axis: #6b6b74;
+  --chart-muted: #c9c9d1;
+
   --duration-fast: 120ms;
   --duration-base: 200ms;
 
@@ -66,6 +73,12 @@
 
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
   --shadow-lg: 0 12px 32px rgb(0 0 0 / 0.5);
+
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --chart-grid: #26262c;
+  --chart-axis: #8f8f99;
+  --chart-muted: #3b3b44;
 
   color-scheme: dark;
 }

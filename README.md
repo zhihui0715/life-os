@@ -3,10 +3,9 @@
 A private, bilingual (English / 简体中文) personal management system: tasks, calendar, goals, habits, journal and insights.
 Architecture and decisions: [`docs/00-architecture-plan.md`](docs/00-architecture-plan.md).
 
-**Current stage: 4 — Tracking.** Working: login, settings (language, theme, timezone, working hours), tasks (views,
-subtasks, tags, search, tracked time), goals (milestones, explained progress), calendar (repeats, conflicts, scheduling
-help), habits (streaks with clear rules, 12-week history), journal & daily review (private, searchable), focus timer and
-activity log. Insights (dashboard + Life Balance Score) is next.
+**Current stage: 5 — Insights.** Everything in the P0 plan except backup is working: tasks, goals, calendar, habits,
+journal, focus timer and activity log, a customizable Home dashboard, and Insights (weekly/monthly metrics with written
+formulas, an experimental Life Balance Score with adjustable weights and data coverage, trends). Backup & restore is next.
 
 ## Requirements (Windows)
 

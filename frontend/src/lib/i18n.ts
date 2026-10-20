@@ -7,6 +7,7 @@ import { initReactI18next } from 'react-i18next'
 
 import enCalendar from '../locales/en/calendar.json'
 import enCommon from '../locales/en/common.json'
+import enInsights from '../locales/en/insights.json'
 import enFocus from '../locales/en/focus.json'
 import enJournal from '../locales/en/journal.json'
 import enHabits from '../locales/en/habits.json'
@@ -15,6 +16,7 @@ import enSettings from '../locales/en/settings.json'
 import enTasks from '../locales/en/tasks.json'
 import zhCalendar from '../locales/zh-CN/calendar.json'
 import zhCommon from '../locales/zh-CN/common.json'
+import zhInsights from '../locales/zh-CN/insights.json'
 import zhFocus from '../locales/zh-CN/focus.json'
 import zhJournal from '../locales/zh-CN/journal.json'
 import zhHabits from '../locales/zh-CN/habits.json'
@@ -26,8 +28,8 @@ export const LOCALES = ['en', 'zh-CN'] as const
 export type Locale = (typeof LOCALES)[number]
 
 export const resources = {
-  en: { common: enCommon, tasks: enTasks, goals: enGoals, calendar: enCalendar, habits: enHabits, journal: enJournal, focus: enFocus, settings: enSettings },
-  'zh-CN': { common: zhCommon, tasks: zhTasks, goals: zhGoals, calendar: zhCalendar, habits: zhHabits, journal: zhJournal, focus: zhFocus, settings: zhSettings },
+  en: { common: enCommon, tasks: enTasks, goals: enGoals, calendar: enCalendar, habits: enHabits, journal: enJournal, focus: enFocus, insights: enInsights, settings: enSettings },
+  'zh-CN': { common: zhCommon, tasks: zhTasks, goals: zhGoals, calendar: zhCalendar, habits: zhHabits, journal: zhJournal, focus: zhFocus, insights: zhInsights, settings: zhSettings },
 } as const
 
 const STORAGE_KEY = 'lifeos.locale'
@@ -46,7 +48,7 @@ i18n.use(initReactI18next).init({
   resources,
   lng: detectLocale(),
   fallbackLng: 'en',
-  ns: ['common', 'tasks', 'goals', 'calendar', 'habits', 'journal', 'focus', 'settings'],
+  ns: ['common', 'tasks', 'goals', 'calendar', 'habits', 'journal', 'focus', 'insights', 'settings'],
   defaultNS: 'common',
   interpolation: { escapeValue: false }, // React already escapes output
 })

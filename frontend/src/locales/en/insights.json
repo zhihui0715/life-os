@@ -1,0 +1,94 @@
+{
+  "title": "Insights",
+  "period": {
+    "week": "Week",
+    "month": "Month",
+    "label": "Period",
+    "prev": "Previous period",
+    "next": "Next period",
+    "current": "This {{period}}",
+    "inProgress": "In progress — {{days}} of {{total}} days so far"
+  },
+  "score": {
+    "title": "Life Balance Score",
+    "experimental": "Experimental",
+    "noData": "Not enough data yet",
+    "noDataHelp": "Complete tasks with due dates, check in habits, log learning time or record your mood, and the score will appear.",
+    "coverage": "Based on {{used}} of {{total}} components · {{coverage}}% data coverage",
+    "disclaimer": "A rough guide to balance in this app's data, not a measure of your worth or health. The weights are starting assumptions you can change in Settings.",
+    "weight": "weight {{weight}}%",
+    "effective": "counts {{weight}}%",
+    "disabled": "Turned off",
+    "noComponentData": "No data",
+    "vsPrevious": "{{delta}} vs previous",
+    "howTitle": "How the score is calculated",
+    "how": "Σ (weight × component score) ÷ Σ weight, using only components that are switched on and have data. Missing components are left out instead of counted as zero; coverage shows how much of the score had data."
+  },
+  "components": {
+    "tasks": "Task execution",
+    "goals_learning": "Goals & learning",
+    "habits": "Habits & routines",
+    "wellbeing": "Wellbeing (self-reported)"
+  },
+  "formula": {
+    "tasks": "Tasks due in the period that were done on time ÷ tasks due in the period. A task due today isn't counted until the day ends. Subtasks and dropped (archived) tasks are left out.",
+    "habits": "Check-ins done ÷ (scheduled days − skipped days), using the streak rules. Weekly-target habits count min(done, target) per week.",
+    "goals_learning": "Average of: learning minutes ÷ your weekly learning target (prorated, max 100%), and goals on track = progress ÷ share of time elapsed (max 100%). Goals whose time hasn't started yet are left out.",
+    "wellbeing": "Average of each day's mood and energy (1–5), rescaled to 0–100. Needs at least 3 check-in days in the period."
+  },
+  "metrics": {
+    "tasksTitle": "Tasks",
+    "onTime": "On-time rate",
+    "dueBreakdown": "{{onTime}} on time · {{late}} late · {{missed}} missed of {{due}} due",
+    "completed": "Completed",
+    "created": "Created",
+    "habitsTitle": "Habits",
+    "consistency": "Consistency",
+    "habitBreakdown": "{{done}} of {{eligible}} scheduled check-ins",
+    "learningTitle": "Learning",
+    "learningTime": "Learning time",
+    "target": "of {{target}} target",
+    "noTarget": "No weekly target set",
+    "setTarget": "Set a target",
+    "goalsTitle": "Goals on track",
+    "goalLine": "{{progress}}% done · {{expected}}% of time used",
+    "noGoals": "Nothing to judge yet. A goal counts once it's active, has progress and a target date, and some of its time has passed.",
+    "moodTitle": "Mood & energy",
+    "mood": "Mood",
+    "energy": "Energy",
+    "moodNeedsDays": "{{count}} of {{min}} check-in days needed",
+    "focusTitle": "Focus",
+    "focusLine": "{{completed}} completed · {{interrupted}} interrupted",
+    "estimatesTitle": "Estimates vs actual",
+    "estimatesLine": "{{actual}} actual for {{estimated}} estimated ({{tasks}} tasks)",
+    "estimatesNone": "Finish tasks that have an estimate and logged time to see this.",
+    "ratio": "×{{ratio}}",
+    "timeTitle": "Where your time went",
+    "timeNone": "No time logged in this period.",
+    "uncategorised": "No category",
+    "noData": "No data",
+    "how": "How is this calculated?"
+  },
+  "trend": {
+    "title": "Score over the last 8 weeks",
+    "weekOf": "Week of {{date}}",
+    "noData": "No score yet for these weeks.",
+    "gap": "Weeks without data are left as gaps, not zeros."
+  },
+  "dailyMood": "Daily mood and energy",
+  "table": {
+    "show": "Show as table",
+    "hide": "Hide table",
+    "date": "Date",
+    "value": "Value"
+  },
+  "settings": {
+    "title": "Life Balance Score",
+    "help": "Adjust how much each area counts, or switch an area off if it doesn't apply to you.",
+    "learningTarget": "Weekly learning target (minutes)",
+    "learningTargetHelp": "Leave empty for no target — learning time is still shown, it just isn't scored.",
+    "reset": "Reset to defaults",
+    "saved": "Score settings saved",
+    "atLeastOne": "Keep at least one area switched on."
+  }
+}

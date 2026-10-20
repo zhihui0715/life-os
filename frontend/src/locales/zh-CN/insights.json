@@ -1,0 +1,94 @@
+{
+  "title": "洞察",
+  "period": {
+    "week": "周",
+    "month": "月",
+    "label": "时间段",
+    "prev": "上一时间段",
+    "next": "下一时间段",
+    "current": "本{{period}}",
+    "inProgress": "进行中——已过 {{days}}/{{total}} 天"
+  },
+  "score": {
+    "title": "生活平衡分",
+    "experimental": "实验性",
+    "noData": "数据还不够",
+    "noDataHelp": "完成有到期日的任务、习惯打卡、记录学习时间或心情后，分数就会出现。",
+    "coverage": "基于 {{total}} 项中的 {{used}} 项 · 数据覆盖率 {{coverage}}%",
+    "disclaimer": "这只是根据本应用数据得出的平衡参考，并不衡量你的价值或健康。各项权重只是初始假设，可以在设置中调整。",
+    "weight": "权重 {{weight}}%",
+    "effective": "实际占比 {{weight}}%",
+    "disabled": "已关闭",
+    "noComponentData": "暂无数据",
+    "vsPrevious": "较上期 {{delta}}",
+    "howTitle": "分数如何计算",
+    "how": "Σ（权重 × 分项得分）÷ Σ 权重，只计算已开启且有数据的分项。缺少数据的分项会被排除，而不是按 0 计算；覆盖率表示分数中有数据支撑的比例。"
+  },
+  "components": {
+    "tasks": "任务执行",
+    "goals_learning": "目标与学习",
+    "habits": "习惯与日常",
+    "wellbeing": "身心状态（自评）"
+  },
+  "formula": {
+    "tasks": "本期按时完成的到期任务 ÷ 本期到期的任务。今天到期的任务要等今天结束才计算。子任务和已放弃（归档）的任务不计入。",
+    "habits": "完成的打卡 ÷（计划天数 − 跳过天数），使用与连续天数相同的规则。每周目标型习惯按每周 min(完成次数, 目标) 计算。",
+    "goals_learning": "以下两项的平均：学习分钟数 ÷ 每周学习目标（按天数折算，最高 100%）；目标进度 = 完成进度 ÷ 已用时间比例（最高 100%）。尚未开始计时的目标不计入。",
+    "wellbeing": "每天心情和精力（1–5）的平均值，换算为 0–100。本期至少需要 3 天的记录。"
+  },
+  "metrics": {
+    "tasksTitle": "任务",
+    "onTime": "按时完成率",
+    "dueBreakdown": "{{due}} 个到期：按时 {{onTime}} · 逾期完成 {{late}} · 未完成 {{missed}}",
+    "completed": "已完成",
+    "created": "新建",
+    "habitsTitle": "习惯",
+    "consistency": "完成率",
+    "habitBreakdown": "计划 {{eligible}} 次中完成 {{done}} 次",
+    "learningTitle": "学习",
+    "learningTime": "学习时间",
+    "target": "目标 {{target}}",
+    "noTarget": "未设置每周目标",
+    "setTarget": "设置目标",
+    "goalsTitle": "目标进度",
+    "goalLine": "完成 {{progress}}% · 已用时间 {{expected}}%",
+    "noGoals": "暂时无法评估。目标需要处于进行中、有进度和目标日期，并且已经过了一段时间，才会计入。",
+    "moodTitle": "心情与精力",
+    "mood": "心情",
+    "energy": "精力",
+    "moodNeedsDays": "需要 {{min}} 天记录，目前 {{count}} 天",
+    "focusTitle": "专注",
+    "focusLine": "完成 {{completed}} 次 · 中断 {{interrupted}} 次",
+    "estimatesTitle": "预计与实际用时",
+    "estimatesLine": "预计 {{estimated}}，实际 {{actual}}（{{tasks}} 个任务）",
+    "estimatesNone": "完成设有预计用时并记录了时间的任务后可以看到。",
+    "ratio": "×{{ratio}}",
+    "timeTitle": "时间都去哪了",
+    "timeNone": "这段时间没有记录时间。",
+    "uncategorised": "未分类",
+    "noData": "暂无数据",
+    "how": "如何计算？"
+  },
+  "trend": {
+    "title": "最近 8 周的分数",
+    "weekOf": "{{date}} 当周",
+    "noData": "这几周还没有分数。",
+    "gap": "没有数据的周显示为空缺，而不是 0。"
+  },
+  "dailyMood": "每日心情与精力",
+  "table": {
+    "show": "以表格显示",
+    "hide": "隐藏表格",
+    "date": "日期",
+    "value": "数值"
+  },
+  "settings": {
+    "title": "生活平衡分",
+    "help": "调整每个方面的权重，或关闭与你无关的方面。",
+    "learningTarget": "每周学习目标（分钟）",
+    "learningTargetHelp": "留空表示不设目标——学习时间仍会显示，只是不计分。",
+    "reset": "恢复默认",
+    "saved": "评分设置已保存",
+    "atLeastOne": "至少保留一个方面处于开启状态。"
+  }
+}

@@ -6,12 +6,19 @@ import type { ThemeSetting } from './theme'
 export type Weekday = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
 export type WorkingHours = Record<Weekday, [string, string][]>
 
+export type ScoreComponentKey = 'tasks' | 'goals_learning' | 'habits' | 'wellbeing'
+export type ScoreWeights = Record<ScoreComponentKey, number> & { enabled: Record<ScoreComponentKey, boolean> }
+export type DashboardSectionKey = 'focus' | 'schedule' | 'tasks' | 'habits' | 'mood' | 'balance' | 'goals' | 'learning'
+
 export interface UserSettings {
   locale: Locale
   timezone: string
   week_start: number
   theme: ThemeSetting
   working_hours: WorkingHours
+  score_weights: ScoreWeights
+  weekly_learning_target_min: number | null
+  dashboard_layout: { key: DashboardSectionKey; visible: boolean }[]
 }
 
 export interface Me {
@@ -322,4 +329,56 @@ export interface FocusSession {
   focused_seconds: number
   actual_minutes: number | null
   server_time: string
+}
+
+export interface ScoreComponent {
+  key: ScoreComponentKey
+  weight: number
+  enabled: boolean
+  score: number | null
+  has_data: boolean
+  effective_weight: number
+}
+
+export interface Overview {
+  period: { start: string; end: string; elapsed_days: number }
+  score: { value: number | null; coverage: number; components: ScoreComponent[] }
+  components: {
+    tasks: { score: number | null; due: number; on_time: number; late: number; missed: number; completed: number; created: number; rate: number | null }
+    habits: { score: number | null; habits: number; done: number; eligible: number; rate: number | null; daily: { date: string; rate: number | null }[] }
+    goals_learning: {
+      score: number | null
+      learning_minutes: number
+      learning_target_minutes: number | null
+      learning_rate: number | null
+      goals_on_track: number | null
+      goals: { goal_id: string; title: string; progress: number; expected: number; on_track: number }[]
+      daily_learning: { date: string; minutes: number }[]
+    }
+    wellbeing: {
+      score: number | null
+      check_in_days: number
+      min_days: number
+      average_mood: number | null
+      average_energy: number | null
+      daily: { date: string; mood: number | null; energy: number | null }[]
+    }
+  }
+  focus: { completed: number; interrupted: number; minutes: number }
+  estimates: { tasks: number; estimated_minutes: number; actual_minutes: number; ratio: number | null }
+  time: { total_minutes: number; by_category: { category_id: string | null; name: string | null; color: string | null; kind: string | null; minutes: number }[] }
+  previous: { period: { start: string; end: string }; score: number | null; components: Record<ScoreComponentKey, number | null>; learning_minutes: number }
+}
+
+export interface TrendWeek {
+  start: string
+  end: string
+  score: number | null
+  coverage: number
+  tasks: number | null
+  habits: number | null
+  goals_learning: number | null
+  wellbeing: number | null
+  learning_minutes: number
+  average_mood: number | null
 }

@@ -42,12 +42,13 @@ def create_app(config_name: str | None = None) -> Flask:
     from app.modules.categories.routes import bp as categories_bp
     from app.modules.goals.routes import bp as goals_bp
     from app.modules.habits.routes import bp as habits_bp
+    from app.modules.insights.routes import bp as insights_bp
     from app.modules.journal.routes import bp as journal_bp
     from app.modules.settings.routes import bp as settings_bp
     from app.modules.tasks.routes import bp as tasks_bp
     from app.modules.tasks.routes import tags_bp
 
-    for bp in (health_bp, auth_bp, settings_bp, categories_bp, tasks_bp, tags_bp, goals_bp, calendar_bp, habits_bp, journal_bp, activity_bp, focus_bp):
+    for bp in (health_bp, auth_bp, settings_bp, categories_bp, tasks_bp, tags_bp, goals_bp, calendar_bp, habits_bp, journal_bp, activity_bp, focus_bp, insights_bp):
         app.register_blueprint(bp)
 
     register_error_handlers(app)

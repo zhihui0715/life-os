@@ -6,6 +6,7 @@ from sqlalchemy import (
     CheckConstraint,
     DateTime,
     ForeignKey,
+    Integer,
     SmallInteger,
     String,
     Uuid,
@@ -26,6 +27,15 @@ DEFAULT_WORKING_HOURS = {
     **{d: [["09:00", "18:00"]] for d in WEEKDAYS[:5]},
     **{d: [["10:00", "16:00"]] for d in WEEKDAYS[5:]},
 }
+
+
+SCORE_COMPONENTS = ("tasks", "goals_learning", "habits", "wellbeing")
+DEFAULT_SCORE_WEIGHTS = {
+    "tasks": 30, "goals_learning": 25, "habits": 30, "wellbeing": 15,
+    "enabled": {k: True for k in SCORE_COMPONENTS},
+}
+DASHBOARD_SECTIONS = ("focus", "schedule", "tasks", "habits", "mood", "balance", "goals", "learning")
+DEFAULT_DASHBOARD = [{"key": k, "visible": True} for k in DASHBOARD_SECTIONS]
 
 
 class User(IdMixin, TimestampMixin, db.Model):
@@ -59,6 +69,11 @@ class UserSettings(db.Model):
     theme: Mapped[str] = mapped_column(String(10), nullable=False, default="system", server_default="system")
     # {"mon": [["09:00", "18:00"]], ...} in the user's timezone. NULL = use DEFAULT_WORKING_HOURS.
     working_hours: Mapped[dict | None] = mapped_column(JSONB)
+    # Life Balance Score: {"tasks": 30, ..., "enabled": {"tasks": true, ...}}. NULL = DEFAULT_SCORE_WEIGHTS.
+    score_weights: Mapped[dict | None] = mapped_column(JSONB)
+    weekly_learning_target_min: Mapped[int | None] = mapped_column(Integer)  # NULL = no target set
+    # Home sections in order: [{"key": "tasks", "visible": true}, ...]. NULL = DEFAULT_DASHBOARD.
+    dashboard_layout: Mapped[list | None] = mapped_column(JSONB)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=utcnow, onupdate=utcnow
     )
