@@ -53,6 +53,11 @@ describe('keepOffline: only the allowlisted data is saved on the device', () => 
     expect(keepOffline(q)).toBe(true)
   })
 
+  it('never keeps a signed-out state', () => {
+    qc.setQueryData(['me'], null)
+    expect(keepOffline(qc.getQueryCache().find({ queryKey: ['me'], exact: true })!)).toBe(false)
+  })
+
   it('never keeps the journal, insights, AI, searches or wide ranges', () => {
     expect(keepOffline(query(['journal', 'entry', '2026-10-23']))).toBe(false)
     expect(keepOffline(query(['insights', 'overview', 'week', 0]))).toBe(false)

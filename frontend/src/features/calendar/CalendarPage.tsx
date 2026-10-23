@@ -9,7 +9,7 @@ import luxonPlugin from '@fullcalendar/luxon3'
 import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import { Plus } from 'lucide-react'
-import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '../../components/ui/Button'
@@ -29,6 +29,31 @@ import { SuggestionDialog, useWhen } from './SuggestionDialog'
 
 const mobileQuery = '(max-width: 767px)'
 const PLUGINS = [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin, luxonPlugin]
+
+/**
+ * Two accessibility gaps in FullCalendar's own markup (found by the axe checks in e2e/a11y.spec.ts), patched after
+ * every redraw: its arrow icons are role="img" without a name (the buttons around them are already named, so the icons
+ * are hidden from screen readers), and its "+N more" link carries aria-expanded, which needs role="button".
+ */
+function useCalendarA11yFixes() {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const root = ref.current
+    if (!root) return
+    const fix = () => {
+      root.querySelectorAll('.fc-icon[role="img"]').forEach((el) => {
+        el.removeAttribute('role')
+        el.setAttribute('aria-hidden', 'true')
+      })
+      root.querySelectorAll('a.fc-daygrid-more-link:not([role])').forEach((el) => el.setAttribute('role', 'button'))
+    }
+    fix()
+    const observer = new MutationObserver(fix)
+    observer.observe(root, { childList: true, subtree: true })
+    return () => observer.disconnect()
+  }, [])
+  return ref
+}
 const LOCALES = [zhCnLocale]
 const MOBILE_HEADER = { left: 'prev,next', center: 'title', right: 'today' }
 const MOBILE_FOOTER = { center: 'timeGridDay,listWeek,dayGridMonth' }
@@ -63,6 +88,7 @@ interface PendingMove {
 
 export function CalendarPage() {
   const { t, i18n } = useTranslation('calendar')
+  const calendarRef = useCalendarA11yFixes()
   const me = useMe()
   const tz = me.settings.timezone
   const isMobile = useIsMobile()
@@ -222,6 +248,7 @@ export function CalendarPage() {
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
         <Card className="min-w-0 p-2 sm:p-3">
+          <div ref={calendarRef}>
           {occ.isError ? (
             <ErrorState message={errorMessage(t, occ.error)} onRetry={() => occ.refetch()} />
           ) : (
@@ -255,6 +282,7 @@ export function CalendarPage() {
               dayMaxEventRows={3}
             />
           )}
+          </div>
         </Card>
 
         <div className="flex flex-col gap-4">

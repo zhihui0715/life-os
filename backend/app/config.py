@@ -10,9 +10,16 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 load_dotenv(REPO_ROOT / ".env")
 
 
+def _db_url(url: str | None) -> str | None:
+    """Hosts often hand out postgres://… addresses; SQLAlchemy needs the driver named (postgresql+psycopg://…)."""
+    if url and url.startswith(("postgres://", "postgresql://")):
+        return "postgresql+psycopg://" + url.split("://", 1)[1]
+    return url
+
+
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY")
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
+    SQLALCHEMY_DATABASE_URI = _db_url(os.environ.get("DATABASE_URL"))
     # pool_pre_ping: recover from dropped DB connections.
     # timezone=utc: the DB returns every timestamptz in UTC, whatever the server's local zone.
     SQLALCHEMY_ENGINE_OPTIONS = {
@@ -27,6 +34,11 @@ class Config:
     PERMANENT_SESSION_LIFETIME = timedelta(days=14)
 
     MAX_CONTENT_LENGTH = 1 * 1024 * 1024  # 1 MB request bodies
+
+    # Production container: path of the built frontend to serve (frontend/dist); unset in development (Vite serves it).
+    FRONTEND_DIST = os.environ.get("FRONTEND_DIST") or None
+    # True when running behind the host's HTTPS proxy (it sets X-Forwarded-For / X-Forwarded-Proto).
+    TRUST_PROXY = os.environ.get("TRUST_PROXY", "").lower() in ("1", "true", "yes")
 
     RATELIMIT_ENABLED = True
     RATELIMIT_STORAGE_URI = "memory://"

@@ -13,7 +13,7 @@ from sqlalchemy import select
 from app.common.auth import current_user
 from app.common.errors import ApiError
 from app.common.timeutil import user_today
-from app.extensions import db
+from app.extensions import db, limiter
 from app.modules.activity.models import ActivityLog
 from app.modules.backup import service
 from app.modules.categories.models import Category
@@ -63,7 +63,11 @@ def _preview(user, backup):
     return result, json_rows, db_rows
 
 
+IMPORT_RATE = "6 per minute"  # each call may carry up to 50 MB and runs a full restore
+
+
 @bp.post("/import/preview")
+@limiter.limit(IMPORT_RATE)
 def import_preview():
     """Dry run: validates the file, runs the whole restore, reports what would change, then undoes everything."""
     _, backup = _import_body()
@@ -75,6 +79,7 @@ def import_preview():
 
 
 @bp.post("/import/apply")
+@limiter.limit(IMPORT_RATE)
 def import_apply():
     body, backup = _import_body()
     user = current_user()

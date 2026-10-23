@@ -96,3 +96,16 @@ def find_session(token: str) -> AuthSession | None:
 def end_session(auth_session: AuthSession) -> None:
     db.session.delete(auth_session)
     db.session.commit()
+
+
+def set_password(email: str, password: str) -> User:
+    """Change a password (CLI only) and sign every device out, so an old or leaked password stops working at once."""
+    user = db.session.scalar(select(User).where(User.email == normalise_email(email)))
+    if user is None:
+        raise ValueError("No user with this email.")
+    if len(password) < MIN_PASSWORD_LENGTH:
+        raise ValueError(f"Password must be at least {MIN_PASSWORD_LENGTH} characters.")
+    user.password_hash = _hasher.hash(password)
+    db.session.execute(delete(AuthSession).where(AuthSession.user_id == user.id))
+    db.session.commit()
+    return user

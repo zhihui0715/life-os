@@ -6,7 +6,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // In development the browser talks only to Vite; Vite forwards /api to Flask.
 // Same origin = no CORS setup, and the session cookie just works. `vite preview` (the built app) does the same.
-const proxy = { '/api': 'http://127.0.0.1:5000' }
+// The browser tests run their own backend, on another port (API_PROXY_TARGET, see playwright.config.ts).
+const proxy = { '/api': process.env.API_PROXY_TARGET ?? 'http://127.0.0.1:5000' }
 
 export default defineConfig({
   plugins: [
@@ -41,10 +42,24 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        // Libraries change far less often than the app: in their own files, a phone keeps them cached across
+        // app updates and re-downloads only the small app file.
+        manualChunks: {
+          react: ['react', 'react-dom', 'react-router', 'scheduler'],
+          data: ['@tanstack/react-query', '@tanstack/react-query-persist-client', '@tanstack/query-sync-storage-persister', 'i18next', 'react-i18next'],
+          forms: ['react-hook-form', 'zod', '@hookform/resolvers'],
+        },
+      },
+    },
+  },
   server: { port: 5173, proxy },
   preview: { port: 4173, proxy },
   test: {
     environment: 'jsdom',
+    exclude: ['e2e/**', 'node_modules/**'], // e2e/ holds Playwright tests (npm run e2e), not Vitest ones
     setupFiles: ['./src/test/setup.ts'],
     css: false,
   },

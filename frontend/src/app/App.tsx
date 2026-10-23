@@ -1,22 +1,15 @@
 import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router'
 
 import { ToastProvider } from '../components/ui/Toast'
 import { ErrorState, ListSkeleton } from '../components/ui/states'
 import { AuthProvider, ME_KEY, useAuth } from '../features/auth/AuthProvider'
-import { AssistantPage } from '../features/ai/AssistantPage'
 import { LoginPage } from '../features/auth/LoginPage'
-import { FocusPage } from '../features/focus/FocusPage'
-import { GoalDetailPage } from '../features/goals/GoalDetailPage'
-import { GoalsPage } from '../features/goals/GoalsPage'
-import { HabitDetailPage } from '../features/habits/HabitDetailPage'
 import { HabitsPage } from '../features/habits/HabitsPage'
 import { HomePage } from '../features/home/HomePage'
-import { JournalPage } from '../features/journal/JournalPage'
-import { SettingsPage } from '../features/settings/SettingsPage'
 import { TasksPage } from '../features/tasks/TasksPage'
 import { ApiError } from '../lib/api'
 import { errorMessage } from '../lib/errors'
@@ -26,6 +19,19 @@ import { AppShell } from './AppShell'
 // The calendar library is large; load it only when the Calendar page is opened.
 const CalendarPage = lazy(() => import('../features/calendar/CalendarPage'))
 const InsightsPage = lazy(() => import('../features/insights/InsightsPage').then((m) => ({ default: m.InsightsPage })))
+// Pages opened less often load on demand, keeping the first download small (performance budget: scripts/check-bundle.mjs).
+// The service worker still pre-caches them, so they open offline too.
+const AssistantPage = lazy(() => import('../features/ai/AssistantPage').then((m) => ({ default: m.AssistantPage })))
+const FocusPage = lazy(() => import('../features/focus/FocusPage').then((m) => ({ default: m.FocusPage })))
+const GoalDetailPage = lazy(() => import('../features/goals/GoalDetailPage').then((m) => ({ default: m.GoalDetailPage })))
+const GoalsPage = lazy(() => import('../features/goals/GoalsPage').then((m) => ({ default: m.GoalsPage })))
+const HabitDetailPage = lazy(() => import('../features/habits/HabitDetailPage').then((m) => ({ default: m.HabitDetailPage })))
+const JournalPage = lazy(() => import('../features/journal/JournalPage').then((m) => ({ default: m.JournalPage })))
+const SettingsPage = lazy(() => import('../features/settings/SettingsPage').then((m) => ({ default: m.SettingsPage })))
+
+function lazyPage(element: ReactNode) {
+  return <Suspense fallback={<ListSkeleton rows={6} />}>{element}</Suspense>
+}
 
 // If any request finds the session has expired, go back to the login screen.
 function onApiError(error: unknown) {
@@ -100,12 +106,12 @@ const router = createBrowserRouter([
               </Suspense>
             ),
           },
-          { path: 'goals', element: <GoalsPage /> },
-          { path: 'goals/:goalId', element: <GoalDetailPage /> },
+          { path: 'goals', element: lazyPage(<GoalsPage />) },
+          { path: 'goals/:goalId', element: lazyPage(<GoalDetailPage />) },
           { path: 'habits', element: <HabitsPage /> },
-          { path: 'habits/:habitId', element: <HabitDetailPage /> },
-          { path: 'focus', element: <FocusPage /> },
-          { path: 'journal', element: <JournalPage /> },
+          { path: 'habits/:habitId', element: lazyPage(<HabitDetailPage />) },
+          { path: 'focus', element: lazyPage(<FocusPage />) },
+          { path: 'journal', element: lazyPage(<JournalPage />) },
           {
             path: 'insights',
             element: (
@@ -114,8 +120,8 @@ const router = createBrowserRouter([
               </Suspense>
             ),
           },
-          { path: 'assistant', element: <AssistantPage /> },
-          { path: 'settings', element: <SettingsPage /> },
+          { path: 'assistant', element: lazyPage(<AssistantPage />) },
+          { path: 'settings', element: lazyPage(<SettingsPage />) },
           { path: '*', element: <Navigate to="/" replace /> },
         ],
       },

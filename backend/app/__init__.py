@@ -69,12 +69,14 @@ def create_app(config_name: str | None = None) -> Flask:
     @app.after_request
     def _finish_request(response):
         response.headers["X-Request-ID"] = g.get("request_id", "")
-        response.headers["X-Content-Type-Options"] = "nosniff"
-        response.headers["Cache-Control"] = "no-store"  # personal data must not sit in shared caches
         # Log the shape of the request only — never bodies (journal text etc.).
         duration_ms = (time.perf_counter() - g.get("started", time.perf_counter())) * 1000
         log.info("%s %s %s %.0fms id=%s", request.method, request.path, response.status_code, duration_ms, g.get("request_id"))
         return response
+
+    from app.web import init_web
+
+    init_web(app)  # security headers; in production also serves the built frontend
 
     from app.cli import register_cli
 

@@ -90,3 +90,27 @@ def test_other_users_records_are_invisible(app, api):
     assert other.get(f"/api/v1/tasks/{task_id}").status_code == 404
     assert other.patch(f"/api/v1/tasks/{task_id}", {"title": "hacked"}).status_code == 404
     assert other.get("/api/v1/tasks").get_json()["total"] == 0
+
+
+def test_set_password_signs_out_everywhere(app, api, user):
+    from app.modules.auth.service import set_password
+    from tests.conftest import ApiClient
+
+    other_device = ApiClient(app.test_client())
+    assert other_device.login(user.email).status_code == 200
+    set_password(user.email, "a-brand-new-password")
+    assert api.get("/api/v1/tasks").status_code == 401
+    assert other_device.get("/api/v1/tasks").status_code == 401
+    assert ApiClient(app.test_client()).login(user.email).status_code == 401  # old password
+    assert ApiClient(app.test_client()).login(user.email, "a-brand-new-password").status_code == 200
+
+
+def test_set_password_rejects_short_or_unknown(app, user):
+    import pytest
+
+    from app.modules.auth.service import set_password
+
+    with pytest.raises(ValueError):
+        set_password(user.email, "short")
+    with pytest.raises(ValueError):
+        set_password("nobody@example.test", "long-enough-password")

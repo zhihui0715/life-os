@@ -236,3 +236,14 @@ def test_backup_made_before_a_table_existed_still_restores(api):
     p = ok(preview(api, b))
     assert p["tables"]["ai_runs"]["in_backup"] == 0
     ok(apply(api, b, p["preview_token"], replace=True))
+
+
+def test_verify_restore_command(app, api):
+    """The restore-drill command (docs/04-deployment.md): same database on both sides → verified."""
+    import os
+
+    fill_account(api)
+    url = os.environ["TEST_DATABASE_URL"]
+    result = app.test_cli_runner().invoke(args=["verify-restore", "--source", url, "--target", url])
+    assert result.exit_code == 0, result.output
+    assert "Restore verified" in result.output

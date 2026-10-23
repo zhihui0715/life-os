@@ -3,11 +3,11 @@
 A private, bilingual (English / 简体中文) personal management system: tasks, calendar, goals, habits, journal and insights.
 Architecture and decisions: [`docs/00-architecture-plan.md`](docs/00-architecture-plan.md).
 
-**Current stage: 8 — Installable & offline.** The whole P0 plan is working: tasks, goals, calendar, habits, journal,
-focus timer and activity log, a customizable Home dashboard, Insights (metrics with written formulas, an experimental
-Life Balance Score, trends), and backup & restore. Optional AI daily plans and weekly reviews (off by default). The app
-installs to a phone or desktop and keeps working for a few things offline. Quality checks and deployment (Stage 9) are
-next.
+**Current stage: 9 — Quality & deployment.** All planned features are built: tasks, goals, calendar, habits, journal,
+focus timer and activity log, a customizable Home dashboard, Insights, backup & restore, optional AI daily plans and
+weekly reviews, and an installable app that works offline for the essentials. Browser tests, accessibility checks,
+a security review, performance budgets and a production container are in place; CI runs them all. What's left is
+choosing a host and deploying: see [`docs/04-deployment.md`](docs/04-deployment.md).
 
 ## Requirements (Windows)
 
@@ -50,8 +50,16 @@ Open http://localhost:5173. Vite forwards `/api` calls to Flask, so both look li
 
 ```bash
 cd backend && .venv/Scripts/python -m pytest    # needs the database running; uses the separate lifeos_test DB
-cd frontend && npm test
+cd frontend && npm test                         # unit tests
+cd frontend && npm run e2e                      # browser tests on the built app, own lifeos_e2e DB (first time: npx playwright install chromium)
+cd frontend && npm run build && npm run check:bundle   # performance budget
+python infra/security/secret_scan.py .          # secrets scan over the whole git history
 ```
+
+Existing local databases need the browser-test database once:
+`docker exec lifeos-db psql -U lifeos -d lifeos -c "CREATE DATABASE lifeos_e2e OWNER lifeos;"`
+
+All of these run in CI on every push (`.github/workflows/ci.yml`).
 
 ## Useful commands
 
@@ -61,6 +69,8 @@ cd frontend && npm test
 | `flask db migrate -m "message"` | Generate a migration after changing models — **review it before applying** |
 | `flask db upgrade` | Apply migrations |
 | `flask seed-dev-user` | Development only: create the test account defined in `.env` |
+| `flask set-password` | Change a password (signs that account out on every device) |
+| `docker build -t lifeos .` | Build the production image (API + built app in one container) |
 
 ## Backup
 

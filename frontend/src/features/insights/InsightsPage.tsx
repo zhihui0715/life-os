@@ -134,7 +134,7 @@ function Body({ data, trendWeeks }: { data: Overview; trendWeeks?: { start: stri
               {c.goals_learning.learning_target_minutes ? (
                 <Meter value={c.goals_learning.learning_rate} label={t('metrics.learningTime')} />
               ) : (
-                <p className="text-subtle text-xs">{t('metrics.noTarget')} · <Link to="/settings" className="text-accent hover:underline">{t('metrics.setTarget')}</Link></p>
+                <p className="text-subtle text-xs">{t('metrics.noTarget')} · <Link to="/settings" className="text-accent underline underline-offset-2">{t('metrics.setTarget')}</Link></p>
               )}
               {c.goals_learning.learning_minutes > 0 && (
                 <div className="mt-3"><MinutesBars data={c.goals_learning.daily_learning} name={t('metrics.learningTime')} /></div>

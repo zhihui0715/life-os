@@ -138,14 +138,15 @@ def _checksum(rows):
 
 # ---------- reading the account ----------
 
-def _read_rows(name, user_id):
+def _read_rows(name, user_id, session=None):
     cols = _columns(name)
-    result = db.session.execute(select(*cols).where(_owned(name, user_id)))
+    result = (session or db.session).execute(select(*cols).where(_owned(name, user_id)))
     return sorted(({c.name: _to_json(v) for c, v in zip(cols, r)} for r in result), key=_sort_key(name))
 
 
-def snapshot(user_id) -> dict[str, list[dict]]:
-    return {name: _read_rows(name, user_id) for name in TABLES}
+def snapshot(user_id, session=None) -> dict[str, list[dict]]:
+    """All of a user's rows. `session` lets the restore drill (flask verify-restore) read another database."""
+    return {name: _read_rows(name, user_id, session) for name in TABLES}
 
 
 def _summary(data):

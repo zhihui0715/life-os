@@ -19,7 +19,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.4,<9"]
+dev = ["pytest>=8.4,<9", "pip-audit>=2.9,<3"]
+prod = ["gunicorn>=25,<27"]  # production web server (Linux; used in the Docker image)
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

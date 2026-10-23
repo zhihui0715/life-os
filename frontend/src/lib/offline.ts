@@ -29,7 +29,9 @@ export function keepOffline(query: Query): boolean {
   // Keep the last good copy even if a later refresh failed (that's exactly when it's needed).
   if (query.state.data === undefined) return false
   const [root, kind, arg, extra] = query.queryKey as unknown[]
-  if (root === 'me' || root === 'categories') return true
+  // "Signed out" is never saved: restored later it would hide a valid session and show the login page.
+  if (root === 'me') return query.state.data !== null
+  if (root === 'categories') return true
   if (root === 'habits') return kind === 'list' && arg === false // active habits (not the archive, not details)
   if (root === 'tasks' && kind === 'list') {
     const filters = (arg ?? {}) as Record<string, unknown>

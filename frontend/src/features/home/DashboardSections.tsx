@@ -164,7 +164,7 @@ export function LearningSection() {
               {gl.learning_target_minutes != null && <span className="text-subtle text-sm"> {ti('metrics.target', { target: formatMinutes(gl.learning_target_minutes, i18n.language) })}</span>}
             </p>
             {gl.learning_target_minutes != null ? <Meter value={gl.learning_rate} label={t('home.learning')} /> : (
-              <p className="text-subtle text-xs">{ti('metrics.noTarget')} · <Link to="/settings" className="text-accent hover:underline">{ti('metrics.setTarget')}</Link></p>
+              <p className="text-subtle text-xs">{ti('metrics.noTarget')} · <Link to="/settings" className="text-accent underline underline-offset-2">{ti('metrics.setTarget')}</Link></p>
             )}
           </>
         )}

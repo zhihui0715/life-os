@@ -21,10 +21,14 @@ export function Delta({ now, before, unit = '' }: { now: number | null; before: 
 
 /** A 0–100 meter whose unfilled track is a lighter step of the same hue. */
 export function Meter({ value, label }: { value: number | null; label: string }) {
+  const { t } = useTranslation('insights')
+  if (value == null) {
+    // No data: a dashed empty bar, announced as such (a meter must have a value).
+    return <div role="img" aria-label={`${label}: ${t('score.noComponentData')}`} className="border-border-strong h-2 rounded-full border border-dashed" />
+  }
   return (
-    <div role={value == null ? undefined : 'meter'} aria-valuenow={value ?? undefined} aria-valuemin={0} aria-valuemax={100} aria-label={label}
-      className={cn('h-2 overflow-hidden rounded-full', value == null ? 'border-border-strong border border-dashed' : 'bg-accent-soft')}>
-      {value != null && <div className="bg-accent h-full rounded-full" style={{ width: `${Math.max(value, 2)}%` }} />}
+    <div role="meter" aria-valuenow={Math.round(value)} aria-valuemin={0} aria-valuemax={100} aria-label={label} className="bg-accent-soft h-2 overflow-hidden rounded-full">
+      <div className="bg-accent h-full rounded-full" style={{ width: `${Math.max(value, 2)}%` }} />
     </div>
   )
 }
