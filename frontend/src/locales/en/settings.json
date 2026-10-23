@@ -63,5 +63,9 @@
       "tags": "Tags",
       "user_settings": "Settings"
     }
+  },
+  "sound": {
+    "label": "Sounds & haptics",
+    "help": "Soft clicks, a chime when you finish a task or habit, and a bell when a focus session ends. Saved on this device."
   }
 }

@@ -1,11 +1,14 @@
-import { Check, Flame, Moon } from 'lucide-react'
+import { Flame, Moon } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { CheckMark } from '../../components/ui/CheckMark'
 import { cn } from '../../components/ui/cn'
 import { useToast } from '../../components/ui/Toast'
 import { todayInZone } from '../../lib/dates'
 import { errorMessage } from '../../lib/errors'
 import { isQueued } from '../../lib/offline'
+import { play } from '../../lib/sound'
 import type { Habit } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
 import { useCheckIn, WEEKDAY_BITS } from './api'
@@ -31,8 +34,11 @@ export function CheckButton({ habit, size = 'md' }: { habit: Habit; size?: 'md' 
   const checkIn = useCheckIn()
   const state = habit.today?.state ?? null
   const today = todayInZone(me.settings.timezone)
+  const [celebrate, setCelebrate] = useState(false)
 
-  const toggle = () =>
+  const toggle = () => {
+    setCelebrate(state !== 'done')
+    play(state === 'done' ? 'uncheck' : 'complete')
     checkIn.mutate(
       { id: habit.id, date: today, state: state === 'done' ? null : 'done', value: habit.target_value, name: habit.name },
       {
@@ -40,7 +46,9 @@ export function CheckButton({ habit, size = 'md' }: { habit: Habit; size?: 'md' 
         onError: (e) => toast(errorMessage(t, e), 'error'),
       },
     )
+  }
 
+  const px = size === 'lg' ? 40 : 28
   return (
     <button
       type="button"
@@ -49,13 +57,15 @@ export function CheckButton({ habit, size = 'md' }: { habit: Habit; size?: 'md' 
       aria-label={t(state === 'done' ? 'actions.undo' : 'actions.done', { name: habit.name })}
       disabled={checkIn.isPending}
       onClick={toggle}
-      className={cn(
-        'relative flex shrink-0 items-center justify-center rounded-full border-2 transition-colors',
-        size === 'lg' ? 'h-11 w-11' : 'h-9 w-9',
-        state === 'done' ? 'border-success bg-success text-white' : state === 'skipped' ? 'border-border bg-sunken text-subtle' : 'border-border-strong hover:border-success text-transparent hover:text-success/40',
-      )}
+      className="group/check pressable relative flex shrink-0 items-center justify-center rounded-full"
     >
-      {state === 'skipped' ? <Moon size={16} aria-hidden /> : <Check size={size === 'lg' ? 22 : 18} strokeWidth={3} aria-hidden />}
+      {state === 'skipped' ? (
+        <span className="bg-sunken text-subtle flex items-center justify-center rounded-full" style={{ width: px, height: px }}>
+          <Moon size={16} aria-hidden />
+        </span>
+      ) : (
+        <CheckMark checked={state === 'done'} celebrate={celebrate} size={px} color="var(--success-fill)" />
+      )}
     </button>
   )
 }
@@ -72,7 +82,7 @@ export function StreakBadge({ habit }: { habit: Habit }) {
 }
 
 const DOT: Record<string, string> = {
-  done: 'bg-success',
+  done: 'bg-success-fill',
   skipped: 'bg-subtle/40',
   missed: 'bg-danger/70',
   open: 'border border-border-strong',

@@ -66,9 +66,9 @@ export function QuickAddInput({ view, extra, label, placeholder, autoFocus, onAd
         e.preventDefault()
         submit()
       }}
-      className="border-border bg-surface focus-within:border-accent flex items-center gap-2 rounded-lg border px-3"
+      className="bg-surface shadow-card focus-within:shadow-[0_0_0_3px_color-mix(in_srgb,var(--accent)_22%,transparent)] flex items-center gap-2.5 rounded-2xl px-3.5 transition-shadow duration-[var(--duration-base)] dark:shadow-none"
     >
-      <Plus size={18} className="text-subtle shrink-0" aria-hidden />
+      <span className="bg-accent-fill text-on-accent flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full"><Plus size={15} strokeWidth={3} aria-hidden /></span>
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
@@ -77,7 +77,7 @@ export function QuickAddInput({ view, extra, label, placeholder, autoFocus, onAd
         data-autofocus={autoFocus || undefined}
         aria-label={label ?? t('quickAdd.label')}
         placeholder={placeholder ?? t('quickAdd.placeholder')}
-        className="placeholder:text-subtle h-11 min-w-0 flex-1 bg-transparent focus:outline-none"
+        className="placeholder:text-subtle h-12 min-w-0 flex-1 bg-transparent text-[15.5px] focus:outline-none"
       />
     </form>
   )

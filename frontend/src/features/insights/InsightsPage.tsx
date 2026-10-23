@@ -184,7 +184,7 @@ function Body({ data, trendWeeks }: { data: Overview; trendWeeks?: { start: stri
                       </div>
                       {/* magnitude → one hue for every bar; the dot carries the category's identity */}
                       <div className="bg-accent-soft h-1.5 overflow-hidden rounded-full">
-                        <div className="bg-accent h-full rounded-full" style={{ width: `${(100 * row.minutes) / data.time.total_minutes}%` }} />
+                        <div className="bg-accent-fill h-full rounded-full" style={{ width: `${(100 * row.minutes) / data.time.total_minutes}%` }} />
                       </div>
                     </li>
                   ))}

@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router'
 
 import { cn } from '../../components/ui/cn'
 import { Card, PageHeader } from '../../components/ui/states'
+import { play } from '../../lib/sound'
 import type { Task, TaskFilters, TaskView } from '../../lib/types'
 import { useCategories } from './api'
 import { QuickAddInput } from './QuickAddInput'
@@ -63,7 +64,7 @@ export function TasksPage() {
       <PageHeader title={t('title')} subtitle={subtitle} />
 
       <div className="mb-3 flex flex-wrap items-center gap-2">
-        <label className="border-border bg-surface focus-within:border-accent flex h-10 min-w-0 flex-1 items-center gap-2 rounded-lg border px-3 sm:max-w-sm">
+        <label className="bg-fg/[0.07] focus-within:bg-fg/[0.09] flex h-10 min-w-0 flex-1 items-center gap-2 rounded-xl px-3 transition-colors sm:max-w-sm">
           <Search size={16} className="text-subtle shrink-0" aria-hidden />
           <span className="sr-only">{t('search.label')}</span>
           <input
@@ -94,16 +95,19 @@ export function TasksPage() {
       </div>
 
       {/* View tabs: the URL keeps the view, so refresh and back/forward work */}
-      <div role="tablist" aria-label={t('views.label')} className="-mx-4 mb-4 flex gap-1 overflow-x-auto px-4 pb-1 md:mx-0 md:px-0">
+      <div role="tablist" aria-label={t('views.label')} className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden">
         {VIEWS.map((v) => (
           <button
             key={v}
             role="tab"
             aria-selected={!q && v === view}
-            onClick={() => pickView(v)}
+            onClick={() => {
+              play('tab')
+              pickView(v)
+            }}
             className={cn(
-              'h-9 shrink-0 rounded-full px-3.5 text-sm font-medium transition-colors',
-              !q && v === view ? 'bg-fg text-bg' : 'text-muted hover:bg-sunken hover:text-fg',
+              'pressable h-9 shrink-0 rounded-full px-4 text-[14px] font-semibold',
+              !q && v === view ? 'bg-accent-fill text-on-accent shadow-[0_2px_8px_-2px_color-mix(in_srgb,var(--accent)_55%,transparent)]' : 'bg-surface text-muted hover:text-fg shadow-card dark:shadow-none',
             )}
           >
             {t(`views.${v}`)}
@@ -112,7 +116,7 @@ export function TasksPage() {
       </div>
 
       {view !== 'completed' && view !== 'archived' && !q && (
-        <div className="mb-4">
+        <div className="mb-5">
           <QuickAddInput view={view} extra={tag ? { tags: [tag] } : undefined} />
         </div>
       )}

@@ -113,8 +113,12 @@ export function useTaskAction() {
       )
     },
     // A queued completion keeps its optimistic tick until it syncs (refetching now would undo it on screen).
-    onSettled: (result) =>
-      isQueued(result) ? undefined : Promise.all([qc.invalidateQueries({ queryKey: TASKS }), qc.invalidateQueries({ queryKey: ['goals'] })]),
+    // A completed task stays ticked in place for a moment (like Things) so its animation can play before it leaves the list.
+    onSettled: async (result, _error, { action }) => {
+      if (isQueued(result)) return
+      if (action === 'complete') await new Promise((r) => setTimeout(r, 900))
+      await Promise.all([qc.invalidateQueries({ queryKey: TASKS }), qc.invalidateQueries({ queryKey: ['goals'] })])
+    },
   })
 }
 

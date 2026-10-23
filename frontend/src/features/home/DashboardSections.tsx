@@ -1,9 +1,9 @@
-import { ArrowRight, CalendarDays, Play, Timer } from 'lucide-react'
+import { CalendarDays, ChevronRight, Play, Timer } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
-import { Card } from '../../components/ui/states'
+import { GroupSection } from '../../components/ui/states'
 import { addDays, formatInstant, formatMinutes, todayInZone, wallTimeToUtcIso } from '../../lib/dates'
 import { useOnline } from '../../lib/offline'
 import { useMe } from '../auth/AuthProvider'
@@ -15,21 +15,21 @@ import { useGoals } from '../goals/api'
 import { useOverview } from '../insights/api'
 import { Meter } from '../insights/BalanceCard'
 
+export function ViewAll({ to, label }: { to: string; label: string }) {
+  return (
+    <Link to={to} className="text-accent pressable inline-flex items-center text-[15px] font-medium">
+      {label}
+      <ChevronRight size={17} aria-hidden />
+    </Link>
+  )
+}
+
 export function Section({ title, to, children }: { title: string; to?: string; children: ReactNode }) {
   const { t } = useTranslation()
   return (
-    <Card className="overflow-hidden">
-      <div className="border-border flex items-center justify-between border-b px-4 py-3">
-        <h2 className="font-semibold">{title}</h2>
-        {to && (
-          <Link to={to} className="text-accent inline-flex items-center gap-1 text-sm font-medium hover:underline">
-            {t('home.viewAll')}
-            <ArrowRight size={14} aria-hidden />
-          </Link>
-        )}
-      </div>
+    <GroupSection title={title} action={to && <ViewAll to={to} label={t('home.viewAll')} />}>
       {children}
-    </Card>
+    </GroupSection>
   )
 }
 
@@ -70,7 +70,7 @@ export function FocusSection() {
           <>
             <Timer size={20} aria-hidden className="text-accent" />
             <span className="min-w-0 flex-1 truncate">{s.task_title ?? s.label ?? t('timer.noTask')}</span>
-            <span className="text-accent text-lg font-semibold tabular-nums">{clock(remaining > 0 ? remaining : focused)}</span>
+            <span className="text-accent font-display text-[22px] font-semibold tabular-nums">{clock(remaining > 0 ? remaining : focused)}</span>
           </>
         ) : (
           <>
@@ -101,7 +101,7 @@ export function BalanceSection() {
           <p className="text-subtle text-sm">{ti('score.noData')}</p>
         ) : (
           <>
-            <p className="mb-1"><span className="text-3xl font-semibold">{Math.round(o.score.value)}</span><span className="text-subtle"> / 100</span></p>
+            <p className="mb-1"><span className="font-display text-[44px] leading-none font-bold tracking-tight tabular-nums">{Math.round(o.score.value)}</span><span className="text-subtle"> / 100</span></p>
             <p className="text-subtle mb-2 text-xs">{ti('score.coverage', {
               used: o.score.components.filter((c) => c.has_data && c.enabled).length,
               total: o.score.components.filter((c) => c.enabled && c.weight > 0).length,

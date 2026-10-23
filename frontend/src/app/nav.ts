@@ -17,17 +17,18 @@ export interface NavItem {
   key: string // translation key under common:nav
   icon: LucideIcon
   mobilePrimary?: boolean // shown in the mobile bottom bar (others go under "More")
+  tint: string // CSS colour for the section's icon (tokens.css --tint-*)
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { to: '/', key: 'home', icon: Home, mobilePrimary: true },
-  { to: '/tasks', key: 'tasks', icon: CheckSquare, mobilePrimary: true },
-  { to: '/calendar', key: 'calendar', icon: CalendarDays, mobilePrimary: true },
-  { to: '/goals', key: 'goals', icon: Target },
-  { to: '/habits', key: 'habits', icon: Flame, mobilePrimary: true },
-  { to: '/focus', key: 'focus', icon: Timer },
-  { to: '/insights', key: 'insights', icon: BarChart3 },
-  { to: '/journal', key: 'journal', icon: BookOpen },
-  { to: '/assistant', key: 'assistant', icon: Sparkles },
-  { to: '/settings', key: 'settings', icon: Settings },
+  { to: '/', key: 'home', tint: 'var(--tint-home)', icon: Home, mobilePrimary: true },
+  { to: '/tasks', key: 'tasks', tint: 'var(--tint-tasks)', icon: CheckSquare, mobilePrimary: true },
+  { to: '/calendar', key: 'calendar', tint: 'var(--tint-calendar)', icon: CalendarDays, mobilePrimary: true },
+  { to: '/goals', key: 'goals', tint: 'var(--tint-goals)', icon: Target },
+  { to: '/habits', key: 'habits', tint: 'var(--tint-habits)', icon: Flame, mobilePrimary: true },
+  { to: '/focus', key: 'focus', tint: 'var(--tint-focus)', icon: Timer },
+  { to: '/insights', key: 'insights', tint: 'var(--tint-insights)', icon: BarChart3 },
+  { to: '/journal', key: 'journal', tint: 'var(--tint-journal)', icon: BookOpen },
+  { to: '/assistant', key: 'assistant', tint: 'var(--tint-assistant)', icon: Sparkles },
+  { to: '/settings', key: 'settings', tint: 'var(--tint-settings)', icon: Settings },
 ]

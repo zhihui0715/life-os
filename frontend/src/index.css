@@ -1,11 +1,19 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/inter';
 @import './styles/tokens.css';
+@import './styles/motion.css';
+
+/* dark: follows the app's own theme setting, not only the OS */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
 /* Expose tokens as Tailwind utilities: bg-surface, text-muted, border-border, bg-accent, text-p1 ... */
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-sunken: var(--surface-sunken);
+  --color-raised: var(--surface-raised);
+  --color-bar: var(--bar);
+  --color-sidebar: var(--sidebar);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
   --color-fg: var(--text);
@@ -13,11 +21,14 @@
   --color-subtle: var(--text-subtle);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
+  --color-accent-fill: var(--accent-fill);
   --color-accent-soft: var(--accent-soft);
   --color-on-accent: var(--text-on-accent);
   --color-success: var(--success);
+  --color-success-fill: var(--success-fill);
   --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
+  --color-warning-fill: var(--warning-fill);
   --color-warning-soft: var(--warning-soft);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
@@ -27,10 +38,23 @@
   --color-p4: var(--p4);
   --shadow-card: var(--shadow-sm);
   --shadow-pop: var(--shadow-lg);
+  --shadow-float: var(--shadow-float);
+  --ease-out-expo: var(--ease-out);
+  --ease-spring: var(--ease-spring);
 }
 
 @theme {
-  --font-sans: Inter, system-ui, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  /* San Francisco on Apple devices; Inter (bundled, works offline) everywhere else. */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', Inter, system-ui, 'Segoe UI', 'PingFang SC',
+    'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --font-display:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter Variable', Inter, system-ui, 'Segoe UI', 'PingFang SC',
+    'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
 }
 
 html,
@@ -39,15 +63,88 @@ body {
   color: var(--text);
 }
 
+html {
+  -webkit-tap-highlight-color: transparent;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
 body {
-  @apply font-sans text-sm antialiased;
+  @apply font-sans antialiased;
+  font-size: 15px;
+  line-height: 1.45;
+  letter-spacing: -0.011em;
+  font-feature-settings: 'cv11', 'ss01'; /* Inter: single-storey a and open digits, closer to SF */
+  overscroll-behavior-y: none;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* Numbers in lists, timers and stats line up */
+.tabular,
+time {
+  font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+input,
+textarea {
+  caret-color: var(--accent);
 }
 
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 99px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 dialog::backdrop {
-  background: rgb(0 0 0 / 0.45);
+  background: rgb(0 0 0 / 0.38);
+}
+
+/* Frosted chrome (tab bar, compact title bar). Solid fallback when transparency is reduced or unsupported. */
+.material {
+  background: var(--bar);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .material {
+    background: var(--surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Press feedback shared by every tappable thing: a quick shrink like UIKit buttons */
+.pressable {
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) ease,
+    color var(--duration-fast) ease,
+    opacity var(--duration-fast) ease;
+}
+.pressable:active:not(:disabled) {
+  transform: scale(0.96);
 }

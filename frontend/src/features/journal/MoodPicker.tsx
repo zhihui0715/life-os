@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '../../components/ui/cn'
+import { play } from '../../lib/sound'
 
 const FACES = ['😞', '🙁', '😐', '🙂', '😄']
 const BOLTS = ['▁', '▂', '▄', '▆', '█']
@@ -12,8 +13,8 @@ export function MoodPicker({ kind, value, onChange, compact }: { kind: 'mood' | 
   const symbols = kind === 'mood' ? FACES : BOLTS
   return (
     <div role="radiogroup" aria-label={label} className="flex items-center gap-2">
-      <span className={cn('text-sm font-medium', compact ? 'w-10' : 'w-14')}>{label}</span>
-      <div className="flex gap-1">
+      <span className={cn('text-muted text-[13px] font-semibold', compact ? 'w-12' : 'w-14')}>{label}</span>
+      <div className="flex gap-1.5">
         {[1, 2, 3, 4, 5].map((v) => (
           <button
             key={v}
@@ -22,11 +23,14 @@ export function MoodPicker({ kind, value, onChange, compact }: { kind: 'mood' | 
             aria-checked={value === v}
             aria-label={`${t('mood.set', { label, value: v })} · ${t(`mood.${v}`)}`}
             title={t(`mood.${v}`)}
-            onClick={() => onChange(value === v ? null : v)}
+            onClick={() => {
+              play('tap')
+              onChange(value === v ? null : v)
+            }}
             className={cn(
-              'flex items-center justify-center rounded-md border text-lg transition-colors',
-              compact ? 'h-9 w-9' : 'h-10 w-10',
-              value === v ? 'border-accent bg-accent-soft' : 'border-border hover:bg-sunken',
+              'pressable flex items-center justify-center rounded-full text-lg',
+              compact ? 'h-10 w-10' : 'h-11 w-11',
+              value === v ? 'bg-accent-soft animate-pop shadow-[inset_0_0_0_2px_var(--accent)]' : 'bg-sunken hover:bg-border',
               kind === 'energy' && (value === v ? 'text-accent' : 'text-subtle'),
             )}
           >

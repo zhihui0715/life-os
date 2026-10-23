@@ -1,4 +1,4 @@
-import { MoreHorizontal, PanelLeftClose, PanelLeftOpen, Plus } from 'lucide-react'
+import { ChevronRight, MoreHorizontal, PanelLeftClose, PanelLeftOpen, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet, useLocation } from 'react-router'
@@ -8,6 +8,7 @@ import { cn } from '../components/ui/cn'
 import { Dialog } from '../components/ui/Dialog'
 import { FocusWidget } from '../features/focus/FocusWidget'
 import { QuickAddDialog } from '../features/tasks/QuickAddDialog'
+import { play } from '../lib/sound'
 import { ErrorBoundary } from './ErrorBoundary'
 import { OfflineBanner, UpdatePrompt } from './OfflineBanner'
 import { NAV_ITEMS } from './nav'
@@ -22,6 +23,8 @@ function readCollapsed() {
   }
 }
 
+const isActivePath = (pathname: string, to: string) => (to === '/' ? pathname === '/' : pathname.startsWith(to))
+
 export function AppShell() {
   const { t } = useTranslation()
   const location = useLocation()
@@ -30,6 +33,7 @@ export function AppShell() {
   const [quickAddOpen, setQuickAddOpen] = useState(false)
 
   const toggleCollapsed = () => {
+    play('tap')
     setCollapsed((c) => {
       try {
         localStorage.setItem(STORAGE_KEY, c ? '0' : '1')
@@ -40,112 +44,184 @@ export function AppShell() {
     })
   }
 
+  const primary = NAV_ITEMS.filter((i) => i.mobilePrimary)
   const secondary = NAV_ITEMS.filter((i) => !i.mobilePrimary)
-  const moreActive = secondary.some((i) => location.pathname.startsWith(i.to))
+  const moreActive = secondary.some((i) => isActivePath(location.pathname, i.to))
+  // Index of the active tab (the last slot is "More"); drives the sliding highlight
+  const activeTab = moreActive ? primary.length : primary.findIndex((i) => isActivePath(location.pathname, i.to))
+  const tabCount = primary.length + 1
+
+  const openQuickAdd = () => {
+    play('tap')
+    setQuickAddOpen(true)
+  }
 
   return (
     <div className="min-h-dvh md:flex">
-      {/* Sidebar: tablet (icons) and desktop (icons + labels, collapsible) */}
+      {/* Sidebar (tablet: icons; desktop: icons + labels, collapsible), styled like a macOS source list */}
       <aside
         className={cn(
-          'border-border bg-surface sticky top-0 hidden h-dvh shrink-0 flex-col border-r md:flex',
-          collapsed ? 'w-16' : 'w-16 lg:w-56',
+          'bg-sidebar sticky top-0 hidden h-dvh shrink-0 flex-col md:flex',
+          'transition-[width] duration-[var(--duration-slow)] ease-[var(--ease-out)]',
+          collapsed ? 'w-[72px]' : 'w-[72px] lg:w-60',
         )}
       >
-        <div className="flex h-14 items-center gap-2.5 px-4">
-          <img src="/icon.svg" alt="" className="h-7 w-7" />
-          <span className={cn('font-semibold', collapsed ? 'hidden' : 'hidden lg:inline')}>{t('appName')}</span>
+        <div className="flex h-16 items-center gap-3 px-[18px]">
+          <img src="/icon.svg" alt="" className="h-9 w-9 shrink-0 rounded-[10px] shadow-[0_2px_6px_rgb(0_0_0/0.15)]" />
+          <span className={cn('font-display text-[17px] font-bold tracking-tight', collapsed ? 'hidden' : 'hidden lg:inline')}>
+            {t('appName')}
+          </span>
         </div>
-        <nav aria-label={t('nav.main')} className="flex flex-1 flex-col gap-0.5 px-2">
-          {NAV_ITEMS.map(({ to, key, icon: Icon }) => (
+
+        <div className="px-3 pb-3">
+          <button
+            type="button"
+            onClick={openQuickAdd}
+            aria-label={t('actions.quickAdd')}
+            className={cn(
+              'pressable bg-accent-fill text-on-accent flex h-10 w-full items-center justify-center gap-2 rounded-xl font-semibold',
+              'shadow-[0_2px_8px_-2px_color-mix(in_srgb,var(--accent)_60%,transparent)] hover:brightness-110',
+            )}
+          >
+            <Plus size={18} strokeWidth={2.5} aria-hidden />
+            <span className={collapsed ? 'sr-only' : 'sr-only lg:not-sr-only'}>{t('actions.quickAdd')}</span>
+          </button>
+        </div>
+
+        <nav aria-label={t('nav.main')} className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-3">
+          {NAV_ITEMS.map(({ to, key, icon: Icon, tint }) => (
             <NavLink
               key={to}
               to={to}
               end={to === '/'}
               title={t(`nav.${key}`)}
+              onClick={() => play('tab')}
               className={({ isActive }) =>
                 cn(
-                  'flex h-10 items-center gap-3 rounded-md px-3 font-medium transition-colors',
-                  isActive ? 'bg-accent-soft text-accent' : 'text-muted hover:bg-sunken hover:text-fg',
+                  'pressable flex h-10 items-center gap-3 rounded-[10px] px-3 text-[15px]',
+                  isActive ? 'bg-fg/[0.08] text-fg font-semibold' : 'text-muted hover:bg-fg/[0.04] hover:text-fg font-medium',
                 )
               }
             >
-              <Icon size={18} aria-hidden className="shrink-0" />
+              <Icon size={19} strokeWidth={2.1} aria-hidden className="shrink-0" style={{ color: tint }} />
               <span className={collapsed ? 'sr-only' : 'sr-only lg:not-sr-only'}>{t(`nav.${key}`)}</span>
             </NavLink>
           ))}
         </nav>
-        <div className="hidden p-2 lg:block">
+        <div className="hidden p-3 lg:block">
           <Button
             variant="ghost"
             size="icon"
             onClick={toggleCollapsed}
             aria-label={collapsed ? t('nav.expand') : t('nav.collapse')}
+            className="text-subtle hover:text-fg hover:bg-fg/[0.05]"
           >
             {collapsed ? <PanelLeftOpen size={18} aria-hidden /> : <PanelLeftClose size={18} aria-hidden />}
           </Button>
         </div>
       </aside>
 
-      <main className="min-w-0 flex-1 px-4 pt-5 pb-28 md:px-8 md:pt-8 md:pb-10">
+      <main className="min-w-0 flex-1 px-4 pt-[calc(env(safe-area-inset-top)+20px)] pb-40 md:px-10 md:pt-10 md:pb-12">
         <div className={cn('mx-auto', location.pathname.startsWith('/calendar') ? 'max-w-7xl' : 'max-w-5xl')}>
           <UpdatePrompt />
           <OfflineBanner />
           <ErrorBoundary resetKey={location.pathname}>
-            <Outlet />
+            {/* Keyed by path so each page plays its entrance when you arrive */}
+            <div key={location.pathname} className="page-enter">
+              <Outlet />
+            </div>
           </ErrorBoundary>
         </div>
       </main>
 
-      {/* Mobile: floating quick-add + bottom navigation */}
-      <Button
-        variant="primary"
-        size="icon"
-        aria-label={t('actions.quickAdd')}
-        onClick={() => setQuickAddOpen(true)}
-        className="shadow-pop fixed right-4 bottom-20 z-20 h-14 w-14 rounded-full md:hidden"
-      >
-        <Plus size={24} aria-hidden />
-      </Button>
-
-      <nav
-        aria-label={t('nav.main')}
-        className="border-border bg-surface fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t pb-[env(safe-area-inset-bottom)] md:hidden"
-      >
-        {NAV_ITEMS.filter((i) => i.mobilePrimary).map(({ to, key, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === '/'}
-            className={({ isActive }) =>
-              cn('flex h-16 flex-col items-center justify-center gap-1 text-[11px] font-medium', isActive ? 'text-accent' : 'text-subtle')
-            }
-          >
-            <Icon size={20} aria-hidden />
-            {t(`nav.${key}`)}
-          </NavLink>
-        ))}
-        <button
-          type="button"
-          onClick={() => setMoreOpen(true)}
-          className={cn('flex h-16 flex-col items-center justify-center gap-1 text-[11px] font-medium', moreActive ? 'text-accent' : 'text-subtle')}
+      {/* Phones: a floating frosted tab bar with a sliding highlight, and the round add button beside it */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-20 flex items-end gap-2.5 px-3 pb-[calc(env(safe-area-inset-bottom)+10px)] md:hidden">
+        <nav
+          aria-label={t('nav.main')}
+          className="material shadow-float pointer-events-auto relative grid h-[62px] flex-1 rounded-full p-1"
+          style={{ gridTemplateColumns: `repeat(${tabCount}, minmax(0, 1fr))` }}
         >
-          <MoreHorizontal size={20} aria-hidden />
-          {t('nav.more')}
-        </button>
-      </nav>
-
-      <Dialog open={moreOpen} onClose={() => setMoreOpen(false)} title={t('nav.more')}>
-        <div className="flex flex-col gap-1">
-          {secondary.map(({ to, key, icon: Icon }) => (
+          {activeTab >= 0 && (
+            <span
+              aria-hidden
+              className="bg-fg/[0.08] absolute top-1 bottom-1 left-1 rounded-full transition-transform duration-[460ms] ease-[var(--ease-spring)] dark:bg-white/[0.12]"
+              style={{ width: `calc((100% - 8px) / ${tabCount})`, transform: `translateX(${activeTab * 100}%)` }}
+            />
+          )}
+          {primary.map(({ to, key, icon: Icon, tint }, i) => (
             <NavLink
               key={to}
               to={to}
-              onClick={() => setMoreOpen(false)}
-              className="hover:bg-sunken flex h-12 items-center gap-3 rounded-md px-3 font-medium"
+              end={to === '/'}
+              onClick={() => play('tab')}
+              className={({ isActive }) =>
+                cn(
+                  'relative flex flex-col items-center justify-center gap-0.5 rounded-full text-[10.5px] font-semibold tracking-normal',
+                  'transition-colors duration-[var(--duration-fast)]',
+                  isActive ? 'text-fg' : 'text-subtle',
+                )
+              }
             >
-              <Icon size={20} aria-hidden className="text-muted" />
+              <Icon
+                key={activeTab === i ? 'on' : 'off'}
+                size={22}
+                strokeWidth={activeTab === i ? 2.3 : 1.9}
+                aria-hidden
+                className={activeTab === i ? 'animate-bounce-icon' : undefined}
+                style={activeTab === i ? { color: tint } : undefined}
+              />
               {t(`nav.${key}`)}
+            </NavLink>
+          ))}
+          <button
+            type="button"
+            onClick={() => {
+              play('tap')
+              setMoreOpen(true)
+            }}
+            className={cn(
+              'relative flex flex-col items-center justify-center gap-0.5 rounded-full text-[10.5px] font-semibold',
+              moreActive ? 'text-fg' : 'text-subtle',
+            )}
+          >
+            <MoreHorizontal size={22} aria-hidden className={moreActive ? 'animate-bounce-icon text-accent' : undefined} />
+            {t('nav.more')}
+          </button>
+        </nav>
+
+        <button
+          type="button"
+          aria-label={t('actions.quickAdd')}
+          onClick={openQuickAdd}
+          className={cn(
+            'pressable bg-accent-fill text-on-accent pointer-events-auto flex h-[62px] w-[62px] shrink-0 items-center justify-center rounded-full',
+            'shadow-[0_10px_24px_-6px_color-mix(in_srgb,var(--accent)_70%,transparent)]',
+          )}
+        >
+          <Plus size={28} strokeWidth={2.4} aria-hidden className={cn('transition-transform duration-[var(--duration-base)]', quickAddOpen && 'rotate-45')} />
+        </button>
+      </div>
+
+      <Dialog open={moreOpen} onClose={() => setMoreOpen(false)} title={t('nav.more')}>
+        {/* An iOS Settings-style grouped list with coloured app-section icons */}
+        <div className="bg-sunken/60 stagger overflow-hidden rounded-2xl">
+          {secondary.map(({ to, key, icon: Icon, tint }) => (
+            <NavLink
+              key={to}
+              to={to}
+              onClick={() => {
+                play('tab')
+                setMoreOpen(false)
+              }}
+              className="group active:bg-fg/[0.06] flex h-[52px] items-center gap-3.5 pl-3.5"
+            >
+              <span className="flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[8px] text-white" style={{ background: tint }}>
+                <Icon size={17} strokeWidth={2.2} aria-hidden />
+              </span>
+              <span className="border-border flex h-full flex-1 items-center justify-between border-b pr-3.5 text-[16px] font-medium group-last:border-b-0">
+                {t(`nav.${key}`)}
+                <ChevronRight size={18} className="text-border-strong" aria-hidden />
+              </span>
             </NavLink>
           ))}
         </div>

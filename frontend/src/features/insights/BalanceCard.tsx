@@ -28,7 +28,7 @@ export function Meter({ value, label }: { value: number | null; label: string })
   }
   return (
     <div role="meter" aria-valuenow={Math.round(value)} aria-valuemin={0} aria-valuemax={100} aria-label={label} className="bg-accent-soft h-2 overflow-hidden rounded-full">
-      <div className="bg-accent h-full rounded-full" style={{ width: `${Math.max(value, 2)}%` }} />
+      <div className="bg-accent-fill h-full rounded-full" style={{ width: `${Math.max(value, 2)}%` }} />
     </div>
   )
 }

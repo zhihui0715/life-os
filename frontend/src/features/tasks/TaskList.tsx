@@ -47,7 +47,7 @@ export function TaskList({ filters, categories, onOpen, limit, compact, empty, h
 
   return (
     <>
-      <ul className="divide-border divide-y">
+      <ul className="divide-border stagger divide-y">
         {tasks.map((task) => (
           <TaskRow
             key={task.id}

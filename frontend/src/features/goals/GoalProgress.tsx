@@ -16,7 +16,7 @@ export function progressSource(t: (key: string, opts?: Record<string, unknown>) 
 export function GoalProgress({ goal, size = 'md' }: { goal: Goal; size?: 'sm' | 'md' }) {
   const { t } = useTranslation('goals')
   const value = goal.progress
-  const tone = goal.status === 'completed' ? 'bg-success' : goal.status === 'active' ? 'bg-accent' : 'bg-subtle'
+  const tone = goal.status === 'completed' ? 'bg-success' : goal.status === 'active' ? 'bg-accent-fill' : 'bg-subtle'
 
   return (
     <div>

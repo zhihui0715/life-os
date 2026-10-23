@@ -1,11 +1,10 @@
-import { ArrowRight, SlidersHorizontal, Sun } from 'lucide-react'
+import { SlidersHorizontal, Sun } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
 
 import { Button } from '../../components/ui/Button'
 import { cn } from '../../components/ui/cn'
-import { Card, EmptyState, PageHeader } from '../../components/ui/states'
+import { EmptyState, GroupSection, PageHeader } from '../../components/ui/states'
 import type { Category, DashboardSectionKey, Task } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
 import { useCategories } from '../tasks/api'
@@ -13,7 +12,7 @@ import { QuickAddInput } from '../tasks/QuickAddInput'
 import { TaskDrawer } from '../tasks/TaskDrawer'
 import { TaskList, useTaskTotal } from '../tasks/TaskList'
 import { CustomizeDialog } from './CustomizeDialog'
-import { BalanceSection, FocusSection, GoalsSection, LearningSection, ScheduleSection } from './DashboardSections'
+import { BalanceSection, FocusSection, GoalsSection, LearningSection, ScheduleSection, ViewAll } from './DashboardSections'
 import { HabitsTodayCard, MoodCheckInCard } from './TodayCards'
 
 function greetingKey(timeZone: string) {
@@ -56,18 +55,18 @@ export function HomePage() {
         title={t(`greeting.${greetingKey(tz)}`, { name: me.user.display_name })}
         subtitle={dateLine}
         actions={
-          <Button size="sm" variant="ghost" onClick={() => setCustomizing(true)}>
+          <Button size="sm" variant="secondary" onClick={() => setCustomizing(true)}>
             <SlidersHorizontal size={15} aria-hidden />
             {t('home.customize')}
           </Button>
         }
       />
 
-      <div className="mb-4">
+      <div className="mb-8">
         <QuickAddInput view="today" />
       </div>
 
-      <div className="grid items-start gap-4 lg:grid-cols-2">
+      <div className="stagger grid items-start gap-x-5 gap-y-8 lg:grid-cols-2">
         {visible.map((s) => (
           <div key={s.key} className={cn('min-w-0', WIDE.includes(s.key) && 'lg:col-span-2')}>
             {sections[s.key]()}
@@ -86,37 +85,24 @@ function TasksSection({ categories, onOpen }: { categories: Category[]; onOpen: 
   const overdueTotal = useTaskTotal({ view: 'overdue' })
   const todayTotal = useTaskTotal({ view: 'today' })
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-8">
       {!!overdueTotal && (
-        <Card className="overflow-hidden">
-          <SectionHeader title={t('home.overdue')} count={overdueTotal} to="/tasks?view=overdue" tone="danger" />
+        <GroupSection
+          title={t('home.overdue')}
+          count={overdueTotal}
+          tone="danger"
+          action={<ViewAll to="/tasks?view=overdue" label={t('home.viewAll')} />}
+        >
           <TaskList filters={{ view: 'overdue' }} categories={categories} onOpen={onOpen} limit={5} compact />
-        </Card>
+        </GroupSection>
       )}
-      <Card className="overflow-hidden">
-        <SectionHeader title={t('home.today')} count={todayTotal} to="/tasks?view=today" />
+      <GroupSection title={t('home.today')} count={todayTotal} action={<ViewAll to="/tasks?view=today" label={t('home.viewAll')} />}>
         {todayTotal === 0 ? (
           <EmptyState icon={Sun} title={t('home.todayEmptyTitle')} body={t('home.todayEmptyBody')} />
         ) : (
           <TaskList filters={{ view: 'today' }} categories={categories} onOpen={onOpen} limit={10} compact />
         )}
-      </Card>
-    </div>
-  )
-}
-
-function SectionHeader({ title, count, to, tone }: { title: string; count?: number; to: string; tone?: 'danger' }) {
-  const { t } = useTranslation()
-  return (
-    <div className="border-border flex items-center justify-between border-b px-4 py-3">
-      <h2 className={tone === 'danger' ? 'text-danger font-semibold' : 'font-semibold'}>
-        {title}
-        {count != null && <span className="text-subtle ml-2 font-normal">{count}</span>}
-      </h2>
-      <Link to={to} className="text-accent inline-flex items-center gap-1 text-sm font-medium hover:underline">
-        {t('home.viewAll')}
-        <ArrowRight size={14} aria-hidden />
-      </Link>
+      </GroupSection>
     </div>
   )
 }

@@ -7,8 +7,8 @@
   --fc-today-bg-color: color-mix(in srgb, var(--accent-soft) 35%, transparent);
   --fc-now-indicator-color: var(--danger);
   --fc-highlight-color: color-mix(in srgb, var(--accent) 18%, transparent);
-  --fc-event-bg-color: var(--accent);
-  --fc-event-border-color: var(--accent);
+  --fc-event-bg-color: var(--accent-fill);
+  --fc-event-border-color: var(--accent-fill);
   --fc-event-text-color: var(--text-on-accent);
   --fc-button-bg-color: var(--surface);
   --fc-button-border-color: var(--border);
@@ -45,8 +45,8 @@
 
 /* Event kinds */
 .fc .ev-appointment {
-  --fc-event-bg-color: var(--accent);
-  --fc-event-border-color: var(--accent);
+  --fc-event-bg-color: var(--accent-fill);
+  --fc-event-border-color: var(--accent-fill);
 }
 .fc .ev-task_block {
   background: var(--success-soft);
