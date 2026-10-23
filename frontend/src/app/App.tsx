@@ -6,6 +6,7 @@ import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-rou
 import { ToastProvider } from '../components/ui/Toast'
 import { ErrorState, ListSkeleton } from '../components/ui/states'
 import { AuthProvider, ME_KEY, useAuth } from '../features/auth/AuthProvider'
+import { AssistantPage } from '../features/ai/AssistantPage'
 import { LoginPage } from '../features/auth/LoginPage'
 import { FocusPage } from '../features/focus/FocusPage'
 import { GoalDetailPage } from '../features/goals/GoalDetailPage'
@@ -106,6 +107,7 @@ const router = createBrowserRouter([
               </Suspense>
             ),
           },
+          { path: 'assistant', element: <AssistantPage /> },
           { path: 'settings', element: <SettingsPage /> },
           { path: '*', element: <Navigate to="/" replace /> },
         ],

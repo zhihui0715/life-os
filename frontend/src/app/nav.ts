@@ -6,6 +6,7 @@ import {
   Flame,
   Home,
   Settings,
+  Sparkles,
   Target,
   Timer,
   type LucideIcon,
@@ -27,5 +28,6 @@ export const NAV_ITEMS: NavItem[] = [
   { to: '/focus', key: 'focus', icon: Timer },
   { to: '/insights', key: 'insights', icon: BarChart3 },
   { to: '/journal', key: 'journal', icon: BookOpen },
+  { to: '/assistant', key: 'assistant', icon: Sparkles },
   { to: '/settings', key: 'settings', icon: Settings },
 ]

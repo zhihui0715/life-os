@@ -96,7 +96,7 @@ def test_export_contains_every_table_with_counts_and_checksums(api):
     b = export(api)
     assert b["format"] == "life-os-backup" and b["format_version"] == 1
     assert set(b["data"]) == set(service.TABLES)
-    assert all(b["counts"][t] >= 1 for t in service.TABLES), b["counts"]
+    assert all(b["counts"][t] >= 1 for t in service.TABLES if t != "ai_runs"), b["counts"]
     assert b["counts"]["tasks"] == 2 and b["counts"]["task_tags"] == 2 and b["counts"]["event_exceptions"] == 1
     assert all("user_id" not in row for rows in b["data"].values() for row in rows)
     assert b["data"]["habit_logs"][0]["value"] == "12.25"  # exact decimals, not floats
@@ -227,3 +227,12 @@ def test_csv_exports_are_spreadsheet_safe(api):
 def test_backup_requires_login(anon):
     assert anon.get("/api/v1/backup/export").status_code == 401
     assert anon.post("/api/v1/backup/import/preview", {"backup": {}}).status_code == 401
+
+
+def test_backup_made_before_a_table_existed_still_restores(api):
+    fill_account(api)
+    b = export(api)
+    del b["data"]["ai_runs"], b["checksums"]["ai_runs"], b["counts"]["ai_runs"]  # as a Stage 6 file looked
+    p = ok(preview(api, b))
+    assert p["tables"]["ai_runs"]["in_backup"] == 0
+    ok(apply(api, b, p["preview_token"], replace=True))

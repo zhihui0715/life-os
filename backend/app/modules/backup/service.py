@@ -44,6 +44,7 @@ TABLES = (
     "journal_entries",
     "focus_sessions",
     "activity_logs",
+    "ai_runs",
     "user_settings",
 )
 # Tables without user_id belong to the user through their parent row: table → (parent table, link column).
@@ -189,6 +190,8 @@ def validate(backup) -> tuple[dict[str, list[dict]], dict[str, list[dict]]]:
 
     json_rows, db_rows = {}, {}
     for name in TABLES:
+        if name not in data and name not in checksums and name != "user_settings":
+            data, checksums = {**data, name: []}, {**checksums, name: _checksum([])}  # table added after the file was made
         rows = data.get(name)
         if not isinstance(rows, list) or not all(isinstance(r, dict) for r in rows):
             raise _invalid(f"The backup is missing the {name} section.")

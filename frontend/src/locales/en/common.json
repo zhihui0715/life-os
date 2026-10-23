@@ -10,6 +10,7 @@
     "focus": "Focus",
     "insights": "Insights",
     "journal": "Journal",
+    "assistant": "Assistant",
     "settings": "Settings",
     "more": "More",
     "collapse": "Collapse sidebar",
@@ -108,6 +109,13 @@
     "account_not_empty": "This account already has data. Confirm the replacement first.",
     "backup_verify_failed": "The restore couldn't be verified, so nothing was changed.",
     "payload_too_large": "The file is too large.",
+    "ai_unavailable": "AI isn't set up on this server.",
+    "ai_disabled": "Turn on AI assistance in Settings first.",
+    "ai_budget_exhausted": "This month's AI limit is used up. You can raise it in Settings.",
+    "ai_rate_limited": "The AI service is busy. Try again in a minute.",
+    "ai_refused": "The AI declined this request. Try sending different data.",
+    "ai_failed": "The AI request didn't work. Try again.",
+    "ai_misconfigured": "The server's AI settings are wrong (check the API key and model).",
     "unknown": "Something went wrong."
   },
   "validation": {
