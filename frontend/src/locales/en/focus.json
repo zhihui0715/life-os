@@ -74,5 +74,34 @@
     "logged": "Time logged",
     "updated": "Activity updated",
     "deleted": "Activity deleted"
+  },
+  "tomato": {
+    "mode": "Timer type",
+    "modes": {
+      "tomato": "🍅 Tomato",
+      "custom": "Custom"
+    },
+    "label": "Tomato",
+    "focus": "Focus",
+    "short": "Short break",
+    "long": "Long break (after {{count}})",
+    "autoStart": "Start the next tomato automatically after a break",
+    "start": "Start a {{count}}-min tomato",
+    "rule": "{{focus}} min focus, {{short}} min break; every {{every}} tomatoes earn a {{long}}-min break. Each tomato counts as a focus session.",
+    "today_one": "{{count}} tomato today",
+    "today_other": "{{count}} tomatoes today",
+    "sets_one": "{{count}} full set",
+    "sets_other": "{{count}} full sets",
+    "breakStart": "Tomato done! Take a {{count}}-minute break.",
+    "longBreakStart": "A full set! Enjoy a {{count}}-minute break.",
+    "doneTitle": "Tomato done 🍅",
+    "shortBreak": "Short break",
+    "longBreak": "Long break",
+    "breakHint": "Stand up, stretch, look out of a window, drink some water.",
+    "breakOverTitle": "Break's over",
+    "breakOverBody": "Ready for the next tomato?",
+    "skip": "Skip break",
+    "next": "Start next tomato",
+    "finish": "I'm done for now"
   }
 }

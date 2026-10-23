@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/inter';
 @import './styles/tokens.css';
+@import './styles/accents.css';
+@import './styles/backgrounds.css';
 @import './styles/motion.css';
 
 /* dark: follows the app's own theme setting, not only the OS */

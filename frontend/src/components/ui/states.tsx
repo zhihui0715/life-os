@@ -5,13 +5,17 @@ import { useTranslation } from 'react-i18next'
 import { Button } from './Button'
 import { cn } from './cn'
 
-export function EmptyState({ icon: Icon, title, body, action }: { icon: LucideIcon; title: string; body?: string; action?: ReactNode }) {
+export function EmptyState({ icon: Icon, title, body, action, art }: { icon: LucideIcon; title: string; body?: string; action?: ReactNode; art?: ReactNode }) {
   return (
     <div className="flex flex-col items-center px-6 py-12 text-center">
-      <div className="relative mb-4 flex h-16 w-16 items-center justify-center">
-        <span className="bg-accent-soft animate-breathe absolute inset-0 rounded-full" aria-hidden />
-        <Icon size={28} strokeWidth={1.75} className="text-accent relative" aria-hidden />
-      </div>
+      {art ? (
+        <div className="mb-3">{art}</div>
+      ) : (
+        <div className="relative mb-4 flex h-16 w-16 items-center justify-center">
+          <span className="bg-accent-soft animate-breathe absolute inset-0 rounded-full" aria-hidden />
+          <Icon size={28} strokeWidth={1.75} className="text-accent relative" aria-hidden />
+        </div>
+      )}
       <p className="text-[17px] font-semibold">{title}</p>
       {body && <p className="text-subtle mt-1 max-w-sm">{body}</p>}
       {action && <div className="mt-5">{action}</div>}
@@ -59,7 +63,7 @@ export function ListSkeleton({ rows = 4 }: { rows?: number }) {
  * iOS large title. On phones, once the title scrolls under the top edge a frosted bar slides in with
  * the title at 17pt, the way UINavigationBar collapses its large title.
  */
-export function PageHeader({ title, subtitle, actions }: { title: string; subtitle?: string; actions?: ReactNode }) {
+export function PageHeader({ title, subtitle, actions, icon }: { title: string; subtitle?: string; actions?: ReactNode; icon?: ReactNode }) {
   const sentinel = useRef<HTMLDivElement>(null)
   const [compact, setCompact] = useState(false)
 
@@ -84,11 +88,14 @@ export function PageHeader({ title, subtitle, actions }: { title: string; subtit
         <span className="max-w-[70%] truncate text-[17px] font-semibold tracking-tight">{title}</span>
       </div>
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3 md:mb-6">
-        <div className="min-w-0">
+        <div className="flex min-w-0 items-end gap-3">
+          {icon}
+          <div className="min-w-0">
           {subtitle && <p className="text-subtle mb-0.5 text-[13px] font-semibold tracking-normal uppercase md:hidden">{subtitle}</p>}
           <h1 className="font-display text-[32px] leading-[1.1] font-bold tracking-[-0.025em] md:text-[30px]">{title}</h1>
           {subtitle && <p className="text-subtle mt-1 hidden md:block">{subtitle}</p>}
           <div ref={sentinel} className="h-px" aria-hidden />
+          </div>
         </div>
         {actions && <div className="flex gap-2">{actions}</div>}
       </div>

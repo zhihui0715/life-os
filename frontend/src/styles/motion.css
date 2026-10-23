@@ -145,6 +145,98 @@
   }
 }
 
+/* The tomato clock (features/focus/Tomato.tsx) */
+@keyframes tomato-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.025);
+  }
+}
+@keyframes tomato-sway {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+}
+@keyframes tomato-blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+@keyframes tomato-wave {
+  to {
+    transform: translateX(-50px);
+  }
+}
+@keyframes tomato-zzz {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.8);
+  }
+  50% {
+    opacity: 0.45;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(8px, -14px) scale(1.15);
+  }
+}
+@keyframes flame {
+  0% {
+    transform: scale(0.4) translateY(10px);
+    opacity: 0;
+  }
+  40% {
+    transform: scale(1.25) translateY(-6px);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+.animate-flame {
+  animation: flame 700ms var(--ease-spring) both;
+}
+
+@keyframes grow {
+  from {
+    transform: scaleY(0.1) scaleX(0.6);
+    opacity: 0;
+  }
+}
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-6deg);
+  }
+  50% {
+    transform: rotate(6deg);
+  }
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
 /* Route change: the new page settles in from slightly below, unblurring */
 .page-enter {
   animation: page-in var(--duration-slow) var(--ease-out) backwards;
@@ -260,7 +352,9 @@ dialog[data-closing]::backdrop {
   .pressable:active:not(:disabled) {
     transform: none;
   }
-  [class*='animate-[slide'] {
+  [class*='animate-[slide'],
+  [class*='animate-[tomato'],
+  .animate-flame {
     animation: none !important;
   }
 }

@@ -5,6 +5,8 @@ import { useSearchParams } from 'react-router'
 
 import { cn } from '../../components/ui/cn'
 import { Card, PageHeader } from '../../components/ui/states'
+import { useToast } from '../../components/ui/Toast'
+import { useAllDone } from '../../lib/celebrate'
 import { play } from '../../lib/sound'
 import type { Task, TaskFilters, TaskView } from '../../lib/types'
 import { useCategories } from './api'
@@ -56,6 +58,8 @@ export function TasksPage() {
   // Search looks through every (non-archived) task, whatever tab was open.
   const filters: TaskFilters = { view: q ? 'all' : view, q: q || undefined, tag: tag || undefined }
   const total = useTaskTotal(filters)
+  const toast = useToast()
+  useAllDone(view === 'today' || view === 'overdue' ? total ?? undefined : undefined, () => toast(t('common:celebrate.allDone')))
 
   const subtitle = total == null ? undefined : q ? t('search.results', { count: total, q }) : t('count', { count: total })
 

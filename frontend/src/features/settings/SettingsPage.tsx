@@ -15,6 +15,7 @@ import { onSoundChange, setSoundEnabled, soundEnabled } from '../../lib/sound'
 import type { Me, UserSettings } from '../../lib/types'
 import { ME_KEY, useAuth, useMe } from '../auth/AuthProvider'
 import { BackupCard } from './BackupCard'
+import { AppearanceCard } from './AppearanceCard'
 import { ReminderCard } from './ReminderCard'
 import { ScoreSettingsCard } from './ScoreSettingsCard'
 import { WorkingHoursCard } from './WorkingHoursCard'
@@ -98,6 +99,7 @@ export function SettingsPage() {
         </div>
       </Card>
 
+      <AppearanceCard />
       <SoundCard />
       <ReminderCard />
       <WorkingHoursCard />

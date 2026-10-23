@@ -5,6 +5,7 @@ import { Link, useSearchParams } from 'react-router'
 
 import { Button } from '../../components/ui/Button'
 import { Segmented } from '../../components/ui/Segments'
+import { SproutArt } from '../../components/ui/Illustrations'
 import { Card, EmptyState, ErrorState, ListSkeleton, PageHeader } from '../../components/ui/states'
 import { errorMessage } from '../../lib/errors'
 import { useHabits } from './api'
@@ -51,6 +52,7 @@ export function HabitsPage() {
             <p className="text-subtle p-6 text-center">{t('archivedEmpty')}</p>
           ) : (
             <EmptyState
+              art={<SproutArt />}
               icon={Flame}
               title={t('empty.title')}
               body={t('empty.body')}

@@ -88,5 +88,47 @@
     "test": "发送测试提醒",
     "testTitle": "提醒已开启",
     "testBody": "Life OS 会这样提醒你。"
+  },
+  "appearance": {
+    "title": "外观",
+    "accent": "强调色",
+    "avatar": "你的头像",
+    "avatarHelp": "显示在问候语和侧边栏中。再次点击可移除。",
+    "credit": "{{title}} — {{artist}}，{{year}}。公有领域，芝加哥艺术博物馆",
+    "kinds": {
+      "plain": "纯色",
+      "gradient": "渐变",
+      "art": "名画",
+      "paper": "纸张"
+    },
+    "accents": {
+      "blue": "蓝色",
+      "indigo": "靛蓝",
+      "purple": "紫色",
+      "pink": "粉色",
+      "red": "红色",
+      "orange": "橙色",
+      "yellow": "黄色",
+      "green": "绿色",
+      "teal": "青色",
+      "graphite": "石墨"
+    },
+    "backgrounds": {
+      "plain": "纯色",
+      "sunrise": "日出",
+      "ocean": "海洋",
+      "lavender": "薰衣草",
+      "mint": "薄荷",
+      "midnight": "午夜",
+      "great-wave": "神奈川冲浪里",
+      "water-lilies": "睡莲",
+      "bedroom": "卧室",
+      "plum-garden": "龟户梅屋铺",
+      "grande-jatte": "大碗岛的星期天",
+      "rainy-day": "巴黎街道，雨天",
+      "dots": "点阵",
+      "grid": "方格",
+      "linen": "亚麻"
+    }
   }
 }

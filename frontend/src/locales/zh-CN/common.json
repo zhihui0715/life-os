@@ -155,5 +155,9 @@
     "planBody": "选出三件要事，排进今天。",
     "reviewTitle": "该做每周回顾了",
     "reviewBody": "花五分钟回顾本周，定下下周三件要事。"
+  },
+  "celebrate": {
+    "allDone": "今天的事全部完成！🎉",
+    "streak": "🔥 {{name}} 连续 {{count}} 天！"
   }
 }

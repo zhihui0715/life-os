@@ -105,6 +105,18 @@ stored on the device. Logging out removes the offline copy and any unsent change
 
 When a new version is built, open pages show *A new version is ready → Reload*.
 
+## Look and feel
+
+Settings → **Appearance** (saved to your account): ten accent colours, a background — plain, five soft gradients,
+six public-domain masterpieces (Hokusai, Monet, Van Gogh, Hiroshige, Seurat, Caillebotte; CC0 from the Art Institute
+of Chicago, credits in `frontend/public/wallpapers/credits.json` and under the picker) or three paper textures — and
+an emoji avatar for your greeting. Milestones get confetti: clearing today's list, a full set of tomatoes, a finished
+weekly review, habit streaks of 3, 7, 14, 30… days.
+
+**Tomato clock** (Focus → 🍅 Tomato): 25 min focus → 5 min break, a longer break after every fourth tomato (lengths
+adjustable, Pomodoro technique). The tomato ripens from green to red as you focus and sleeps during breaks; a bell
+rings at each switch. Each tomato is saved as a focus session.
+
 ## Planning and reminders
 
 Everything here works from your own data by fixed rules (`backend/app/modules/planning/service.py`); nothing is sent

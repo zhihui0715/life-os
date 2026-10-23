@@ -9,6 +9,7 @@ import { useToast } from '../../components/ui/Toast'
 import { formatDay, formatInstant, formatMinutes } from '../../lib/dates'
 import { errorMessage } from '../../lib/errors'
 import { isQueued } from '../../lib/offline'
+import { noteCompletion } from '../../lib/celebrate'
 import { play } from '../../lib/sound'
 import type { Category, Goal, Task } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
@@ -35,6 +36,7 @@ export function TaskRow({ task, category, goal, onOpen }: Props) {
   const toggle = () => {
     setCelebrate(!done)
     play(done ? 'uncheck' : 'complete')
+    if (!done) noteCompletion()
     action.mutate(
       { id: task.id, action: done ? 'reopen' : 'complete', title: task.title },
       {

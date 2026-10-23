@@ -8,6 +8,8 @@ import { useToast } from '../../components/ui/Toast'
 import { todayInZone } from '../../lib/dates'
 import { errorMessage } from '../../lib/errors'
 import { isQueued } from '../../lib/offline'
+import { isStreakMilestone } from '../../lib/celebrate'
+import { confetti } from '../../lib/confetti'
 import { play } from '../../lib/sound'
 import type { Habit } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
@@ -42,7 +44,15 @@ export function CheckButton({ habit, size = 'md' }: { habit: Habit; size?: 'md' 
     checkIn.mutate(
       { id: habit.id, date: today, state: state === 'done' ? null : 'done', value: habit.target_value, name: habit.name },
       {
-        onSuccess: (r) => toast(isQueued(r) ? t('common:offline.queued') : t(state === 'done' ? 'toast.cleared' : 'toast.checked')),
+        onSuccess: (r) => {
+          if (isQueued(r) || state === 'done') return toast(isQueued(r) ? t('common:offline.queued') : t('toast.cleared'))
+          const streak = habit.stats.current_streak + (habit.stats.unit === 'days' ? 1 : 0)
+          if (habit.stats.unit === 'days' && isStreakMilestone(streak)) {
+            confetti({ emoji: ['🔥', '⭐', '✨'] })
+            play('success')
+            toast(t('common:celebrate.streak', { count: streak, name: habit.name }))
+          } else toast(t('toast.checked'))
+        },
         onError: (e) => toast(errorMessage(t, e), 'error'),
       },
     )
@@ -75,7 +85,7 @@ export function StreakBadge({ habit }: { habit: Habit }) {
   const s = habit.stats
   return (
     <span className={cn('inline-flex items-center gap-1 text-xs font-medium', s.current_streak > 0 ? 'text-warning' : 'text-subtle')}>
-      <Flame size={13} aria-hidden />
+      <Flame key={s.current_streak} size={13} aria-hidden className={s.current_streak > 0 ? 'animate-flame' : undefined} />
       {t(`stats.streak_${s.unit}`, { count: s.current_streak })}
     </span>
   )

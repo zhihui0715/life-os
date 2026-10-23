@@ -11,6 +11,7 @@ import { useToast } from '../../components/ui/Toast'
 import { EmptyState, ErrorState, GroupSection, ListSkeleton } from '../../components/ui/states'
 import { addDays, formatInstant, formatMinutes, todayInZone } from '../../lib/dates'
 import { errorMessage } from '../../lib/errors'
+import { confetti } from '../../lib/confetti'
 import { play } from '../../lib/sound'
 import type { Occurrence } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
@@ -102,6 +103,7 @@ function Flow({ day, plan }: { day: PlanDay; plan: DayPlan }) {
       onSuccess: (n) => {
         play('success')
         toast(t('day.added', { count: n }))
+        confetti({ count: 70 })
         setDone(true)
       },
       onError: (e) => toast(errorMessage(t, e), 'error'),

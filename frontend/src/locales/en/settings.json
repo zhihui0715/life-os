@@ -89,5 +89,47 @@
     "test": "Send a test reminder",
     "testTitle": "Reminders are on",
     "testBody": "This is how Life OS will remind you."
+  },
+  "appearance": {
+    "title": "Appearance",
+    "accent": "Accent colour",
+    "avatar": "Your avatar",
+    "avatarHelp": "Shown in your greeting and the sidebar. Tap it again to remove.",
+    "credit": "{{title}} — {{artist}}, {{year}}. Public domain, Art Institute of Chicago",
+    "kinds": {
+      "plain": "Plain",
+      "gradient": "Gradients",
+      "art": "Famous art",
+      "paper": "Paper"
+    },
+    "accents": {
+      "blue": "Blue",
+      "indigo": "Indigo",
+      "purple": "Purple",
+      "pink": "Pink",
+      "red": "Red",
+      "orange": "Orange",
+      "yellow": "Yellow",
+      "green": "Green",
+      "teal": "Teal",
+      "graphite": "Graphite"
+    },
+    "backgrounds": {
+      "plain": "Plain",
+      "sunrise": "Sunrise",
+      "ocean": "Ocean",
+      "lavender": "Lavender",
+      "mint": "Mint",
+      "midnight": "Midnight",
+      "great-wave": "The Great Wave",
+      "water-lilies": "Water Lilies",
+      "bedroom": "The Bedroom",
+      "plum-garden": "Plum Garden",
+      "grande-jatte": "La Grande Jatte",
+      "rainy-day": "Rainy Day",
+      "dots": "Dotted",
+      "grid": "Grid",
+      "linen": "Linen"
+    }
   }
 }

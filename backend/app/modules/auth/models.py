@@ -20,6 +20,14 @@ from app.extensions import db
 
 LOCALES = ("en", "zh-CN")
 THEMES = ("system", "light", "dark")
+# Appearance (frontend/src/lib/theme.ts draws them): the tint colour, and what sits behind the cards.
+ACCENTS = ("blue", "indigo", "purple", "pink", "red", "orange", "yellow", "green", "teal", "graphite")
+BACKGROUNDS = (
+    "plain",
+    "sunrise", "ocean", "lavender", "mint", "midnight",  # soft gradients
+    "great-wave", "water-lilies", "bedroom", "plum-garden", "grande-jatte", "rainy-day",  # public-domain art
+    "dots", "grid", "linen",  # paper
+)
 DEFAULT_TIMEZONE = "Asia/Kuala_Lumpur"
 WEEKDAYS = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")
 # Used for free-slot finding until the user sets their own hours in Settings.
@@ -59,6 +67,8 @@ class UserSettings(db.Model):
         CheckConstraint(f"locale IN {LOCALES}", name="locale"),
         CheckConstraint(f"theme IN {THEMES}", name="theme"),
         CheckConstraint("week_start BETWEEN 1 AND 7", name="week_start"),
+        CheckConstraint(f"accent IN {ACCENTS}", name="accent"),
+        CheckConstraint(f"background IN {BACKGROUNDS}", name="background"),
     )
 
     user_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
@@ -68,6 +78,9 @@ class UserSettings(db.Model):
     )
     week_start: Mapped[int] = mapped_column(SmallInteger, nullable=False, default=1, server_default="1")
     theme: Mapped[str] = mapped_column(String(10), nullable=False, default="system", server_default="system")
+    accent: Mapped[str] = mapped_column(String(12), nullable=False, default="blue", server_default="blue")
+    background: Mapped[str] = mapped_column(String(20), nullable=False, default="plain", server_default="plain")
+    avatar: Mapped[str | None] = mapped_column(String(16))  # an emoji or symbol shown in the greeting; NULL = initial
     # {"mon": [["09:00", "18:00"]], ...} in the user's timezone. NULL = use DEFAULT_WORKING_HOURS.
     working_hours: Mapped[dict | None] = mapped_column(JSONB)
     # Life Balance Score: {"tasks": 30, ..., "enabled": {"tasks": true, ...}}. NULL = DEFAULT_SCORE_WEIGHTS.

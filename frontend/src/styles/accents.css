@@ -1,0 +1,146 @@
+/* Accent colours (Settings → Appearance). Blue is the default in tokens.css. Every pair was checked:
+   text ≥ 4.5:1 on the ground and on its own soft tint, and the button label ≥ 4.5:1 on the fill. */
+:root[data-accent='indigo'] {
+  --accent: #4b44d1;
+  --accent-hover: #3d36b8;
+  --accent-fill: #4b44d1;
+  --accent-soft: #ebeaff;
+  --text-on-accent: #ffffff;
+  --p3: #4b44d1;
+}
+:root[data-theme='dark'][data-accent='indigo'] {
+  --accent: #8f8bff;
+  --accent-hover: #aeabff;
+  --accent-fill: #4b44d1;
+  --accent-soft: #1d1b47;
+  --text-on-accent: #ffffff;
+  --p3: #8f8bff;
+}
+:root[data-accent='purple'] {
+  --accent: #8a2fc9;
+  --accent-hover: #7424ad;
+  --accent-fill: #8a2fc9;
+  --accent-soft: #f4e9fc;
+  --text-on-accent: #ffffff;
+  --p3: #8a2fc9;
+}
+:root[data-theme='dark'][data-accent='purple'] {
+  --accent: #c98bff;
+  --accent-hover: #dbb0ff;
+  --accent-fill: #8a2fc9;
+  --accent-soft: #2c1440;
+  --text-on-accent: #ffffff;
+  --p3: #c98bff;
+}
+:root[data-accent='pink'] {
+  --accent: #c4155f;
+  --accent-hover: #a8104f;
+  --accent-fill: #c4155f;
+  --accent-soft: #fde8f0;
+  --text-on-accent: #ffffff;
+  --p3: #c4155f;
+}
+:root[data-theme='dark'][data-accent='pink'] {
+  --accent: #ff7aac;
+  --accent-hover: #ff9fc3;
+  --accent-fill: #c4155f;
+  --accent-soft: #3d1024;
+  --text-on-accent: #ffffff;
+  --p3: #ff7aac;
+}
+:root[data-accent='red'] {
+  --accent: #d70015;
+  --accent-hover: #b80012;
+  --accent-fill: #d70015;
+  --accent-soft: #ffeaec;
+  --text-on-accent: #ffffff;
+  --p3: #d70015;
+}
+:root[data-theme='dark'][data-accent='red'] {
+  --accent: #ff6b61;
+  --accent-hover: #ff8f87;
+  --accent-fill: #d70015;
+  --accent-soft: #3a1311;
+  --text-on-accent: #ffffff;
+  --p3: #ff6b61;
+}
+:root[data-accent='orange'] {
+  --accent: #b84a00;
+  --accent-hover: #9c3f00;
+  --accent-fill: #b84a00;
+  --accent-soft: #fff0e3;
+  --text-on-accent: #ffffff;
+  --p3: #b84a00;
+}
+:root[data-theme='dark'][data-accent='orange'] {
+  --accent: #ffa24d;
+  --accent-hover: #ffbb7a;
+  --accent-fill: #b84a00;
+  --accent-soft: #38200b;
+  --text-on-accent: #ffffff;
+  --p3: #ffa24d;
+}
+:root[data-accent='yellow'] {
+  --accent: #8a6200;
+  --accent-hover: #735200;
+  --accent-fill: #ffcc00;
+  --accent-soft: #fff6d6;
+  --text-on-accent: #1c1c1e;
+  --p3: #8a6200;
+}
+:root[data-theme='dark'][data-accent='yellow'] {
+  --accent: #ffd23f;
+  --accent-hover: #ffe07a;
+  --accent-fill: #ffcc00;
+  --accent-soft: #332908;
+  --text-on-accent: #1c1c1e;
+  --p3: #ffd23f;
+}
+:root[data-accent='green'] {
+  --accent: #1b7a34;
+  --accent-hover: #166a2c;
+  --accent-fill: #1b7a34;
+  --accent-soft: #e5f6ea;
+  --text-on-accent: #ffffff;
+  --p3: #1b7a34;
+}
+:root[data-theme='dark'][data-accent='green'] {
+  --accent: #4cd471;
+  --accent-hover: #7ee29a;
+  --accent-fill: #1b7a34;
+  --accent-soft: #0f2e18;
+  --text-on-accent: #ffffff;
+  --p3: #4cd471;
+}
+:root[data-accent='teal'] {
+  --accent: #00717d;
+  --accent-hover: #00616b;
+  --accent-fill: #00717d;
+  --accent-soft: #def5f7;
+  --text-on-accent: #ffffff;
+  --p3: #00717d;
+}
+:root[data-theme='dark'][data-accent='teal'] {
+  --accent: #40c8d6;
+  --accent-hover: #72d8e2;
+  --accent-fill: #00717d;
+  --accent-soft: #08292d;
+  --text-on-accent: #ffffff;
+  --p3: #40c8d6;
+}
+:root[data-accent='graphite'] {
+  --accent: #55555b;
+  --accent-hover: #45454a;
+  --accent-fill: #55555b;
+  --accent-soft: #ececf0;
+  --text-on-accent: #ffffff;
+  --p3: #55555b;
+}
+:root[data-theme='dark'][data-accent='graphite'] {
+  --accent: #b4b4bb;
+  --accent-hover: #cfcfd4;
+  --accent-fill: #55555b;
+  --accent-soft: #2c2c2e;
+  --text-on-accent: #ffffff;
+  --p3: #b4b4bb;
+}

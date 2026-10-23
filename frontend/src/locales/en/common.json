@@ -158,5 +158,9 @@
     "planBody": "Pick your top three and fit them into today.",
     "reviewTitle": "Time for your weekly review",
     "reviewBody": "Five minutes to look back and set next week's top 3."
+  },
+  "celebrate": {
+    "allDone": "Everything for today is done! 🎉",
+    "streak": "🔥 {{count}}-day streak on {{name}}!"
   }
 }

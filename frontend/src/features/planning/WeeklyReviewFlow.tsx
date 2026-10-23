@@ -11,6 +11,7 @@ import { useToast } from '../../components/ui/Toast'
 import { ErrorState, GroupSection, ListSkeleton } from '../../components/ui/states'
 import { addDays, formatDay, formatMinutes, todayInZone } from '../../lib/dates'
 import { errorMessage } from '../../lib/errors'
+import { confetti } from '../../lib/confetti'
 import { play } from '../../lib/sound'
 import { useMe } from '../auth/AuthProvider'
 import { useTaskAction, useUpdateTask } from '../tasks/api'
@@ -207,6 +208,7 @@ function Review({ data }: { data: WeekSummary }) {
               persist({ completed: true }, () => {
                 play('complete')
                 toast(t('week.saved'))
+                confetti({ emoji: ['🎉', '⭐', '🌟', '🏆'] })
                 setEditing(false)
               })
             }

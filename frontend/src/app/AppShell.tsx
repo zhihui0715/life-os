@@ -3,10 +3,12 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet, useLocation } from 'react-router'
 
+import { Avatar } from '../components/ui/Avatar'
 import { Button } from '../components/ui/Button'
 import { cn } from '../components/ui/cn'
 import { Dialog } from '../components/ui/Dialog'
 import { FocusWidget } from '../features/focus/FocusWidget'
+import { usePomodoroEngine } from '../features/focus/usePomodoroEngine'
 import { QuickAddDialog } from '../features/tasks/QuickAddDialog'
 import { startReminders } from '../lib/reminders'
 import { play } from '../lib/sound'
@@ -34,6 +36,7 @@ export function AppShell() {
   const [moreOpen, setMoreOpen] = useState(false)
   const [quickAddOpen, setQuickAddOpen] = useState(false)
   useReminderLoop()
+  const me = useMe()
 
   const toggleCollapsed = () => {
     play('tap')
@@ -64,7 +67,7 @@ export function AppShell() {
       {/* Sidebar (tablet: icons; desktop: icons + labels, collapsible), styled like a macOS source list */}
       <aside
         className={cn(
-          'bg-sidebar sticky top-0 hidden h-dvh shrink-0 flex-col md:flex',
+          'app-sidebar bg-sidebar sticky top-0 hidden h-dvh shrink-0 flex-col md:flex',
           'transition-[width] duration-[var(--duration-slow)] ease-[var(--ease-out)]',
           collapsed ? 'w-[72px]' : 'w-[72px] lg:w-60',
         )}
@@ -111,7 +114,15 @@ export function AppShell() {
             </NavLink>
           ))}
         </nav>
-        <div className="hidden p-3 lg:block">
+        <NavLink
+          to="/settings"
+          className={cn('pressable mx-3 mb-1 flex items-center gap-2.5 rounded-xl p-1.5 hover:bg-fg/[0.04]', collapsed ? 'justify-center' : 'justify-center lg:justify-start')}
+          title={me.user.display_name}
+        >
+          <Avatar emoji={me.settings.avatar} name={me.user.display_name} size={34} />
+          <span className={cn('min-w-0 truncate text-[14px] font-semibold', collapsed ? 'hidden' : 'hidden lg:inline')}>{me.user.display_name}</span>
+        </NavLink>
+        <div className="hidden p-3 pt-1 lg:block">
           <Button
             variant="ghost"
             size="icon"
@@ -232,6 +243,7 @@ export function AppShell() {
 
       <QuickAddDialog open={quickAddOpen} onClose={() => setQuickAddOpen(false)} />
       <FocusWidget />
+      <PomodoroEngine />
     </div>
   )
 }
@@ -243,4 +255,10 @@ function useReminderLoop() {
   const ctx = useRef({ t, timeZone: me.settings.timezone, weekStart: me.settings.week_start, locale: me.settings.locale as string })
   ctx.current = { t, timeZone: me.settings.timezone, weekStart: me.settings.week_start, locale: me.settings.locale }
   useEffect(() => startReminders(() => ctx.current), [])
+}
+
+/** The tomato clock ticks every second; running it in its own component keeps the rest of the shell still. */
+function PomodoroEngine() {
+  usePomodoroEngine()
+  return null
 }

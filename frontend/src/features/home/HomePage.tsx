@@ -4,8 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
 import { Button } from '../../components/ui/Button'
+import { Avatar } from '../../components/ui/Avatar'
 import { cn } from '../../components/ui/cn'
+import { SunArt } from '../../components/ui/Illustrations'
 import { EmptyState, GroupSection, PageHeader } from '../../components/ui/states'
+import { useToast } from '../../components/ui/Toast'
+import { useAllDone } from '../../lib/celebrate'
 import type { Category, DashboardSectionKey, Task } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
 import { useCategories } from '../tasks/api'
@@ -55,10 +59,11 @@ export function HomePage() {
       <PageHeader
         title={t(`greeting.${greetingKey(tz)}`, { name: me.user.display_name })}
         subtitle={dateLine}
+        icon={<Avatar emoji={me.settings.avatar} name={me.user.display_name} />}
         actions={
-          <Button size="sm" variant="secondary" onClick={() => setCustomizing(true)}>
+          <Button size="sm" variant="secondary" onClick={() => setCustomizing(true)} aria-label={t('home.customize')}>
             <SlidersHorizontal size={15} aria-hidden />
-            {t('home.customize')}
+            <span className="hidden sm:inline">{t('home.customize')}</span>
           </Button>
         }
       />
@@ -90,6 +95,8 @@ function TasksSection({ categories, onOpen }: { categories: Category[]; onOpen: 
   const { t } = useTranslation()
   const overdueTotal = useTaskTotal({ view: 'overdue' })
   const todayTotal = useTaskTotal({ view: 'today' })
+  const toast = useToast()
+  useAllDone(todayTotal == null || overdueTotal == null ? undefined : todayTotal + overdueTotal, () => toast(t('celebrate.allDone')))
   return (
     <div className="flex flex-col gap-6">
       {!!overdueTotal && (
@@ -104,7 +111,7 @@ function TasksSection({ categories, onOpen }: { categories: Category[]; onOpen: 
       )}
       <GroupSection title={t('home.today')} count={todayTotal} action={<ViewAll to="/tasks?view=today" label={t('home.viewAll')} />}>
         {todayTotal === 0 ? (
-          <EmptyState icon={Sun} title={t('home.todayEmptyTitle')} body={t('home.todayEmptyBody')} />
+          <EmptyState icon={Sun} art={<SunArt />} title={t('home.todayEmptyTitle')} body={t('home.todayEmptyBody')} />
         ) : (
           <TaskList filters={{ view: 'today' }} categories={categories} onOpen={onOpen} limit={10} compact />
         )}
