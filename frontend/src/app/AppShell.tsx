@@ -9,10 +9,10 @@ import { cn } from '../components/ui/cn'
 import { Dialog } from '../components/ui/Dialog'
 import { FocusWidget } from '../features/focus/FocusWidget'
 import { usePomodoroEngine } from '../features/focus/usePomodoroEngine'
-import { QuickAddDialog } from '../features/tasks/QuickAddDialog'
 import { startReminders } from '../lib/reminders'
 import { play } from '../lib/sound'
 import { useMe } from '../features/auth/AuthProvider'
+import { CreateMenu, CreateSheets, type Sheet } from './CreateMenu'
 import { ErrorBoundary } from './ErrorBoundary'
 import { OfflineBanner, UpdatePrompt } from './OfflineBanner'
 import { NAV_ITEMS } from './nav'
@@ -34,7 +34,7 @@ export function AppShell() {
   const location = useLocation()
   const [collapsed, setCollapsed] = useState(readCollapsed)
   const [moreOpen, setMoreOpen] = useState(false)
-  const [quickAddOpen, setQuickAddOpen] = useState(false)
+  const [sheet, setSheet] = useState<Sheet>(null)
   useReminderLoop()
   const me = useMe()
 
@@ -59,7 +59,7 @@ export function AppShell() {
 
   const openQuickAdd = () => {
     play('tap')
-    setQuickAddOpen(true)
+    setSheet('task')
   }
 
   return (
@@ -203,17 +203,7 @@ export function AppShell() {
           </button>
         </nav>
 
-        <button
-          type="button"
-          aria-label={t('actions.quickAdd')}
-          onClick={openQuickAdd}
-          className={cn(
-            'pressable bg-accent-fill text-on-accent pointer-events-auto flex h-[62px] w-[62px] shrink-0 items-center justify-center rounded-full',
-            'shadow-[0_10px_24px_-6px_color-mix(in_srgb,var(--accent)_70%,transparent)]',
-          )}
-        >
-          <Plus size={28} strokeWidth={2.4} aria-hidden className={cn('transition-transform duration-[var(--duration-base)]', quickAddOpen && 'rotate-45')} />
-        </button>
+        <CreateMenu sheet={sheet} setSheet={setSheet} />
       </div>
 
       <Dialog open={moreOpen} onClose={() => setMoreOpen(false)} title={t('nav.more')}>
@@ -241,7 +231,7 @@ export function AppShell() {
         </div>
       </Dialog>
 
-      <QuickAddDialog open={quickAddOpen} onClose={() => setQuickAddOpen(false)} />
+      <CreateSheets sheet={sheet} setSheet={setSheet} />
       <FocusWidget />
       <PomodoroEngine />
     </div>

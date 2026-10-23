@@ -159,5 +159,14 @@
   "celebrate": {
     "allDone": "今天的事全部完成！🎉",
     "streak": "🔥 {{name}} 连续 {{count}} 天！"
+  },
+  "create": {
+    "title": "新建",
+    "hint": "轻点查看选项，长按直接新建任务",
+    "task": "任务",
+    "event": "日程",
+    "habit": "习惯",
+    "journal": "日记",
+    "tomato": "番茄钟"
   }
 }

@@ -123,5 +123,32 @@
   "tagFilter": {
     "active": "Tag: {{tag}}",
     "clear": "Remove tag filter"
+  },
+  "sheet": {
+    "titlePlaceholder": "What needs doing?",
+    "addNotes": "+ Add notes",
+    "notesPlaceholder": "Notes",
+    "tagHint": "Add #tags in the title, e.g. Buy milk #home",
+    "when": "When",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "weekend": "This weekend",
+    "nextWeek": "Next week",
+    "someday": "Someday",
+    "pick": "Pick a date",
+    "dueOn": "Due {{date}}",
+    "inbox": "No date — it goes to your Inbox",
+    "estimate": "How long",
+    "noEstimate": "Not sure",
+    "min_one": "{{count}} min",
+    "min_other": "{{count}} min",
+    "hours_one": "{{count}} hour",
+    "hours_other": "{{count}} hours",
+    "goal": "Goal",
+    "noGoal": "No goal",
+    "again": "Add another after this",
+    "addedCount_one": "{{count}} added — keep going",
+    "addedCount_other": "{{count}} added — keep going",
+    "add": "Add task"
   }
 }

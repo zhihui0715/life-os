@@ -83,3 +83,19 @@ test('weekly review: step through and set the top 3 for next week', async ({ pag
   await expect(page.getByRole('heading', { name: 'Week reviewed' })).toBeVisible()
   await expect(page.getByText('Ship the release')).toBeVisible()
 })
+
+test('the + button creates a task with a date, priority and tag', async ({ page, request }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Quick add' }).filter({ visible: true }).first().click()
+  const task = page.getByRole('menuitem', { name: 'Task' })
+  if (await task.isVisible()) await task.click() // phones: the + opens a menu first
+  const sheet = page.getByRole('dialog', { name: 'New task' })
+  const title = `Sheet task ${Date.now()}`
+  await sheet.getByPlaceholder('What needs doing?').fill(`${title} #errands`)
+  await sheet.getByRole('button', { name: 'Tomorrow' }).click()
+  await sheet.getByRole('button', { name: 'High' }).click()
+  await sheet.getByRole('button', { name: 'Add task' }).click()
+  await expect(page.getByText('Task added')).toBeVisible()
+  const found = await (await request.get(`/api/v1/tasks?view=all&q=${encodeURIComponent(title)}`)).json()
+  expect(found.items[0]).toMatchObject({ title, priority: 2, tags: ['errands'], status: 'todo' })
+})

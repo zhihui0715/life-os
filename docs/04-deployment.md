@@ -92,7 +92,7 @@ change, and replaces nothing without confirmation.
 | Sessions | Cookie `HttpOnly`, `SameSite=Lax`, `Secure` in production; 14-day lifetime; logout deletes the session; `flask set-password` signs out every device |
 | CSRF | Token required on every write (except login) |
 | Access control | Every `/api` route requires login unless explicitly public (login, health); every record is filtered by owner; idempotency keys are per user |
-| Injection | SQLAlchemy parameters only (no SQL built from strings); React escapes all text (no raw HTML anywhere); CSV exports neutralise spreadsheet formulas |
+| Injection | SQLAlchemy parameters only (no SQL built from strings); React escapes all text (no raw HTML anywhere) |
 | Browser hardening | Strict Content-Security-Policy (no inline or third-party scripts), `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, HSTS in production |
 | Caching | API responses `no-store`; offline copy limited to today's tasks/habits/schedule and settings; the journal is never stored on the device; logout clears it |
 | Abuse limits | 300 requests/min per IP overall; PDF report 6/min; backup import 6/min, 50 MB max; other bodies 1 MB |

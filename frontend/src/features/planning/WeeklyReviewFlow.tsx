@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '../../components/ui/Button'
 import { CheckMark } from '../../components/ui/CheckMark'
 import { cn } from '../../components/ui/cn'
+import { ProgressBar } from '../../components/ui/ProgressBar'
 import { Field, Input, Textarea } from '../../components/ui/Field'
 import { Segmented, Stat } from '../../components/ui/Segments'
 import { useToast } from '../../components/ui/Toast'
@@ -271,9 +272,7 @@ function LookBack({ data }: { data: WeekSummary }) {
                   <span className="min-w-0 truncate font-medium">{g.title}</span>
                   <span className="text-subtle text-[13px] tabular-nums">{pct(g.progress)}</span>
                 </div>
-                <div className="bg-sunken h-1.5 overflow-hidden rounded-full">
-                  <div className="bg-accent-fill h-full rounded-full transition-[width] duration-700" style={{ width: `${g.progress ?? 0}%` }} />
-                </div>
+                <ProgressBar value={g.progress} label={g.title} />
               </li>
             ))}
           </ul>

@@ -215,15 +215,9 @@ def test_import_accepts_files_larger_than_the_normal_limit(api):
     assert big.status_code == 413
 
 
-def test_csv_exports_are_spreadsheet_safe(api):
-    fill_account(api)
-    res = api.get("/api/v1/backup/export/tasks.csv")
-    assert res.status_code == 200 and res.mimetype == "text/csv"
-    body = res.data.decode("utf-8-sig")
-    assert body.splitlines()[0].startswith("title,status")
-    assert "'=Outline" in body and "写作" in body
-    activity = api.get("/api/v1/backup/export/activity.csv").data.decode("utf-8-sig")
-    assert "Gym" in activity and activity.splitlines()[0].startswith("date,title,minutes")
+def test_csv_exports_are_gone(api):
+    assert api.get("/api/v1/backup/export/tasks.csv").status_code == 404
+    assert api.get("/api/v1/backup/export/activity.csv").status_code == 404
 
 
 def test_backup_requires_login(anon):

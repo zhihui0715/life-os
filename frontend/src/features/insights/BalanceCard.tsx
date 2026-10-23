@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '../../components/ui/cn'
 import { Card } from '../../components/ui/states'
 import type { Overview } from '../../lib/types'
+import { ProgressBar } from '../../components/ui/ProgressBar'
 
 /** Signed change vs the previous period, with an icon so direction is never colour-only. */
 export function Delta({ now, before, unit = '' }: { now: number | null; before: number | null; unit?: string }) {
@@ -27,9 +28,7 @@ export function Meter({ value, label }: { value: number | null; label: string })
     return <div role="img" aria-label={`${label}: ${t('score.noComponentData')}`} className="border-border-strong h-2 rounded-full border border-dashed" />
   }
   return (
-    <div role="meter" aria-valuenow={Math.round(value)} aria-valuemin={0} aria-valuemax={100} aria-label={label} className="bg-accent-soft h-2 overflow-hidden rounded-full">
-      <div className="bg-accent-fill h-full rounded-full transition-[width] duration-700 ease-[var(--ease-out)]" style={{ width: `${Math.max(value, 2)}%` }} />
-    </div>
+    <ProgressBar value={value} role="meter" label={label} />
   )
 }
 

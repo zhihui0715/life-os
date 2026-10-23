@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router'
 
 import { Button } from '../../components/ui/Button'
+import { ProgressBar } from '../../components/ui/ProgressBar'
 import { Segmented } from '../../components/ui/Segments'
 import { cn } from '../../components/ui/cn'
 import { Card, ErrorState, ListSkeleton, PageHeader } from '../../components/ui/states'
@@ -177,9 +178,7 @@ function Body({ data, trendWeeks }: { data: Overview; trendWeeks?: { start: stri
                         <span className="text-muted tabular-nums">{formatMinutes(row.minutes, lang)}</span>
                       </div>
                       {/* magnitude → one hue for every bar; the dot carries the category's identity */}
-                      <div className="bg-accent-soft h-1.5 overflow-hidden rounded-full">
-                        <div className="bg-accent-fill h-full rounded-full" style={{ width: `${(100 * row.minutes) / data.time.total_minutes}%` }} />
-                      </div>
+                      <ProgressBar value={(100 * row.minutes) / data.time.total_minutes} celebrate={false} />
                     </li>
                   ))}
                 </ul>

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '../../components/ui/Button'
 import { cn } from '../../components/ui/cn'
 import { Dialog } from '../../components/ui/Dialog'
+import { ProgressBar } from '../../components/ui/ProgressBar'
 import { Field, Input } from '../../components/ui/Field'
 import { useToast } from '../../components/ui/Toast'
 import { Card, ErrorState, ListSkeleton, PageHeader } from '../../components/ui/states'
@@ -104,9 +105,7 @@ export function FocusPage() {
                         <span className="truncate">{c.name ?? t('summary.uncategorised')}</span>
                         <span className="text-muted tabular-nums">{formatMinutes(c.minutes, lang)}</span>
                       </div>
-                      <div className="bg-sunken h-1.5 overflow-hidden rounded-full">
-                        <div className="h-full rounded-full" style={{ width: `${(100 * c.minutes) / summary.data!.total_minutes}%`, background: c.color ?? 'var(--border-strong)' }} />
-                      </div>
+                      <ProgressBar value={(100 * c.minutes) / summary.data!.total_minutes} color={c.color ?? 'var(--border-strong)'} celebrate={false} />
                     </li>
                   ))}
                 </ul>

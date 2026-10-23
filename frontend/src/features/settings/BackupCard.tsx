@@ -143,18 +143,6 @@ export function BackupCard() {
         />
       </div>
 
-      <p className="text-subtle mt-5 mb-1 text-[13px]">{t('backup.csvHelp')}</p>
-      <div className="flex flex-wrap gap-2">
-        <Button size="sm" variant="ghost" onClick={() => download('/backup/export/tasks.csv')}>
-          <Download size={14} aria-hidden />
-          {t('backup.csvTasks')}
-        </Button>
-        <Button size="sm" variant="ghost" onClick={() => download('/backup/export/activity.csv')}>
-          <Download size={14} aria-hidden />
-          {t('backup.csvActivity')}
-        </Button>
-      </div>
-
       <Dialog
         open={preview !== null}
         onClose={close}

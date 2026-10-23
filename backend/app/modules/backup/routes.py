@@ -1,24 +1,16 @@
 """Backup & restore. Export downloads one JSON file; restore is preview (dry run) → apply with the preview's token.
-The PDF report and CSV exports of tasks and activity are for reading and spreadsheets — they can't be restored."""
+The PDF report is for reading and printing — it can't be restored."""
 
-import csv
-import io
 import json
 import logging
-from datetime import date
 
 from flask import Blueprint, Response, request
-from sqlalchemy import select
 
 from app.common.auth import current_user
 from app.common.errors import ApiError
 from app.common.timeutil import user_today
 from app.extensions import db, limiter
-from app.modules.activity.models import ActivityLog
 from app.modules.backup import service
-from app.modules.categories.models import Category
-from app.modules.goals.models import Goal
-from app.modules.tasks.models import Task
 
 bp = Blueprint("backup", __name__, url_prefix="/api/v1/backup")
 log = logging.getLogger(__name__)
@@ -94,28 +86,6 @@ def import_apply():
     return {"restored": {name: len(rows) for name, rows in json_rows.items()}}
 
 
-# ---------- CSV ----------
-
-def _cell(value) -> str:
-    """Spreadsheet-safe text: a cell starting with = + - @ would run as a formula when opened in Excel."""
-    if value is None:
-        return ""
-    s = value.isoformat() if isinstance(value, date) else str(value)
-    return "'" + s if s[:1] in ("=", "+", "-", "@", "\t", "\r") else s
-
-
-def _csv(header, rows) -> str:
-    out = io.StringIO()
-    w = csv.writer(out)
-    w.writerow(header)
-    w.writerows([_cell(v) for v in row] for row in rows)
-    return "﻿" + out.getvalue()  # the BOM makes Excel read UTF-8 (Chinese text) correctly
-
-
-def _names(model, user_id) -> dict:
-    return dict(db.session.execute(select(model.id, model.title if model is Goal else model.name).where(model.user_id == user_id)).all())
-
-
 @bp.get("/export/report.pdf")
 @limiter.limit("6 per minute")
 def export_pdf():
@@ -127,35 +97,3 @@ def export_pdf():
     log.info("report exported user=%s bytes=%d", user.id, len(body))
     return Response(body, mimetype="application/pdf",
                     headers={"Content-Disposition": f'attachment; filename="life-os-report-{_stamp()}.pdf"'})
-
-
-@bp.get("/export/tasks.csv")
-def export_tasks_csv():
-    user = current_user()
-    cats, goals = _names(Category, user.id), _names(Goal, user.id)
-    tasks = db.session.scalars(select(Task).where(Task.user_id == user.id).order_by(Task.created_at)).all()
-    rows = [
-        (t.title, t.status, t.priority, t.due_date, t.deadline, t.estimate_minutes, t.actual_minutes_manual,
-         cats.get(t.category_id), goals.get(t.goal_id), " ".join(tag.name for tag in t.tags),
-         "yes" if t.parent_task_id else "", t.completed_at, t.archived_at, t.created_at, t.notes)
-        for t in tasks
-    ]
-    header = ("title", "status", "priority", "due_date", "deadline", "estimate_minutes", "actual_minutes", "category",
-              "goal", "tags", "is_subtask", "completed_at", "archived_at", "created_at", "notes")
-    return _download(_csv(header, rows), f"life-os-tasks-{_stamp()}.csv", "text/csv")
-
-
-@bp.get("/export/activity.csv")
-def export_activity_csv():
-    user = current_user()
-    cats, goals = _names(Category, user.id), _names(Goal, user.id)
-    logs = db.session.scalars(
-        select(ActivityLog).where(ActivityLog.user_id == user.id).order_by(ActivityLog.log_date, ActivityLog.started_at)
-    ).all()
-    rows = [
-        (a.log_date, a.title, a.duration_minutes, cats.get(a.category_id), goals.get(a.goal_id), a.started_at,
-         a.ended_at, "yes" if a.focus_session_id else "", a.outcome, a.notes)
-        for a in logs
-    ]
-    header = ("date", "title", "minutes", "category", "goal", "started_at", "ended_at", "from_focus", "outcome", "notes")
-    return _download(_csv(header, rows), f"life-os-activity-{_stamp()}.csv", "text/csv")

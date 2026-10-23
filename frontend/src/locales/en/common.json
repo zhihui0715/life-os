@@ -162,5 +162,14 @@
   "celebrate": {
     "allDone": "Everything for today is done! 🎉",
     "streak": "🔥 {{count}}-day streak on {{name}}!"
+  },
+  "create": {
+    "title": "Create",
+    "hint": "Tap for options, press and hold for a new task",
+    "task": "Task",
+    "event": "Event",
+    "habit": "Habit",
+    "journal": "Journal entry",
+    "tomato": "Tomato timer"
   }
 }

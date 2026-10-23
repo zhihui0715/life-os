@@ -399,7 +399,7 @@ life-os/
 | A7 | Recurrence in P0: events and habits; **tasks do not recur in P0** | Recurring tasks in P0 |
 | A8 | Habit streak rules: count scheduled days only; "skipped" (intentional rest) pauses, "missed" breaks; also show a 30-day consistency % so one miss isn't a "failure" | Other rules |
 | A9 | Life Balance Score v0 as in §7, labelled experimental | Change weights/formulas |
-| A10 | Backup = JSON export/import (CSV export for tasks/activity as a convenience) in Stage 6 | Different format/timing |
+| A10 | Backup = JSON export/import in Stage 6, plus a readable PDF report (the CSV exports were removed) | Different format/timing |
 | A11 | AI deferred to Stage 7, off by default, journal never sent unless toggled per request; provider: Anthropic Claude first behind a generic interface | Other provider / earlier |
 | A12 | ✅ **Amended:** UI in **English and Simplified Chinese** (switchable in Settings, stored per user); light + dark themes. i18n built in from Stage 1 — see `03-design-and-i18n.md` | — |
 | A13 | Deployment target decided at Stage 9, aiming for ~US$5–15/month; free tier acceptable during development | Strict US$0 |
