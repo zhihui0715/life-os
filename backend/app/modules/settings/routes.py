@@ -31,8 +31,6 @@ def settings_to_dict(s: UserSettings) -> dict:
         "score_weights": s.score_weights or DEFAULT_SCORE_WEIGHTS,
         "weekly_learning_target_min": s.weekly_learning_target_min,
         "dashboard_layout": dashboard_layout(s),
-        "ai_enabled": s.ai_enabled,
-        "ai_monthly_token_budget": s.ai_monthly_token_budget,
     }
 
 
@@ -112,8 +110,6 @@ class SettingsPatch(InputModel):
     score_weights: dict | None = None
     weekly_learning_target_min: int | None = Field(default=None, ge=0, le=10_080)
     dashboard_layout: list | None = None
-    ai_enabled: bool | None = None
-    ai_monthly_token_budget: int | None = Field(default=None, ge=0, le=10_000_000)
 
     @field_validator("score_weights")
     @classmethod

@@ -1,5 +1,5 @@
 import { ChevronRight, MoreHorizontal, PanelLeftClose, PanelLeftOpen, Plus } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet, useLocation } from 'react-router'
 
@@ -8,7 +8,9 @@ import { cn } from '../components/ui/cn'
 import { Dialog } from '../components/ui/Dialog'
 import { FocusWidget } from '../features/focus/FocusWidget'
 import { QuickAddDialog } from '../features/tasks/QuickAddDialog'
+import { startReminders } from '../lib/reminders'
 import { play } from '../lib/sound'
+import { useMe } from '../features/auth/AuthProvider'
 import { ErrorBoundary } from './ErrorBoundary'
 import { OfflineBanner, UpdatePrompt } from './OfflineBanner'
 import { NAV_ITEMS } from './nav'
@@ -31,6 +33,7 @@ export function AppShell() {
   const [collapsed, setCollapsed] = useState(readCollapsed)
   const [moreOpen, setMoreOpen] = useState(false)
   const [quickAddOpen, setQuickAddOpen] = useState(false)
+  useReminderLoop()
 
   const toggleCollapsed = () => {
     play('tap')
@@ -121,7 +124,7 @@ export function AppShell() {
         </div>
       </aside>
 
-      <main className="min-w-0 flex-1 px-4 pt-[calc(env(safe-area-inset-top)+20px)] pb-40 md:px-10 md:pt-10 md:pb-12">
+      <main className="min-w-0 flex-1 px-4 pt-[calc(env(safe-area-inset-top)+12px)] pb-36 md:px-10 md:pt-10 md:pb-12">
         <div className={cn('mx-auto', location.pathname.startsWith('/calendar') ? 'max-w-7xl' : 'max-w-5xl')}>
           <UpdatePrompt />
           <OfflineBanner />
@@ -158,7 +161,7 @@ export function AppShell() {
                 cn(
                   'relative flex flex-col items-center justify-center gap-0.5 rounded-full text-[10.5px] font-semibold tracking-normal',
                   'transition-colors duration-[var(--duration-fast)]',
-                  isActive ? 'text-fg' : 'text-subtle',
+                  isActive ? 'text-fg' : 'text-muted',
                 )
               }
             >
@@ -181,7 +184,7 @@ export function AppShell() {
             }}
             className={cn(
               'relative flex flex-col items-center justify-center gap-0.5 rounded-full text-[10.5px] font-semibold',
-              moreActive ? 'text-fg' : 'text-subtle',
+              moreActive ? 'text-fg' : 'text-muted',
             )}
           >
             <MoreHorizontal size={22} aria-hidden className={moreActive ? 'animate-bounce-icon text-accent' : undefined} />
@@ -231,4 +234,13 @@ export function AppShell() {
       <FocusWidget />
     </div>
   )
+}
+
+/** Runs the reminder loop while signed in (it does nothing until reminders are switched on in Settings). */
+function useReminderLoop() {
+  const { t } = useTranslation()
+  const me = useMe()
+  const ctx = useRef({ t, timeZone: me.settings.timezone, weekStart: me.settings.week_start, locale: me.settings.locale as string })
+  ctx.current = { t, timeZone: me.settings.timezone, weekStart: me.settings.week_start, locale: me.settings.locale }
+  useEffect(() => startReminders(() => ctx.current), [])
 }

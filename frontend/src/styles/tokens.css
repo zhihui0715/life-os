@@ -8,7 +8,7 @@
   --surface-raised: #ffffff;
   --border: #e3e3e8; /* separators */
   --border-strong: #c7c7cc;
-  --bar: rgb(249 249 251 / 0.78); /* frosted chrome: tab bar, compact nav bar */
+  --bar: rgb(249 249 251 / 0.9); /* frosted chrome: tab bar, compact nav bar */
   --sidebar: #ebebf0;
 
   --text: #1c1c1e;
@@ -28,6 +28,7 @@
   --warning-fill: #ff9f0a;
   --warning-soft: #fff3e0;
   --danger: #d70015;
+  --danger-fill: #d70015; /* filled red under white text (the calendar's today circle) */
   --danger-soft: #ffeaec;
 
   --p1: #d70015;
@@ -44,7 +45,7 @@
   --tint-focus: #30b0c7;
   --tint-insights: #34c759;
   --tint-journal: #af52de;
-  --tint-assistant: #5e5ce6;
+  --tint-plan: #5e5ce6;
   --tint-settings: #8e8e93;
 
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.04);
@@ -76,7 +77,7 @@
   --surface-raised: #2c2c2e;
   --border: #38383a;
   --border-strong: #48484a;
-  --bar: rgb(22 22 24 / 0.78);
+  --bar: rgb(22 22 24 / 0.9);
   --sidebar: #121214;
 
   --text: #f5f5f7;
@@ -96,6 +97,7 @@
   --warning-fill: #ff9f0a;
   --warning-soft: #33230a;
   --danger: #ff453a;
+  --danger-fill: #d70015;
   --danger-soft: #3a1311;
 
   --p1: #ff453a;
@@ -111,7 +113,7 @@
   --tint-focus: #40c8e0;
   --tint-insights: #30d158;
   --tint-journal: #bf5af2;
-  --tint-assistant: #7d7aff;
+  --tint-plan: #7d7aff;
   --tint-settings: #8e8e93;
 
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);

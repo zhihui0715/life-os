@@ -83,10 +83,10 @@ export function PageHeader({ title, subtitle, actions }: { title: string; subtit
       >
         <span className="max-w-[70%] truncate text-[17px] font-semibold tracking-tight">{title}</span>
       </div>
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3 md:mb-6">
         <div className="min-w-0">
           {subtitle && <p className="text-subtle mb-0.5 text-[13px] font-semibold tracking-normal uppercase md:hidden">{subtitle}</p>}
-          <h1 className="font-display text-[34px] leading-[1.1] font-bold tracking-[-0.025em] md:text-[30px]">{title}</h1>
+          <h1 className="font-display text-[32px] leading-[1.1] font-bold tracking-[-0.025em] md:text-[30px]">{title}</h1>
           {subtitle && <p className="text-subtle mt-1 hidden md:block">{subtitle}</p>}
           <div ref={sentinel} className="h-px" aria-hidden />
         </div>

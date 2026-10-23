@@ -19,7 +19,7 @@ Personal Life OS is a single-user (for now) personal management system that clos
 | Record | Learning/activity logs, habit logs, actual durations |
 | Analyze | Insights (metrics, Life Balance Score) |
 | Reflect | Journal / daily review |
-| Improve | Weekly review (manual first, AI-assisted later) |
+| Improve | Plan my day and a guided weekly review, from your own data |
 
 Three things I am treating as non-negotiable because the spec repeats them:
 
@@ -291,7 +291,7 @@ I recommend one change to the spec's stage order: build a **thin vertical slice 
 | **4. Personal tracking** | Habits + logs + streaks, activity logs, journal/daily review, focus timer | Streak rules documented & unit-tested (scheduled days only; "skipped" doesn't break, "missed" does); durations correct; past entries editable; journal never appears in server logs |
 | **5. Insights** | Dashboard, metrics, Life Balance Score v0, coverage indicators, trends | Every metric has a written formula in-app; missing data shown as "no data", not 0; score shows components, weights, coverage %; chart values match a SQL check in tests |
 | **6. Backup** *(moved earlier than spec)* | JSON export of all user data; validated restore into an empty account or as a dry-run diff | Export → wipe test DB → restore → record counts and checksums identical; restore never overwrites without confirmation |
-| **7. AI (P1)** | Provider-independent gateway; daily plan; weekly review; privacy controls | Works with no API key (feature hidden + explanation); every AI request shows which data categories will be sent; journal text excluded unless explicitly toggled per request; all suggestions applied only via confirm |
+| **7. AI (P1)** — *replaced on 2026-10-23 by rule-based planning (Plan my day, weekly review) and reminders; see the schema doc §2.8* | Provider-independent gateway; daily plan; weekly review; privacy controls | Works with no API key (feature hidden + explanation); every AI request shows which data categories will be sent; journal text excluded unless explicitly toggled per request; all suggestions applied only via confirm |
 | **8. PWA & offline (P1)** | Manifest, icons, service worker, app-shell cache; offline read of today's view; offline queue for task-complete / habit check-in / quick capture | Installable on Chrome (desktop + Android) and Safari iOS; airplane-mode test of the listed flows; replay after reconnect with no duplicates (idempotency keys); offline limits shown in UI |
 | **9. Quality & deploy** | Playwright E2E for key flows, accessibility pass (axe), security review, perf budget, production deploy, docs | E2E green; no critical axe issues; secrets scan clean; production DB backups configured *and a restore tested* |
 

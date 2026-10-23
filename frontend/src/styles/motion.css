@@ -132,6 +132,19 @@
   }
 }
 
+@keyframes slide-l {
+  from {
+    opacity: 0;
+    transform: translate3d(36px, 0, 0);
+  }
+}
+@keyframes slide-r {
+  from {
+    opacity: 0;
+    transform: translate3d(-36px, 0, 0);
+  }
+}
+
 /* Route change: the new page settles in from slightly below, unblurring */
 .page-enter {
   animation: page-in var(--duration-slow) var(--ease-out) backwards;
@@ -246,5 +259,8 @@ dialog[data-closing]::backdrop {
   }
   .pressable:active:not(:disabled) {
     transform: none;
+  }
+  [class*='animate-[slide'] {
+    animation: none !important;
   }
 }

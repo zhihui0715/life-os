@@ -2,7 +2,6 @@
 
 from app.common.models_idempotency import IdempotencyKey  # noqa: F401
 from app.modules.activity.models import ActivityLog, FocusSession  # noqa: F401
-from app.modules.ai.models import AiRun  # noqa: F401
 from app.modules.auth.models import AuthSession, User, UserSettings  # noqa: F401
 from app.modules.calendar.models import EventException, ScheduleEvent  # noqa: F401
 from app.modules.categories.models import Category  # noqa: F401
@@ -10,3 +9,4 @@ from app.modules.goals.models import Goal, GoalMilestone, GoalProgressUpdate  # 
 from app.modules.tasks.models import Tag, Task, task_tags  # noqa: F401
 from app.modules.habits.models import Habit, HabitLog, HabitScheduleChange  # noqa: F401
 from app.modules.journal.models import JournalEntry  # noqa: F401
+from app.modules.planning.models import WeeklyReview  # noqa: F401

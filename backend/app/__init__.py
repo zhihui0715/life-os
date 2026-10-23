@@ -38,7 +38,6 @@ def create_app(config_name: str | None = None) -> Flask:
 
     from app import models  # noqa: F401  (registers every table for Alembic)
     from app.modules.activity.routes import activity_bp, focus_bp
-    from app.modules.ai.routes import bp as ai_bp
     from app.modules.auth.routes import bp as auth_bp
     from app.modules.backup.routes import bp as backup_bp
     from app.modules.calendar.routes import bp as calendar_bp
@@ -47,11 +46,12 @@ def create_app(config_name: str | None = None) -> Flask:
     from app.modules.habits.routes import bp as habits_bp
     from app.modules.insights.routes import bp as insights_bp
     from app.modules.journal.routes import bp as journal_bp
+    from app.modules.planning.routes import bp as planning_bp
     from app.modules.settings.routes import bp as settings_bp
     from app.modules.tasks.routes import bp as tasks_bp
     from app.modules.tasks.routes import tags_bp
 
-    for bp in (health_bp, auth_bp, settings_bp, categories_bp, tasks_bp, tags_bp, goals_bp, calendar_bp, habits_bp, journal_bp, activity_bp, focus_bp, insights_bp, backup_bp, ai_bp):
+    for bp in (health_bp, auth_bp, settings_bp, categories_bp, tasks_bp, tags_bp, goals_bp, calendar_bp, habits_bp, journal_bp, activity_bp, focus_bp, insights_bp, backup_bp, planning_bp):
         app.register_blueprint(bp)
 
     register_error_handlers(app)

@@ -1,5 +1,5 @@
 """Backup & restore. Export downloads one JSON file; restore is preview (dry run) → apply with the preview's token.
-CSV exports of tasks and activity are a convenience for spreadsheets — they can't be restored."""
+The PDF report and CSV exports of tasks and activity are for reading and spreadsheets — they can't be restored."""
 
 import csv
 import io
@@ -114,6 +114,19 @@ def _csv(header, rows) -> str:
 
 def _names(model, user_id) -> dict:
     return dict(db.session.execute(select(model.id, model.title if model is Goal else model.name).where(model.user_id == user_id)).all())
+
+
+@bp.get("/export/report.pdf")
+@limiter.limit("6 per minute")
+def export_pdf():
+    """A readable PDF of your data. For reading and printing — it can't be restored (the JSON file is the backup)."""
+    from app.modules.backup.report import build_report  # ReportLab loads only when a report is asked for
+
+    user = current_user()
+    body = build_report(user)
+    log.info("report exported user=%s bytes=%d", user.id, len(body))
+    return Response(body, mimetype="application/pdf",
+                    headers={"Content-Disposition": f'attachment; filename="life-os-report-{_stamp()}.pdf"'})
 
 
 @bp.get("/export/tasks.csv")

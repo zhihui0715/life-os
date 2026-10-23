@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '../../components/ui/Button'
-import { cn } from '../../components/ui/cn'
+import { Switch } from '../../components/ui/Switch'
 import { Field, Select } from '../../components/ui/Field'
 import { useToast } from '../../components/ui/Toast'
 import { Card, PageHeader } from '../../components/ui/states'
@@ -14,8 +14,8 @@ import { LOCALES } from '../../lib/i18n'
 import { onSoundChange, setSoundEnabled, soundEnabled } from '../../lib/sound'
 import type { Me, UserSettings } from '../../lib/types'
 import { ME_KEY, useAuth, useMe } from '../auth/AuthProvider'
-import { AiSettingsCard } from './AiSettingsCard'
 import { BackupCard } from './BackupCard'
+import { ReminderCard } from './ReminderCard'
 import { ScoreSettingsCard } from './ScoreSettingsCard'
 import { WorkingHoursCard } from './WorkingHoursCard'
 
@@ -99,9 +99,9 @@ export function SettingsPage() {
       </Card>
 
       <SoundCard />
+      <ReminderCard />
       <WorkingHoursCard />
       <ScoreSettingsCard />
-      <AiSettingsCard />
       <BackupCard />
 
       <Card className="p-5">
@@ -132,31 +132,5 @@ function SoundCard() {
       </div>
       <Switch checked={on} onChange={setSoundEnabled} labelledBy="sound-label" />
     </Card>
-  )
-}
-
-/** An iOS switch: a real checkbox role, a knob that slides with a spring. */
-export function Switch({ checked, onChange, labelledBy }: { checked: boolean; onChange: (v: boolean) => void; labelledBy: string }) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      aria-labelledby={labelledBy}
-      onClick={() => onChange(!checked)}
-      className={cn(
-        'relative h-[31px] w-[51px] shrink-0 rounded-full transition-colors duration-[var(--duration-base)]',
-        checked ? 'bg-success-fill' : 'bg-fg/[0.14]',
-      )}
-    >
-      <span
-        aria-hidden
-        className={cn(
-          'absolute top-[2px] left-[2px] h-[27px] w-[27px] rounded-full bg-white shadow-[0_3px_8px_rgb(0_0_0/0.15),0_1px_1px_rgb(0_0_0/0.16)]',
-          'transition-transform duration-[380ms] ease-[var(--ease-spring)]',
-          checked && 'translate-x-5',
-        )}
-      />
-    </button>
   )
 }

@@ -22,8 +22,8 @@
   "signedInAs": "当前登录：{{email}}",
   "backup": {
     "title": "备份与恢复",
-    "help": "把你录入的所有内容下载为一个文件，并妥善保存。之后可以在这里或新账户中恢复。",
-    "download": "下载备份",
+    "help": "你输入的所有内容，保存为一个 Life OS 可以恢复的文件——可在此处或新账户中恢复。请妥善保管。",
+    "download": "下载备份文件",
     "restore": "从文件恢复…",
     "checking": "正在检查文件…",
     "csvHelp": "表格副本（用于在 Excel 中查看，无法用来恢复）：",
@@ -60,11 +60,33 @@
       "focus_sessions": "专注记录",
       "categories": "分类",
       "tags": "标签",
-      "user_settings": "设置"
-    }
+      "user_settings": "设置",
+      "weekly_reviews": "每周回顾"
+    },
+    "pdfTitle": "可读报告（PDF）",
+    "pdfHelp": "你的目标、任务、习惯、日程、日记和每周回顾，排版好便于阅读、打印或分享。无法用它恢复数据。",
+    "pdfDownload": "下载 PDF 报告",
+    "fileTitle": "备份文件（用于恢复）"
   },
   "sound": {
     "label": "声音与触感",
     "help": "轻柔的点击声、完成任务或习惯时的提示音，以及专注结束时的铃声。仅保存在此设备上。"
+  },
+  "reminders": {
+    "label": "提醒",
+    "help": "Life OS 打开时发送的通知——在浏览器标签页中，或电脑上已安装的应用。在手机上，应用打开时才会收到。仅保存在此设备上。",
+    "denied": "此网站的通知已被阻止。请在浏览器的网站设置中允许通知，然后再次打开此开关。",
+    "unsupported": "此浏览器无法显示通知。",
+    "events": "日程开始前",
+    "off": "关闭",
+    "minutes": "{{count}} 分钟",
+    "deadlines": "任务截止前 30 分钟",
+    "habits": "未完成的习惯",
+    "plan": "计划今天",
+    "review": "每周回顾（每周最后一天）",
+    "time": "{{what}}的时间",
+    "test": "发送测试提醒",
+    "testTitle": "提醒已开启",
+    "testBody": "Life OS 会这样提醒你。"
   }
 }

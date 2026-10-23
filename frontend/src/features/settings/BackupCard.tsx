@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Download, FileUp, TriangleAlert } from 'lucide-react'
+import { Download, FileText, FileUp, TriangleAlert } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -105,10 +105,26 @@ export function BackupCard() {
   return (
     <Card className="mb-4 p-5">
       <h2 className="text-[17px] font-semibold tracking-tight">{t('backup.title')}</h2>
-      <p className="text-subtle mt-1 mb-4 text-sm">{t('backup.help')}</p>
 
+      {/* The readable copy: a laid-out document to read, print or keep */}
+      <div className="bg-sunken/70 mt-4 flex items-start gap-3.5 rounded-2xl p-4">
+        <span className="bg-danger-soft text-danger flex h-11 w-11 shrink-0 items-center justify-center rounded-xl">
+          <FileText size={22} aria-hidden />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="font-semibold">{t('backup.pdfTitle')}</p>
+          <p className="text-subtle mt-0.5 mb-3 text-[13px]">{t('backup.pdfHelp')}</p>
+          <Button variant="primary" size="sm" onClick={() => download('/backup/export/report.pdf')}>
+            <Download size={14} aria-hidden />
+            {t('backup.pdfDownload')}
+          </Button>
+        </div>
+      </div>
+
+      <p className="mt-5 font-semibold">{t('backup.fileTitle')}</p>
+      <p className="text-subtle mt-0.5 mb-3 text-[13px]">{t('backup.help')}</p>
       <div className="flex flex-wrap gap-2">
-        <Button variant="primary" onClick={() => download('/backup/export')}>
+        <Button onClick={() => download('/backup/export')}>
           <Download size={16} aria-hidden />
           {t('backup.download')}
         </Button>
@@ -127,7 +143,7 @@ export function BackupCard() {
         />
       </div>
 
-      <p className="text-subtle mt-4 mb-2 text-sm">{t('backup.csvHelp')}</p>
+      <p className="text-subtle mt-5 mb-1 text-[13px]">{t('backup.csvHelp')}</p>
       <div className="flex flex-wrap gap-2">
         <Button size="sm" variant="ghost" onClick={() => download('/backup/export/tasks.csv')}>
           <Download size={14} aria-hidden />

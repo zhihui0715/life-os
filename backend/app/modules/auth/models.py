@@ -35,8 +35,6 @@ DEFAULT_SCORE_WEIGHTS = {
     "enabled": {k: True for k in SCORE_COMPONENTS},
 }
 DASHBOARD_SECTIONS = ("focus", "schedule", "tasks", "habits", "mood", "balance", "goals", "learning")
-# ~100 daily plans or ~40 weekly reviews; on Claude Opus 5.5 roughly US$2 at most.
-DEFAULT_AI_MONTHLY_TOKENS = 300_000
 
 DEFAULT_DASHBOARD = [{"key": k, "visible": True} for k in DASHBOARD_SECTIONS]
 
@@ -54,14 +52,13 @@ class User(IdMixin, TimestampMixin, db.Model):
 
 
 class UserSettings(db.Model):
-    """One row per user. More columns (working hours, score weights, AI) arrive in later stages."""
+    """One row per user: preferences that follow the account to every device."""
 
     __tablename__ = "user_settings"
     __table_args__ = (
         CheckConstraint(f"locale IN {LOCALES}", name="locale"),
         CheckConstraint(f"theme IN {THEMES}", name="theme"),
         CheckConstraint("week_start BETWEEN 1 AND 7", name="week_start"),
-        CheckConstraint("ai_monthly_token_budget BETWEEN 0 AND 10000000", name="ai_budget"),
     )
 
     user_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
@@ -78,11 +75,6 @@ class UserSettings(db.Model):
     weekly_learning_target_min: Mapped[int | None] = mapped_column(Integer)  # NULL = no target set
     # Home sections in order: [{"key": "tasks", "visible": true}, ...]. NULL = DEFAULT_DASHBOARD.
     dashboard_layout: Mapped[list | None] = mapped_column(JSONB)
-    # AI assistance is opt-in, and capped per calendar month (input + output tokens).
-    ai_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="false")
-    ai_monthly_token_budget: Mapped[int] = mapped_column(
-        Integer, nullable=False, default=DEFAULT_AI_MONTHLY_TOKENS, server_default=str(DEFAULT_AI_MONTHLY_TOKENS)
-    )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=utcnow, onupdate=utcnow
     )

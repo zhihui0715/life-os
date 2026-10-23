@@ -4,8 +4,8 @@ A private, bilingual (English / 简体中文) personal management system: tasks,
 Architecture and decisions: [`docs/00-architecture-plan.md`](docs/00-architecture-plan.md).
 
 **Current stage: 9 — Quality & deployment.** All planned features are built: tasks, goals, calendar, habits, journal,
-focus timer and activity log, a customizable Home dashboard, Insights, backup & restore, optional AI daily plans and
-weekly reviews, and an installable app that works offline for the essentials. Browser tests, accessibility checks,
+focus timer and activity log, a customizable Home dashboard, Insights, Plan my day and a guided weekly review,
+reminders, backup & restore with a readable PDF report, and an installable app that works offline for the essentials. Browser tests, accessibility checks,
 a security review, performance budgets and a production container are in place; CI runs them all. What's left is
 choosing a host and deploying: see [`docs/04-deployment.md`](docs/04-deployment.md).
 
@@ -74,7 +74,8 @@ All of these run in CI on every push (`.github/workflows/ci.yml`).
 
 ## Backup
 
-Settings → **Backup & restore** → *Download backup* saves everything you've entered as one `.json` file. Do this
+Settings → **Backup & restore** → *Download PDF report* gives a readable, printable document of your goals, tasks,
+habits, schedule, journal and weekly reviews (it can't be restored from). *Download backup file* saves everything you've entered as one `.json` file. Do this
 regularly (and before applying migrations); keep copies somewhere other than this laptop.
 
 To restore, choose *Restore from file…*: the app checks the file, does a test restore, and shows what will change.
@@ -99,23 +100,24 @@ cd frontend && npm run build && npm run preview     # http://localhost:4173 (nee
 **Offline** (no connection, or the server is down): today's and overdue tasks, your habits and today's schedule are
 shown as of your last visit; you can complete tasks, check in habits and quick-add tasks. Those changes wait on the
 device and are sent automatically when the server is reachable again — each exactly once. A banner says what works and
-lists waiting changes. Journal, goals, insights, the assistant and editing need a connection, and the journal is never
+lists waiting changes. Journal, goals, insights, planning and editing need a connection, and the journal is never
 stored on the device. Logging out removes the offline copy and any unsent changes.
 
 When a new version is built, open pages show *A new version is ready → Reload*.
 
-## AI assistance (optional)
+## Planning and reminders
 
-Off unless you set it up — the rest of the app never needs it.
+Everything here works from your own data by fixed rules (`backend/app/modules/planning/service.py`); nothing is sent
+to an outside service.
 
-1. Put an Anthropic API key in `.env`: `ANTHROPIC_API_KEY=...` (restart the backend). Optionally set `AI_MODEL`
-   (default `claude-opus-5-5`; `claude-haiku-5-5` costs much less).
-2. Settings → **AI assistance** → turn it on, and check the monthly token limit (default 300,000).
-3. Open **Assistant**: tick which data to send, press *See exact data* to read precisely what would go out, then
-   *Suggest a plan* or *Write my review*. Journal text is never ticked by default — you include it per request.
-
-Suggestions only appear on screen. Calendar blocks and tasks are created only when you select them and confirm.
-Each request is logged (what kind, which categories, tokens used) — the text sent is not stored.
+- **Plan → My day**: your open tasks ranked by urgency (overdue, due today, deadline soon, in progress, high priority,
+  due this week), three suggested. *Fit into my day* places the ones you pick into free time within your working hours,
+  sized by their estimates (45 min without one). Calendar blocks are created only when you press *Add to calendar*.
+- **Plan → Weekly review**: look back (the week's numbers and what you finished), tidy up left-over tasks (next week,
+  tomorrow or drop), reflect (went well / to improve / one lesson), and set next week's top 3. Saved per week.
+- **Reminders** (Settings → Reminders, per device): notifications before events and deadlines, a habit nudge, a
+  morning "Plan your day" and an end-of-week review reminder. They come from the app while it's open (a tab, or the
+  installed app on a computer); on a phone they arrive while the app is open.
 
 ## Project layout
 

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-import { apiCall, apiGet, today } from './helpers'
+import { apiCall, today } from './helpers'
 
 test('capture a task, complete it, find it in Completed', async ({ page }) => {
   await page.goto('/tasks')
@@ -54,9 +54,32 @@ test('download a backup, then check it restores (preview only)', async ({ page }
   await expect(dialog).toBeHidden()
 })
 
-test('AI is hidden and explained when no key is configured', async ({ page, request }) => {
-  const status = await apiGet<{ configured: boolean }>(request, '/ai/status')
-  test.skip(status.configured, 'this server has an AI key')
-  await page.goto('/assistant')
-  await expect(page.getByText("AI isn't set up")).toBeVisible()
+const ALL_DAY = Object.fromEntries(['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map((d) => [d, [['00:00', '23:59']]]))
+
+test('plan tomorrow: pick a task, fit it into the day, add it to the calendar', async ({ page, request }) => {
+  await apiCall(request, 'PATCH', '/settings', { working_hours: ALL_DAY })
+  const title = `Plan me ${Date.now()}`
+  await apiCall(request, 'POST', '/tasks', { title, priority: 1, estimate_minutes: 30 })
+  await page.goto('/plan')
+  await page.getByRole('button', { name: 'Tomorrow' }).click()
+  const pick = page.getByRole('checkbox', { name: new RegExp(title) })
+  await expect(pick).toBeVisible()
+  if ((await pick.getAttribute('aria-checked')) !== 'true') await pick.click()
+  await page.getByRole('button', { name: 'Fit into my day' }).click()
+  await expect(page.getByRole('heading', { name: 'Your day' })).toBeVisible()
+  await page.getByRole('button', { name: /Add \d+ blocks? to calendar/ }).click()
+  await expect(page.getByRole('heading', { name: 'Your day is planned' })).toBeVisible()
+})
+
+test('weekly review: step through and set the top 3 for next week', async ({ page }) => {
+  await page.goto('/plan?tab=week')
+  const edit = page.getByRole('button', { name: 'Edit review' })
+  const next = page.getByRole('button', { name: 'Next', exact: true })
+  await expect(edit.or(next)).toBeVisible()
+  if (await edit.isVisible()) await edit.click() // the other browser project already reviewed this week
+  for (let i = 0; i < 3; i++) await next.click()
+  await page.getByLabel('Priority 1').fill('Ship the release')
+  await page.getByRole('button', { name: 'Finish review' }).click()
+  await expect(page.getByRole('heading', { name: 'Week reviewed' })).toBeVisible()
+  await expect(page.getByText('Ship the release')).toBeVisible()
 })

@@ -1,6 +1,7 @@
-import { SlidersHorizontal, Sun } from 'lucide-react'
+import { CalendarCheck, NotebookPen, SlidersHorizontal, Sun } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 
 import { Button } from '../../components/ui/Button'
 import { cn } from '../../components/ui/cn'
@@ -62,11 +63,16 @@ export function HomePage() {
         }
       />
 
-      <div className="mb-8">
+      <div className="mb-3">
         <QuickAddInput view="today" />
       </div>
+      {/* Daily and weekly rituals, one tap away */}
+      <div className="mb-6 flex gap-2">
+        <Shortcut to="/plan" icon={CalendarCheck} label={t('planning:home.plan')} tint="var(--tint-plan)" />
+        <Shortcut to="/plan?tab=week" icon={NotebookPen} label={t('planning:home.review')} tint="var(--tint-journal)" />
+      </div>
 
-      <div className="stagger grid items-start gap-x-5 gap-y-8 lg:grid-cols-2">
+      <div className="stagger grid items-start gap-x-5 gap-y-6 lg:grid-cols-2">
         {visible.map((s) => (
           <div key={s.key} className={cn('min-w-0', WIDE.includes(s.key) && 'lg:col-span-2')}>
             {sections[s.key]()}
@@ -85,7 +91,7 @@ function TasksSection({ categories, onOpen }: { categories: Category[]; onOpen: 
   const overdueTotal = useTaskTotal({ view: 'overdue' })
   const todayTotal = useTaskTotal({ view: 'today' })
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6">
       {!!overdueTotal && (
         <GroupSection
           title={t('home.overdue')}
@@ -104,5 +110,14 @@ function TasksSection({ categories, onOpen }: { categories: Category[]; onOpen: 
         )}
       </GroupSection>
     </div>
+  )
+}
+
+function Shortcut({ to, icon: Icon, label, tint }: { to: string; icon: typeof Sun; label: string; tint: string }) {
+  return (
+    <Link to={to} className="pressable bg-surface shadow-card flex h-11 flex-1 items-center justify-center gap-2 rounded-2xl px-3 text-[14px] font-semibold sm:flex-none sm:px-4 dark:shadow-none">
+      <Icon size={17} style={{ color: tint }} aria-hidden />
+      {label}
+    </Link>
   )
 }

@@ -45,7 +45,7 @@ export function TaskRow({ task, category, goal, onOpen }: Props) {
   }
 
   return (
-    <li className="group hover:bg-sunken/50 flex flex-wrap items-start gap-x-3 gap-y-1.5 px-3.5 py-3 transition-colors duration-[var(--duration-fast)] sm:flex-nowrap sm:px-4">
+    <li className="group hover:bg-sunken/50 flex flex-wrap items-start gap-x-3 gap-y-1 px-3.5 py-2.5 transition-colors duration-[var(--duration-fast)] sm:flex-nowrap sm:px-4">
       <button
         type="button"
         role="checkbox"

@@ -10,7 +10,7 @@
     "focus": "Focus",
     "insights": "Insights",
     "journal": "Journal",
-    "assistant": "Assistant",
+    "plan": "Plan",
     "settings": "Settings",
     "more": "More",
     "collapse": "Collapse sidebar",
@@ -109,13 +109,6 @@
     "account_not_empty": "This account already has data. Confirm the replacement first.",
     "backup_verify_failed": "The restore couldn't be verified, so nothing was changed.",
     "payload_too_large": "The file is too large.",
-    "ai_unavailable": "AI isn't set up on this server.",
-    "ai_disabled": "Turn on AI assistance in Settings first.",
-    "ai_budget_exhausted": "This month's AI limit is used up. You can raise it in Settings.",
-    "ai_rate_limited": "The AI service is busy. Try again in a minute.",
-    "ai_refused": "The AI declined this request. Try sending different data.",
-    "ai_failed": "The AI request didn't work. Try again.",
-    "ai_misconfigured": "The server's AI settings are wrong (check the API key and model).",
     "idempotency_key_reused": "This change conflicted with another one.",
     "unknown": "Something went wrong."
   },
@@ -133,7 +126,7 @@
   "offline": {
     "title": "You're offline",
     "works": "You can still see today's tasks, habits and schedule as of your last visit, tick off tasks, check in habits and quick-add tasks. These are saved on this device and sent when you're back online.",
-    "needsConnection": "Everything else — journal, goals, insights, the assistant, editing — needs a connection. Pages you haven't opened recently may not load.",
+    "needsConnection": "Everything else — journal, goals, insights, planning, editing — needs a connection. Pages you haven't opened recently may not load.",
     "waiting_one": "{{count}} change waiting to sync",
     "waiting_other": "{{count}} changes waiting to sync",
     "syncing_one": "Syncing {{count}} change…",
@@ -154,5 +147,16 @@
       "habit_uncheck": "Undo check-in for “{{label}}”"
     },
     "notSaved": "Not available offline."
+  },
+  "reminder": {
+    "eventSoon": "Starts at {{time}}",
+    "eventNow": "Starting now",
+    "deadline": "Deadline at {{time}}",
+    "habitsTitle_one": "{{count}} habit left today",
+    "habitsTitle_other": "{{count}} habits left today",
+    "planTitle": "Plan your day",
+    "planBody": "Pick your top three and fit them into today.",
+    "reviewTitle": "Time for your weekly review",
+    "reviewBody": "Five minutes to look back and set next week's top 3."
   }
 }

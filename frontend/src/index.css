@@ -31,6 +31,7 @@
   --color-warning-fill: var(--warning-fill);
   --color-warning-soft: var(--warning-soft);
   --color-danger: var(--danger);
+  --color-danger-fill: var(--danger-fill);
   --color-danger-soft: var(--danger-soft);
   --color-p1: var(--p1);
   --color-p2: var(--p2);
