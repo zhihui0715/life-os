@@ -5,6 +5,7 @@ import { Link } from 'react-router'
 
 import { Card } from '../../components/ui/states'
 import { addDays, formatInstant, formatMinutes, todayInZone, wallTimeToUtcIso } from '../../lib/dates'
+import { useOnline } from '../../lib/offline'
 import { useMe } from '../auth/AuthProvider'
 import { useOccurrences } from '../calendar/api'
 import { useCurrentFocus } from '../focus/api'
@@ -82,12 +83,19 @@ export function FocusSection() {
   )
 }
 
+/** Shown in place of a card's content when it has no data because the app is offline. */
+function NotOffline() {
+  const { t } = useTranslation()
+  return useOnline() ? null : <p className="text-subtle px-4 py-3 text-sm">{t('offline.notSaved')}</p>
+}
+
 export function BalanceSection() {
   const { t } = useTranslation()
   const { t: ti } = useTranslation('insights')
   const o = useOverview('week', 0).data
   return (
     <Section title={t('home.balance')} to="/insights">
+      {!o && <NotOffline />}
       <div className="px-4 py-3">
         {!o ? null : o.score.value == null ? (
           <p className="text-subtle text-sm">{ti('score.noData')}</p>
@@ -116,10 +124,13 @@ export function BalanceSection() {
 
 export function GoalsSection() {
   const { t } = useTranslation()
-  const goals = (useGoals('active').data ?? []).slice(0, 3)
+  const data = useGoals('active').data
+  const goals = (data ?? []).slice(0, 3)
   return (
     <Section title={t('home.goals')} to="/goals">
-      {goals.length === 0 ? (
+      {!data ? (
+        <NotOffline /> // not loaded: never claim "no goals" when we simply couldn't ask
+      ) : goals.length === 0 ? (
         <p className="text-subtle px-4 py-3 text-sm">{t('home.noGoals')}</p>
       ) : (
         <ul className="divide-border divide-y">
@@ -144,6 +155,7 @@ export function LearningSection() {
   const gl = o?.components.goals_learning
   return (
     <Section title={t('home.learning')} to="/focus">
+      {!o && <NotOffline />}
       <div className="px-4 py-3">
         {gl && (
           <>

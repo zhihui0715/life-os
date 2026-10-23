@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useToast } from '../../components/ui/Toast'
 import { todayInZone } from '../../lib/dates'
 import { errorMessage } from '../../lib/errors'
+import { isQueued } from '../../lib/offline'
 import type { TaskView } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
 import { useCreateTask, type TaskInput } from './api'
@@ -47,8 +48,8 @@ export function QuickAddInput({ view, extra, label, placeholder, autoFocus, onAd
     create.mutate(
       { title: value, ...defaultsForView(view, me.settings.timezone), ...extra },
       {
-        onSuccess: () => {
-          toast(t('toast.created'))
+        onSuccess: (r) => {
+          toast(isQueued(r) ? t('common:offline.queued') : t('toast.created'))
           onAdded?.()
         },
         onError: (e) => {

@@ -2,6 +2,7 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { api } from '../../lib/api'
+import { isQueued, sendOrQueue, type Queued } from '../../lib/offline'
 import type { Category, Page, TagSummary, Task, TaskFilters, TaskStatus } from '../../lib/types'
 
 export interface TaskInput {
@@ -63,10 +64,16 @@ function useInvalidateTasks() {
 export function useCreateTask() {
   const invalidate = useInvalidateTasks()
   return useMutation({
-    // The client creates the id, so a retried request can never create a duplicate.
-    mutationFn: (input: TaskInput) =>
-      api<Task>('/tasks', { method: 'POST', body: { id: crypto.randomUUID(), ...input } }),
-    onSuccess: invalidate,
+    // The client creates the id, so a retried request can never create a duplicate. Works offline (queued).
+    mutationFn: (input: TaskInput): Promise<Task | Queued> =>
+      sendOrQueue<Task>({
+        kind: 'task_create',
+        method: 'POST',
+        path: '/tasks',
+        body: { id: crypto.randomUUID(), ...input },
+        label: input.title ?? '',
+      }),
+    onSuccess: (result) => (isQueued(result) ? undefined : invalidate()),
   })
 }
 
@@ -84,8 +91,11 @@ export type TaskAction = 'complete' | 'reopen' | 'archive' | 'restore'
 export function useTaskAction() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, action }: { id: string; action: TaskAction }) =>
-      api<Task>(`/tasks/${id}/${action}`, { method: 'POST' }),
+    // Completing works offline (queued); the other actions need the server.
+    mutationFn: ({ id, action, title }: { id: string; action: TaskAction; title?: string }): Promise<Task | Queued> =>
+      action === 'complete'
+        ? sendOrQueue<Task>({ kind: 'task_complete', method: 'POST', path: `/tasks/${id}/complete`, label: title ?? '' })
+        : api<Task>(`/tasks/${id}/${action}`, { method: 'POST' }),
     // Optimistic tick: the checkbox responds instantly; the list refreshes from the server afterwards.
     onMutate: async ({ id, action }) => {
       if (action !== 'complete' && action !== 'reopen') return
@@ -102,7 +112,9 @@ export function useTaskAction() {
         },
       )
     },
-    onSettled: () => Promise.all([qc.invalidateQueries({ queryKey: TASKS }), qc.invalidateQueries({ queryKey: ['goals'] })]),
+    // A queued completion keeps its optimistic tick until it syncs (refetching now would undo it on screen).
+    onSettled: (result) =>
+      isQueued(result) ? undefined : Promise.all([qc.invalidateQueries({ queryKey: TASKS }), qc.invalidateQueries({ queryKey: ['goals'] })]),
   })
 }
 

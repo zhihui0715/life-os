@@ -6,6 +6,7 @@ import { cn } from '../../components/ui/cn'
 import { useToast } from '../../components/ui/Toast'
 import { formatDay, formatInstant, formatMinutes } from '../../lib/dates'
 import { errorMessage } from '../../lib/errors'
+import { isQueued } from '../../lib/offline'
 import type { Category, Goal, Task } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
 import { useTaskAction } from './api'
@@ -29,9 +30,9 @@ export function TaskRow({ task, category, goal, onOpen }: Props) {
 
   const toggle = () =>
     action.mutate(
-      { id: task.id, action: done ? 'reopen' : 'complete' },
+      { id: task.id, action: done ? 'reopen' : 'complete', title: task.title },
       {
-        onSuccess: () => toast(t(done ? 'toast.reopened' : 'toast.completed')),
+        onSuccess: (r) => toast(isQueued(r) ? t('common:offline.queued') : t(done ? 'toast.reopened' : 'toast.completed')),
         onError: (e) => toast(errorMessage(t, e), 'error'),
       },
     )

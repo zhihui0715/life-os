@@ -116,6 +116,7 @@
     "ai_refused": "AI 拒绝了此请求，请尝试发送不同的数据。",
     "ai_failed": "AI 请求未成功，请重试。",
     "ai_misconfigured": "服务器的 AI 配置有误（请检查 API 密钥和模型）。",
+    "idempotency_key_reused": "此更改与另一项更改冲突。",
     "unknown": "出了点问题。"
   },
   "validation": {
@@ -128,5 +129,27 @@
     "duplicate": "该名称已被使用。",
     "email": "请输入有效的邮箱地址。",
     "invalid": "该值无效。"
+  },
+  "offline": {
+    "title": "当前处于离线状态",
+    "works": "你仍可查看上次访问时保存的今日任务、习惯和日程，并可完成任务、习惯打卡和快速添加任务。这些操作会保存在本设备上，恢复联网后自动发送。",
+    "needsConnection": "其他功能——日记、目标、洞察、助手和编辑——都需要联网。最近未打开过的页面可能无法加载。",
+    "waiting_other": "{{count}} 项更改等待同步",
+    "syncing_other": "正在同步 {{count}} 项更改…",
+    "show": "显示",
+    "hide": "隐藏",
+    "failed_other": "{{count}} 项更改未能保存",
+    "dismiss": "知道了",
+    "queued": "已保存在本设备上，恢复联网后将自动同步。",
+    "update": "Life OS 有新版本可用。",
+    "reload": "重新加载",
+    "later": "稍后",
+    "actions": {
+      "task_complete": "完成“{{label}}”",
+      "task_create": "添加任务“{{label}}”",
+      "habit_check_in": "打卡“{{label}}”",
+      "habit_uncheck": "取消“{{label}}”的打卡"
+    },
+    "notSaved": "离线时不可用。"
   }
 }

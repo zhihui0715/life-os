@@ -10,6 +10,7 @@ from sqlalchemy import text
 
 from app.common.auth import load_and_enforce_auth
 from app.common.errors import register_error_handlers
+from app.common.idempotency import remember, replay_if_seen
 from app.config import check_config, get_config
 from app.extensions import db, limiter, migrate
 
@@ -61,6 +62,9 @@ def create_app(config_name: str | None = None) -> Flask:
         g.started = time.perf_counter()
 
     app.before_request(load_and_enforce_auth)
+    app.before_request(replay_if_seen)  # after auth: keys belong to a user
+
+    app.after_request(remember)
 
     @app.after_request
     def _finish_request(response):

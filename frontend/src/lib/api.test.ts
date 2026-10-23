@@ -42,4 +42,14 @@ describe('api client', () => {
     mockFetch(204, undefined)
     expect(await api('/tasks/1', { method: 'DELETE' })).toBeUndefined()
   })
+
+  it('treats a 5xx that is not the API error format (proxy, host) as "server unreachable"', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('<html>Bad Gateway</html>', { status: 502 })))
+    const proxy = (await api('/tasks').catch((e) => e)) as ApiError
+    expect(proxy.status).toBe(0)
+    expect(proxy.code).toBe('network_error')
+    mockFetch(500, { error: { code: 'internal_error', message: 'x' } })
+    const real = (await api('/tasks').catch((e) => e)) as ApiError
+    expect(real.status).toBe(500)
+  })
 })

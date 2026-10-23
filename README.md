@@ -3,10 +3,11 @@
 A private, bilingual (English / 简体中文) personal management system: tasks, calendar, goals, habits, journal and insights.
 Architecture and decisions: [`docs/00-architecture-plan.md`](docs/00-architecture-plan.md).
 
-**Current stage: 7 — AI assistance.** The whole P0 plan is working: tasks, goals, calendar, habits, journal, focus timer
-and activity log, a customizable Home dashboard, Insights (metrics with written formulas, an experimental Life Balance
-Score, trends), and backup & restore. Optional AI daily plans and weekly reviews are built (off by default). The
-installable/offline app (Stage 8) is next.
+**Current stage: 8 — Installable & offline.** The whole P0 plan is working: tasks, goals, calendar, habits, journal,
+focus timer and activity log, a customizable Home dashboard, Insights (metrics with written formulas, an experimental
+Life Balance Score, trends), and backup & restore. Optional AI daily plans and weekly reviews (off by default). The app
+installs to a phone or desktop and keeps working for a few things offline. Quality checks and deployment (Stage 9) are
+next.
 
 ## Requirements (Windows)
 
@@ -71,6 +72,27 @@ Nothing is replaced until you confirm. A restore replaces the account's data wit
 [`docs/01-database-schema.md` §5](docs/01-database-schema.md).
 
 ⚠️ `docker compose down -v` deletes the database volume — all local data. Don't use it unless you mean to.
+
+## Install it & use it offline
+
+The installable version is the **built** app (the dev server on :5173 deliberately has no service worker):
+
+```bash
+cd frontend && npm run build && npm run preview     # http://localhost:4173 (needs the backend running)
+```
+
+- **Chrome / Edge (desktop or Android):** the install icon in the address bar, or menu → *Install Life OS*.
+- **iPhone / iPad (Safari):** Share → *Add to Home Screen*.
+  Installing on a phone needs HTTPS, so it works once the app is deployed (Stage 9); `localhost` only works on the
+  computer itself.
+
+**Offline** (no connection, or the server is down): today's and overdue tasks, your habits and today's schedule are
+shown as of your last visit; you can complete tasks, check in habits and quick-add tasks. Those changes wait on the
+device and are sent automatically when the server is reachable again — each exactly once. A banner says what works and
+lists waiting changes. Journal, goals, insights, the assistant and editing need a connection, and the journal is never
+stored on the device. Logging out removes the offline copy and any unsent changes.
+
+When a new version is built, open pages show *A new version is ready → Reload*.
 
 ## AI assistance (optional)
 

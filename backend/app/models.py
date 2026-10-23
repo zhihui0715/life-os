@@ -1,5 +1,6 @@
 """Import every model so SQLAlchemy (and Alembic autogenerate) knows about all tables."""
 
+from app.common.models_idempotency import IdempotencyKey  # noqa: F401
 from app.modules.activity.models import ActivityLog, FocusSession  # noqa: F401
 from app.modules.ai.models import AiRun  # noqa: F401
 from app.modules.auth.models import AuthSession, User, UserSettings  # noqa: F401

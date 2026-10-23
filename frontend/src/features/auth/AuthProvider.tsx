@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createContext, useContext, useEffect, type ReactNode } from 'react'
 
 import { api, ApiError, setCsrfToken } from '../../lib/api'
+import { clearOfflineData, setOfflineUser } from '../../lib/offline'
 import i18n from '../../lib/i18n'
 import { setTheme } from '../../lib/theme'
 import type { Me } from '../../lib/types'
@@ -30,18 +31,24 @@ function useLoginMutation() {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: (body: { email: string; password: string }) => api<Me>('/auth/login', { method: 'POST', body }),
-    onSuccess: (me) => qc.setQueryData(ME_KEY, me),
+    onSuccess: (me) => {
+      // Signing in (maybe as someone else): drop any data cached for the previous session before showing pages.
+      qc.removeQueries({ predicate: (q) => q.queryKey[0] !== ME_KEY[0] })
+      qc.setQueryData(ME_KEY, me)
+    },
   })
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const qc = useQueryClient()
-  const { data: me, error: meError, refetch } = useQuery({ queryKey: ME_KEY, queryFn: fetchMe, staleTime: Infinity, retry: 1 })
+  // Restored from this browser when offline; re-checked with the server after a minute.
+  const { data: me, error: meError, refetch } = useQuery({ queryKey: ME_KEY, queryFn: fetchMe, staleTime: 60_000, retry: 1 })
   const login = useLoginMutation()
 
   // Apply the account's language, theme and CSRF token whenever they load or change.
   useEffect(() => {
     setCsrfToken(me?.csrf_token ?? null)
+    setOfflineUser(me?.user.id ?? null)
     if (me) {
       if (i18n.language !== me.settings.locale) i18n.changeLanguage(me.settings.locale)
       setTheme(me.settings.theme)
@@ -56,6 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // personal record from memory. qc.clear() would also detach the "me" watcher, leaving the page stuck.
       qc.setQueryData(ME_KEY, null)
       qc.removeQueries({ predicate: (q) => q.queryKey[0] !== ME_KEY[0] })
+      clearOfflineData() // the offline copy and any unsent actions leave this browser too
     }
   }
 

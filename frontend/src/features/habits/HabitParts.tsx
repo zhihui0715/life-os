@@ -5,6 +5,7 @@ import { cn } from '../../components/ui/cn'
 import { useToast } from '../../components/ui/Toast'
 import { todayInZone } from '../../lib/dates'
 import { errorMessage } from '../../lib/errors'
+import { isQueued } from '../../lib/offline'
 import type { Habit } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
 import { useCheckIn, WEEKDAY_BITS } from './api'
@@ -33,9 +34,9 @@ export function CheckButton({ habit, size = 'md' }: { habit: Habit; size?: 'md' 
 
   const toggle = () =>
     checkIn.mutate(
-      { id: habit.id, date: today, state: state === 'done' ? null : 'done', value: habit.target_value },
+      { id: habit.id, date: today, state: state === 'done' ? null : 'done', value: habit.target_value, name: habit.name },
       {
-        onSuccess: () => toast(t(state === 'done' ? 'toast.cleared' : 'toast.checked')),
+        onSuccess: (r) => toast(isQueued(r) ? t('common:offline.queued') : t(state === 'done' ? 'toast.cleared' : 'toast.checked')),
         onError: (e) => toast(errorMessage(t, e), 'error'),
       },
     )

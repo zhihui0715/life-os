@@ -116,6 +116,7 @@
     "ai_refused": "The AI declined this request. Try sending different data.",
     "ai_failed": "The AI request didn't work. Try again.",
     "ai_misconfigured": "The server's AI settings are wrong (check the API key and model).",
+    "idempotency_key_reused": "This change conflicted with another one.",
     "unknown": "Something went wrong."
   },
   "validation": {
@@ -128,5 +129,30 @@
     "duplicate": "This name is already in use.",
     "email": "Enter a valid email address.",
     "invalid": "This value is not valid."
+  },
+  "offline": {
+    "title": "You're offline",
+    "works": "You can still see today's tasks, habits and schedule as of your last visit, tick off tasks, check in habits and quick-add tasks. These are saved on this device and sent when you're back online.",
+    "needsConnection": "Everything else — journal, goals, insights, the assistant, editing — needs a connection. Pages you haven't opened recently may not load.",
+    "waiting_one": "{{count}} change waiting to sync",
+    "waiting_other": "{{count}} changes waiting to sync",
+    "syncing_one": "Syncing {{count}} change…",
+    "syncing_other": "Syncing {{count}} changes…",
+    "show": "Show",
+    "hide": "Hide",
+    "failed_one": "{{count}} change couldn't be saved",
+    "failed_other": "{{count}} changes couldn't be saved",
+    "dismiss": "Dismiss",
+    "queued": "Saved on this device — it will sync when you're back online.",
+    "update": "A new version of Life OS is ready.",
+    "reload": "Reload",
+    "later": "Later",
+    "actions": {
+      "task_complete": "Complete “{{label}}”",
+      "task_create": "Add task “{{label}}”",
+      "habit_check_in": "Check in “{{label}}”",
+      "habit_uncheck": "Undo check-in for “{{label}}”"
+    },
+    "notSaved": "Not available offline."
   }
 }

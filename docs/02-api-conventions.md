@@ -72,7 +72,8 @@ Domain actions are separate endpoints (rather than "PATCH status") because they 
 ## 6. Concurrency & offline (prepared now, used in Stage 8)
 
 - `PATCH` may include `"if_updated_at": "<timestamp the client last saw>"`. If the record changed since, the server returns `409 conflict` with the current version, and the UI shows "changed elsewhere — keep mine / keep theirs".
-- Header `Idempotency-Key: <uuid>` on `POST` actions: the server remembers the result for 24 h, so a replayed offline request doesn't create duplicates.
+- ✅ Header `Idempotency-Key: <8–64 chars>` on any write (`POST`/`PUT`/`PATCH`/`DELETE`): the server stores the outcome for 24 h per user, and a repeat with the same key gets the stored reply (header `Idempotent-Replay: true`) without the work being done again. Successes and 404/409/422 are stored; 5xx, 401/403 and 429 are not (a retry really retries). Reusing a key for a different method/path → `422 idempotency_key_reused`. The app sends a key with every offline-capable action (complete task, habit check-in, quick-add).
+- Errors from the API always use the JSON format in §4. The app treats a 5xx *without* that format (from a proxy or the host while the API is down) as "server unreachable", the same as no connection.
 
 ## 7. Planned endpoint groups
 

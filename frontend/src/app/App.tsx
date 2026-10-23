@@ -1,5 +1,6 @@
-import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { lazy, Suspense } from 'react'
+import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
+import { lazy, Suspense, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router'
 
@@ -19,6 +20,7 @@ import { SettingsPage } from '../features/settings/SettingsPage'
 import { TasksPage } from '../features/tasks/TasksPage'
 import { ApiError } from '../lib/api'
 import { errorMessage } from '../lib/errors'
+import { CACHE_MAX_AGE, keepOffline, persister, startOutboxSync } from '../lib/offline'
 import { AppShell } from './AppShell'
 
 // The calendar library is large; load it only when the Calendar page is opened.
@@ -36,9 +38,14 @@ const queryClient: QueryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 30_000,
+      gcTime: CACHE_MAX_AGE, // keep results around long enough to be saved for offline use
+      refetchOnReconnect: false, // on reconnect the outbox is sent first, then everything is refreshed (lib/offline.ts)
       // Don't retry client errors (401/404/422…); do retry brief server/network hiccups.
       retry: (count, error) => !(error instanceof ApiError && error.status >= 400 && error.status < 500) && count < 2,
     },
+    // Writes are attempted even offline: the few that work offline are queued, the rest show "can't reach the server"
+    // instead of silently waiting.
+    mutations: { networkMode: 'always' },
   },
 })
 
@@ -117,11 +124,15 @@ const router = createBrowserRouter([
 ])
 
 export function App() {
+  useEffect(() => startOutboxSync(queryClient), [])
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister, maxAge: CACHE_MAX_AGE, buster: 'v1', dehydrateOptions: { shouldDehydrateQuery: keepOffline } }}
+    >
       <ToastProvider>
         <RouterProvider router={router} />
       </ToastProvider>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   )
 }

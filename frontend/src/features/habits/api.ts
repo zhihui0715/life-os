@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { api } from '../../lib/api'
+import { isQueued, sendOrQueue, type Queued } from '../../lib/offline'
 import type { Habit, HabitDayState, HabitDetail, HabitScheduleType } from '../../lib/types'
 
 export interface HabitInput {
@@ -60,15 +61,33 @@ export function useArchiveHabit() {
   })
 }
 
-/** Set or clear a day's check-in. `state: null` removes it. */
+interface CheckIn {
+  id: string
+  date: string
+  state: HabitDayState | null
+  value?: number | null
+  note?: string | null
+  name?: string // shown in the offline outbox
+}
+
+/** Set or clear a day's check-in. `state: null` removes it. Works offline (queued). */
 export function useCheckIn() {
+  const qc = useQueryClient()
   const invalidate = useInvalidate()
   return useMutation({
-    mutationFn: ({ id, date, state, value, note }: { id: string; date: string; state: HabitDayState | null; value?: number | null; note?: string | null }) =>
-      state === null
-        ? api<HabitDetail>(`/habits/${id}/logs/${date}`, { method: 'DELETE' })
-        : api<HabitDetail>(`/habits/${id}/logs/${date}`, { method: 'PUT', body: { state, value, note } }),
-    onSuccess: invalidate,
+    mutationFn: ({ id, date, state, value, note, name }: CheckIn): Promise<HabitDetail | Queued> =>
+      sendOrQueue<HabitDetail>(
+        state === null
+          ? { kind: 'habit_check_in', method: 'DELETE', path: `/habits/${id}/logs/${date}`, label: name ?? '' }
+          : { kind: 'habit_check_in', method: 'PUT', path: `/habits/${id}/logs/${date}`, body: { state, value, note }, label: name ?? '' },
+      ),
+    onSuccess: (result, { id, state, value, note }) => {
+      if (!isQueued(result)) return invalidate()
+      // Saved for later: show the tick now (streaks update once it syncs).
+      qc.setQueryData<{ items: Habit[] }>([...HABITS, 'list', false], (data) =>
+        data && { ...data, items: data.items.map((h) => (h.id === id ? { ...h, today: state ? { state, value: value ?? null, note: note ?? null } : null } : h)) },
+      )
+    },
   })
 }
 
