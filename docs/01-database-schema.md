@@ -241,3 +241,32 @@ Rules:
 - One migration per stage minimum; never edit a migration after it has been applied to real data — write a new one.
 - Every migration has a working `downgrade()` and is tested in CI: `upgrade head → downgrade base → upgrade head` on an empty database.
 - Before applying a migration to a database containing real data: run the export (Stage 6+) or `pg_dump` first.
+
+## 5. Backup format (Stage 6)
+
+One JSON file per account, made by `GET /api/v1/backup/export`:
+
+```json
+{"format": "life-os-backup", "format_version": 1, "exported_at": "…", "schema_revision": "0005",
+ "account": {"email": "…", "display_name": "…"},
+ "counts": {"tasks": 12, …}, "checksums": {"tasks": "<sha256>", …},
+ "data": {"categories": [{…row…}], "tags": […], …, "user_settings": [{…}]}}
+```
+
+- **Raw rows, every column** of every user table (list in `app/modules/backup/service.py`, `TABLES`), except `user_id`,
+  which becomes the restoring account's id. `users` and `auth_sessions` are never exported (no password hash, no sessions).
+  Ids and timestamps are kept, so links between records survive. Decimals are strings (`"12.25"`), instants are ISO 8601
+  with offset, dates are `YYYY-MM-DD`.
+- **Checksum** per table: SHA-256 of the rows as compact JSON with sorted keys, rows sorted by primary key.
+- **Restore replaces** the account's data in one transaction: validate the file (format, version, checksums, types) →
+  delete the account's rows (reverse order) → insert the backup (dependency order) → read back and compare checksums →
+  commit. Any failure rolls everything back.
+- **Preview** runs that same restore and rolls it back, then reports per table: `current`, `in_backup`, `added`,
+  `changed`, `unchanged`, `removed`. **Apply** needs the preview's token (a fingerprint of the account's current data and
+  the file), so data changed after the preview can't be overwritten unseen; a non-empty account (anything beyond the
+  default categories) also needs `replace_existing: true`.
+- **New columns later:** a file without a column restores with that column's default; `format_version` only changes if
+  the shape of the file changes. A file from a newer format version is refused.
+- **Another account's backup** restores into a fresh account on another server (or after wiping this one). On the same
+  server it is refused (`backup_conflict`), because ids are unique across the whole database.
+

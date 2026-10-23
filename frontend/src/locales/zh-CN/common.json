@@ -102,6 +102,12 @@
     "validation_error": "请修正标出的字段。",
     "rate_limited": "尝试次数过多，请稍等一分钟再试。",
     "internal_error": "服务器出错了。",
+    "backup_invalid": "无法恢复此文件。",
+    "backup_conflict": "此备份属于本服务器上的其他账户，无法在此恢复。",
+    "preview_outdated": "检查之后你的数据或文件已变化，请重新选择文件。",
+    "account_not_empty": "此账户已有数据，请先确认替换。",
+    "backup_verify_failed": "恢复结果校验失败，因此未做任何更改。",
+    "payload_too_large": "文件太大。",
     "unknown": "出了点问题。"
   },
   "validation": {

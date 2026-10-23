@@ -3,9 +3,9 @@
 A private, bilingual (English / 简体中文) personal management system: tasks, calendar, goals, habits, journal and insights.
 Architecture and decisions: [`docs/00-architecture-plan.md`](docs/00-architecture-plan.md).
 
-**Current stage: 5 — Insights.** Everything in the P0 plan except backup is working: tasks, goals, calendar, habits,
-journal, focus timer and activity log, a customizable Home dashboard, and Insights (weekly/monthly metrics with written
-formulas, an experimental Life Balance Score with adjustable weights and data coverage, trends). Backup & restore is next.
+**Current stage: 6 — Backup.** The whole P0 plan is working: tasks, goals, calendar, habits, journal, focus timer and
+activity log, a customizable Home dashboard, Insights (metrics with written formulas, an experimental Life Balance Score,
+trends), and backup & restore. AI assistance (Stage 7) is next.
 
 ## Requirements (Windows)
 
@@ -59,6 +59,15 @@ cd frontend && npm test
 | `flask db migrate -m "message"` | Generate a migration after changing models — **review it before applying** |
 | `flask db upgrade` | Apply migrations |
 | `flask seed-dev-user` | Development only: create the test account defined in `.env` |
+
+## Backup
+
+Settings → **Backup & restore** → *Download backup* saves everything you've entered as one `.json` file. Do this
+regularly (and before applying migrations); keep copies somewhere other than this laptop.
+
+To restore, choose *Restore from file…*: the app checks the file, does a test restore, and shows what will change.
+Nothing is replaced until you confirm. A restore replaces the account's data with the backup's. Format details:
+[`docs/01-database-schema.md` §5](docs/01-database-schema.md).
 
 ⚠️ `docker compose down -v` deletes the database volume — all local data. Don't use it unless you mean to.
 

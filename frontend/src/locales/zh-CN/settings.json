@@ -19,5 +19,48 @@
     "1": "星期一",
     "7": "星期日"
   },
-  "signedInAs": "当前登录：{{email}}"
+  "signedInAs": "当前登录：{{email}}",
+  "backup": {
+    "title": "备份与恢复",
+    "help": "把你录入的所有内容下载为一个文件，并妥善保存。之后可以在这里或新账户中恢复。",
+    "download": "下载备份",
+    "restore": "从文件恢复…",
+    "checking": "正在检查文件…",
+    "csvHelp": "表格副本（用于在 Excel 中查看，无法用来恢复）：",
+    "csvTasks": "任务（CSV）",
+    "csvActivity": "活动记录（CSV）",
+    "notJson": "这不是备份文件（应为从 Life OS 下载的 .json 文件）。",
+    "previewTitle": "恢复前请确认",
+    "fileFrom": "备份时间 {{date}}，账户 {{email}}。",
+    "checked": "文件完整且未损坏，试恢复已成功。目前尚未做任何更改。",
+    "unknownDate": "未知日期",
+    "col": {
+      "what": "内容",
+      "now": "当前",
+      "after": "恢复后",
+      "lost": "将被替换或删除"
+    },
+    "lostHelp": "恢复后，你的数据将与备份完全一致。",
+    "warnReplace_other": "当前有 {{count}} 条记录将被删除或被旧版本覆盖。",
+    "warnReplaceSame": "当前数据将被备份替换（目前两者一致）。",
+    "understand": "我明白当前数据将被替换",
+    "tip": "提示：如果之后可能还需要当前数据，请先下载一份当前备份。",
+    "replace": "替换我的数据",
+    "restoreNow": "恢复",
+    "restored": "备份已恢复。",
+    "tables": {
+      "tasks": "任务",
+      "goals": "目标",
+      "goal_milestones": "里程碑",
+      "schedule_events": "日程",
+      "habits": "习惯",
+      "habit_logs": "习惯打卡",
+      "journal_entries": "日记",
+      "activity_logs": "活动记录",
+      "focus_sessions": "专注记录",
+      "categories": "分类",
+      "tags": "标签",
+      "user_settings": "设置"
+    }
+  }
 }

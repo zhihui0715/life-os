@@ -102,6 +102,12 @@
     "validation_error": "Please fix the highlighted fields.",
     "rate_limited": "Too many attempts. Please wait a minute and try again.",
     "internal_error": "Something went wrong on the server.",
+    "backup_invalid": "This file can't be restored.",
+    "backup_conflict": "This backup belongs to another account on this server and can't be restored here.",
+    "preview_outdated": "Your data or the file changed since the check. Choose the file again.",
+    "account_not_empty": "This account already has data. Confirm the replacement first.",
+    "backup_verify_failed": "The restore couldn't be verified, so nothing was changed.",
+    "payload_too_large": "The file is too large.",
     "unknown": "Something went wrong."
   },
   "validation": {
