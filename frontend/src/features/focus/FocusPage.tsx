@@ -47,7 +47,7 @@ export function FocusPage() {
           <FocusTimer />
 
           <Card className="p-4">
-            <h2 className="mb-2 font-semibold">{t('log.title')}</h2>
+            <h2 className="mb-2 text-[17px] font-semibold tracking-tight">{t('log.title')}</h2>
             {activity.isPending ? (
               <ListSkeleton rows={3} />
             ) : activity.isError ? (
@@ -66,7 +66,7 @@ export function FocusPage() {
                         const cat = catName(l.category_id)
                         return (
                           <li key={l.id}>
-                            <button type="button" onClick={() => setEditing(l)} className="hover:bg-sunken flex w-full items-center gap-3 rounded-md px-2 py-2 text-left">
+                            <button type="button" onClick={() => setEditing(l)} className="hover:bg-sunken flex w-full items-center gap-3 rounded-xl px-2 py-2 text-left">
                               <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: cat?.color ?? 'var(--border-strong)' }} aria-hidden />
                               <span className="min-w-0 flex-1">
                                 <span className="block truncate text-sm">{l.title}</span>
@@ -90,12 +90,12 @@ export function FocusPage() {
 
         <div className="flex flex-col gap-4">
           <Card className="p-4">
-            <h2 className="mb-3 font-semibold">{t('summary.title')}</h2>
+            <h2 className="mb-3 text-[17px] font-semibold tracking-tight">{t('summary.title')}</h2>
             {summary.data && (
               <>
                 <div className="mb-3 grid grid-cols-2 gap-2">
-                  <div><p className="text-xl font-semibold tabular-nums">{formatMinutes(summary.data.total_minutes, lang)}</p><p className="text-subtle text-xs">{t('summary.total')}</p></div>
-                  <div><p className="text-xl font-semibold tabular-nums">{formatMinutes(summary.data.learning_minutes, lang)}</p><p className="text-subtle text-xs">{t('summary.learning')}</p></div>
+                  <div><p className="font-display text-[24px] leading-tight font-bold tracking-tight tabular-nums">{formatMinutes(summary.data.total_minutes, lang)}</p><p className="text-subtle text-xs">{t('summary.total')}</p></div>
+                  <div><p className="font-display text-[24px] leading-tight font-bold tracking-tight tabular-nums">{formatMinutes(summary.data.learning_minutes, lang)}</p><p className="text-subtle text-xs">{t('summary.learning')}</p></div>
                 </div>
                 <ul className="flex flex-col gap-2">
                   {summary.data.by_category.map((c) => (
@@ -120,14 +120,14 @@ export function FocusPage() {
           </Card>
 
           <Card className="p-4">
-            <h2 className="mb-2 font-semibold">{t('today')}</h2>
+            <h2 className="mb-2 text-[17px] font-semibold tracking-tight">{t('today')}</h2>
             {!sessions.data?.items.length ? (
               <p className="text-subtle text-sm">{t('noSessions')}</p>
             ) : (
               <ul className="flex flex-col gap-2">
                 {sessions.data.items.map((s) => (
                   <li key={s.id} className="flex items-center gap-2 text-sm">
-                    <span className={cn('rounded px-1.5 py-0.5 text-xs font-medium',
+                    <span className={cn('rounded-full px-2 py-0.5 text-xs font-medium',
                       s.state === 'completed' ? 'bg-success-soft text-success' : s.state === 'interrupted' ? 'bg-warning-soft text-warning' : 'bg-accent-soft text-accent')}>
                       {t(`state.${s.state}`)}
                     </span>

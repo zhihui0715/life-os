@@ -65,7 +65,7 @@ export function SuggestionDialog({ task, onClose }: { task: { id: string; title:
             ) : (
               <ul className="flex flex-col gap-2">
                 {data.slots.map((s) => (
-                  <li key={s.starts_at} className="border-border flex items-center gap-3 rounded-lg border p-3">
+                  <li key={s.starts_at} className="bg-sunken/70 flex items-center gap-3 rounded-2xl p-3">
                     <div className="min-w-0 flex-1">
                       <p className="font-medium">{when(s.starts_at, s.ends_at)}</p>
                       <p className="text-subtle flex flex-wrap items-center gap-x-2 text-xs">

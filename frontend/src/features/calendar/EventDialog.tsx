@@ -178,7 +178,7 @@ export function EventDialog({ mode, onClose }: { mode: EventDialogMode | null; o
         ) : (
           <>
             {mode.type === 'edit' && (
-              <Button variant="ghost" className="text-danger" onClick={() => setConfirmDelete(true)}>
+              <Button variant="ghost" className="text-danger hover:bg-danger-soft" onClick={() => setConfirmDelete(true)}>
                 <Trash2 size={16} aria-hidden />
                 {t('common:actions.delete')}
               </Button>
@@ -205,7 +205,7 @@ export function EventDialog({ mode, onClose }: { mode: EventDialogMode | null; o
           }}
         >
           {recurring && (
-            <fieldset className="border-border rounded-lg border p-3">
+            <fieldset className="bg-sunken/70 rounded-2xl p-3.5">
               <legend className="px-1 text-sm font-medium">{t('scope.label')}</legend>
               {(['this', 'all'] as const).map((s) => (
                 <label key={s} className="flex items-center gap-2 py-1 text-sm">

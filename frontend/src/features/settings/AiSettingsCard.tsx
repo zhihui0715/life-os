@@ -37,7 +37,7 @@ export function AiSettingsCard() {
 
   return (
     <Card className="mb-4 p-5">
-      <h2 className="font-semibold">{t('settings.title')}</h2>
+      <h2 className="text-[17px] font-semibold tracking-tight">{t('settings.title')}</h2>
       <p className="text-subtle mt-1 mb-4 text-sm">{t('settings.help')}</p>
       {status.data && !status.data.configured && <p className="text-muted mb-4 text-sm">{t('unavailable.body')}</p>}
 

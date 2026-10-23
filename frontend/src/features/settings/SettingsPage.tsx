@@ -49,7 +49,7 @@ export function SettingsPage() {
       <PageHeader title={t('title')} />
 
       <Card className="mb-4 p-5">
-        <h2 className="mb-4 font-semibold">{t('sections.preferences')}</h2>
+        <h2 className="mb-4 text-[17px] font-semibold tracking-tight">{t('sections.preferences')}</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label={t('common:language.label')}>
             {(a) => (
@@ -105,7 +105,7 @@ export function SettingsPage() {
       <BackupCard />
 
       <Card className="p-5">
-        <h2 className="mb-1 font-semibold">{t('sections.account')}</h2>
+        <h2 className="mb-1 text-[17px] font-semibold tracking-tight">{t('sections.account')}</h2>
         <p className="text-muted mb-4">{t('signedInAs', { email: me.user.email })}</p>
         <Button onClick={() => logout()}>
           <LogOut size={16} aria-hidden />
@@ -127,7 +127,7 @@ function SoundCard() {
   return (
     <Card className="mb-4 flex items-center gap-4 p-5">
       <div className="min-w-0 flex-1">
-        <h2 id="sound-label" className="font-semibold">{t('sound.label')}</h2>
+        <h2 id="sound-label" className="text-[17px] font-semibold tracking-tight">{t('sound.label')}</h2>
         <p className="text-subtle mt-0.5 text-[13px]">{t('sound.help')}</p>
       </div>
       <Switch checked={on} onChange={setSoundEnabled} labelledBy="sound-label" />

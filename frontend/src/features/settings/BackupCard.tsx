@@ -104,7 +104,7 @@ export function BackupCard() {
 
   return (
     <Card className="mb-4 p-5">
-      <h2 className="font-semibold">{t('backup.title')}</h2>
+      <h2 className="text-[17px] font-semibold tracking-tight">{t('backup.title')}</h2>
       <p className="text-subtle mt-1 mb-4 text-sm">{t('backup.help')}</p>
 
       <div className="flex flex-wrap gap-2">
@@ -195,7 +195,7 @@ export function BackupCard() {
             <p className="text-subtle mt-2 text-xs">{t('backup.lostHelp')}</p>
 
             {needsConsent && (
-              <div className="border-danger/40 bg-danger-soft mt-4 rounded-lg border p-3">
+              <div className="bg-danger-soft mt-4 rounded-2xl p-3">
                 <p className="flex gap-2 text-sm font-medium">
                   <TriangleAlert size={16} className="text-danger mt-0.5 shrink-0" aria-hidden />
                   {removed ? t('backup.warnReplace', { count: removed }) : t('backup.warnReplaceSame')}

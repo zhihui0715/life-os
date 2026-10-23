@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/Button'
 import { cn } from '../../components/ui/cn'
 import { ConfirmDialog } from '../../components/ui/Dialog'
 import { Field, Input, Select } from '../../components/ui/Field'
+import { ChoiceChip } from '../../components/ui/Segments'
 import { useToast } from '../../components/ui/Toast'
 import { Card } from '../../components/ui/states'
 import { formatMinutes } from '../../lib/dates'
@@ -59,7 +60,7 @@ export function FocusTimer() {
   if (!session) {
     return (
       <Card className="p-5">
-        <h2 className="mb-4 flex items-center gap-2 font-semibold"><Timer size={18} aria-hidden />{t('title')}</h2>
+        <h2 className="mb-4 flex items-center gap-2 text-[17px] font-semibold tracking-tight"><Timer size={19} className="text-[var(--tint-focus)]" aria-hidden />{t('title')}</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <Field label={t('timer.focusOn')}>
             {(a) => (
@@ -76,24 +77,22 @@ export function FocusTimer() {
           )}
         </div>
         <fieldset className="mt-4">
-          <legend className="mb-1.5 text-sm font-medium">{t('timer.length')}</legend>
-          <div className="flex flex-wrap gap-1.5">
+          <legend className="text-muted mb-2 px-1 text-[13px] font-medium">{t('timer.length')}</legend>
+          <div className="flex flex-wrap gap-2">
             {LENGTHS.map((m) => (
-              <button key={m} type="button" aria-pressed={planned === m} onClick={() => setPlanned(m)}
-                className={cn('h-9 rounded-md border px-3 text-sm', planned === m ? 'border-accent bg-accent-soft text-accent font-medium' : 'border-border text-muted')}>
+              <ChoiceChip key={m} selected={planned === m} onClick={() => setPlanned(m)}>
                 {t('timer.minutes', { count: m })}
-              </button>
+              </ChoiceChip>
             ))}
           </div>
         </fieldset>
         <fieldset className="mt-3">
-          <legend className="mb-1.5 text-sm font-medium">{t('timer.break')}</legend>
-          <div className="flex flex-wrap gap-1.5">
+          <legend className="text-muted mb-2 px-1 text-[13px] font-medium">{t('timer.break')}</legend>
+          <div className="flex flex-wrap gap-2">
             {BREAKS.map((m) => (
-              <button key={m} type="button" aria-pressed={breakMin === m} onClick={() => setBreakMin(m)}
-                className={cn('h-9 rounded-md border px-3 text-sm', breakMin === m ? 'border-accent bg-accent-soft text-accent font-medium' : 'border-border text-muted')}>
+              <ChoiceChip key={m} selected={breakMin === m} onClick={() => setBreakMin(m)}>
                 {t('timer.minutes', { count: m })}
-              </button>
+              </ChoiceChip>
             ))}
           </div>
         </fieldset>
@@ -114,14 +113,14 @@ export function FocusTimer() {
   return (
     <Card className="flex flex-col items-center p-5">
       <p className="text-muted text-sm font-medium">{session.task_title ?? session.label ?? t('timer.noTask')}</p>
-      <div className="relative my-4 h-52 w-52">
+      <div className="relative my-5 h-60 w-60">
         <svg viewBox="0 0 200 200" className="h-full w-full -rotate-90" aria-hidden>
           <circle cx="100" cy="100" r={R} fill="none" stroke="var(--surface-sunken)" strokeWidth="12" />
           <circle cx="100" cy="100" r={R} fill="none" stroke={over ? 'var(--success)' : 'var(--accent)'} strokeWidth="12" strokeLinecap="round"
             strokeDasharray={C} strokeDashoffset={C * (1 - progress)} className="transition-[stroke-dashoffset] duration-1000 ease-linear motion-reduce:transition-none" />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center" role="timer" aria-live="off">
-          <span className="text-4xl font-semibold tabular-nums">{clock(over ? focused : remaining)}</span>
+          <span className="font-display text-[52px] leading-none font-light tracking-tight tabular-nums">{clock(over ? focused : remaining)}</span>
           <span className="text-subtle text-xs">{over ? t('timer.planned', { count: session.planned_minutes }) : t('timer.remaining')}</span>
         </div>
       </div>

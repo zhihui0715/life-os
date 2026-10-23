@@ -88,7 +88,7 @@ export function ActivityDialog({ open, log, onClose }: { open: boolean; log?: Ac
         footer={
           <>
             {log && (
-              <Button variant="ghost" className="text-danger" onClick={() => setConfirmDelete(true)}>
+              <Button variant="ghost" className="text-danger hover:bg-danger-soft" onClick={() => setConfirmDelete(true)}>
                 <Trash2 size={16} aria-hidden />{t('common:actions.delete')}
               </Button>
             )}

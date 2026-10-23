@@ -28,7 +28,7 @@ export function Meter({ value, label }: { value: number | null; label: string })
   }
   return (
     <div role="meter" aria-valuenow={Math.round(value)} aria-valuemin={0} aria-valuemax={100} aria-label={label} className="bg-accent-soft h-2 overflow-hidden rounded-full">
-      <div className="bg-accent-fill h-full rounded-full" style={{ width: `${Math.max(value, 2)}%` }} />
+      <div className="bg-accent-fill h-full rounded-full transition-[width] duration-700 ease-[var(--ease-out)]" style={{ width: `${Math.max(value, 2)}%` }} />
     </div>
   )
 }
@@ -42,8 +42,8 @@ export function BalanceCard({ data }: { data: Overview }) {
   return (
     <Card className="p-5">
       <div className="mb-1 flex flex-wrap items-center gap-2">
-        <h2 className="font-semibold">{t('score.title')}</h2>
-        <span className="bg-sunken text-muted rounded px-1.5 py-0.5 text-xs">{t('score.experimental')}</span>
+        <h2 className="text-[17px] font-semibold tracking-tight">{t('score.title')}</h2>
+        <span className="bg-sunken text-muted rounded-full px-2 py-0.5 text-xs font-medium">{t('score.experimental')}</span>
       </div>
 
       {s.value == null ? (
@@ -54,7 +54,7 @@ export function BalanceCard({ data }: { data: Overview }) {
         </div>
       ) : (
         <div className="my-3 flex flex-wrap items-end gap-x-3 gap-y-1">
-          <span className="text-5xl font-semibold tracking-tight">{Math.round(s.value)}</span>
+          <span className="font-display text-[64px] leading-none font-bold tracking-tight tabular-nums">{Math.round(s.value)}</span>
           <span className="text-subtle mb-1.5">/ 100</span>
           <span className="mb-2"><Delta now={s.value} before={data.previous.score} /></span>
         </div>

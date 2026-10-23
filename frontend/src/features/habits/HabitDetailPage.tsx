@@ -1,12 +1,13 @@
-import { Archive, ArchiveRestore, ArrowLeft, Pencil } from 'lucide-react'
+import { Archive, ArchiveRestore, Pencil } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router'
+import { useParams } from 'react-router'
 
 import { Button } from '../../components/ui/Button'
 import { cn } from '../../components/ui/cn'
 import { Dialog } from '../../components/ui/Dialog'
 import { useToast } from '../../components/ui/Toast'
+import { BackLink, Stat } from '../../components/ui/Segments'
 import { Card, ErrorState, ListSkeleton } from '../../components/ui/states'
 import { formatDay } from '../../lib/dates'
 import { errorMessage } from '../../lib/errors'
@@ -34,16 +35,13 @@ export function HabitDetailPage() {
 
   return (
     <>
-      <Link to="/habits" className="text-muted hover:text-fg mb-3 inline-flex items-center gap-1 text-sm">
-        <ArrowLeft size={14} aria-hidden />
-        {t('back')}
-      </Link>
+      <BackLink to="/habits">{t('back')}</BackLink>
 
       <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           {!h.archived_at && <CheckButton habit={h} size="lg" />}
           <div className="min-w-0">
-            <h1 className="text-2xl font-semibold tracking-tight break-words">{h.name}</h1>
+            <h1 className="font-display text-[30px] leading-tight font-bold tracking-[-0.025em] break-words">{h.name}</h1>
             <p className="text-subtle text-sm">
               {summary(h)}
               {h.target_value != null && ` · ${h.target_value} ${h.target_unit ?? ''}`}
@@ -73,7 +71,7 @@ export function HabitDetailPage() {
 
       {h.description && <p className="text-muted mb-4 whitespace-pre-line">{h.description}</p>}
 
-      <div className="mb-4 grid gap-3 sm:grid-cols-3">
+      <div className="stagger mb-6 grid grid-cols-3 gap-3">
         <Stat label={t(`stats.streak_${s.unit}`, { count: s.current_streak })} value={String(s.current_streak)} />
         <Stat label={t(`stats.best_${s.unit}`, { count: s.best_streak })} value={String(s.best_streak)} />
         <Stat
@@ -85,7 +83,7 @@ export function HabitDetailPage() {
 
       <div className="grid gap-4 lg:grid-cols-[1fr_18rem]">
         <Card className="p-4">
-          <h2 className="font-semibold">{t('history.title')}</h2>
+          <h2 className="text-[17px] font-semibold tracking-tight">{t('history.title')}</h2>
           <p className="text-subtle mb-3 text-xs">{t('history.help')}</p>
           <HistoryGrid history={h.history} lang={i18n.language} onPick={setPicked} />
           <div className="text-subtle mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs">
@@ -98,7 +96,7 @@ export function HabitDetailPage() {
           </div>
         </Card>
         <Card className="p-4">
-          <h2 className="mb-2 font-semibold">{t('rules.title')}</h2>
+          <h2 className="mb-2 text-[17px] font-semibold tracking-tight">{t('rules.title')}</h2>
           <ul className="text-muted list-disc space-y-1.5 pl-4 text-sm">
             {(t('rules.items', { returnObjects: true }) as string[]).map((r) => <li key={r}>{r}</li>)}
           </ul>
@@ -108,16 +106,6 @@ export function HabitDetailPage() {
       <HabitFormDialog open={editing} onClose={() => setEditing(false)} habit={h} />
       <DayDialog habit={h} day={picked} onClose={() => setPicked(null)} />
     </>
-  )
-}
-
-function Stat({ label, value, help }: { label: string; value: string; help?: string }) {
-  return (
-    <Card className="p-4">
-      <p className="text-2xl font-semibold tabular-nums">{value}</p>
-      <p className="text-muted text-sm">{label}</p>
-      {help && <p className="text-subtle mt-1 text-xs">{help}</p>}
-    </Card>
   )
 }
 
@@ -150,7 +138,7 @@ function HistoryGrid({ history, lang, onPick }: { history: Day[]; lang: string; 
                 type="button"
                 onClick={() => onPick(d)}
                 aria-label={`${formatDay(d.date, lang, { weekday: 'short' })} · ${t(`state.${d.status}`)}`}
-                className="hover:ring-accent h-4 w-4 rounded-[3px] hover:ring-2"
+                className="hover:ring-accent h-4 w-4 rounded-[4px] transition-transform hover:scale-125 hover:ring-2"
               >
                 <HistoryDot status={d.status} />
               </button>

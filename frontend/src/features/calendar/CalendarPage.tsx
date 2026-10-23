@@ -317,7 +317,7 @@ export function CalendarPage() {
 function MoveScopePicker({ scope, onChange }: { scope: 'this' | 'all'; onChange: (s: 'this' | 'all') => void }) {
   const { t } = useTranslation('calendar')
   return (
-    <div className="border-border mt-3 rounded-lg border p-3">
+    <div className="bg-sunken/70 mt-3 rounded-xl p-3">
       <p className="mb-1 text-sm font-medium">{t('scope.label')}</p>
       {(['this', 'all'] as const).map((s) => (
         <label key={s} className="flex items-center gap-2 py-1 text-sm">

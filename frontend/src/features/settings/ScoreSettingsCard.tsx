@@ -41,7 +41,7 @@ export function ScoreSettingsCard() {
 
   return (
     <Card className="mb-4 p-5">
-      <h2 className="font-semibold">{t('settings.title')}</h2>
+      <h2 className="text-[17px] font-semibold tracking-tight">{t('settings.title')}</h2>
       <p className="text-subtle mt-1 mb-4 text-sm">{t('settings.help')}</p>
       <ul className="flex flex-col gap-3">
         {KEYS.map((k) => (

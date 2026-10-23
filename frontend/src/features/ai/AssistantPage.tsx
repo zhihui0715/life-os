@@ -201,7 +201,7 @@ function DailyPlanCard({ status }: { status: AiStatus }) {
 
   return (
     <Card className="p-5">
-      <h2 className="font-semibold">{t('plan.title')}</h2>
+      <h2 className="text-[17px] font-semibold tracking-tight">{t('plan.title')}</h2>
       <p className="text-subtle mt-1 text-sm">{t('plan.help')}</p>
       <div className="mt-3 flex items-center gap-2">
         <Select aria-label={t('plan.day')} value={day} onChange={(e) => setDay(e.target.value as 'today' | 'tomorrow')} className="w-auto">
@@ -230,7 +230,7 @@ function DailyPlanCard({ status }: { status: AiStatus }) {
           ) : (
             <ul className="mt-3 flex flex-col gap-2">
               {plan.blocks.map((b, i) => (
-                <li key={i} className="border-border rounded-lg border p-2.5">
+                <li key={i} className="bg-sunken/70 rounded-xl p-3">
                   <label className="flex items-start gap-2.5">
                     <input
                       type="checkbox"
@@ -325,7 +325,7 @@ function WeeklyReviewCard({ status }: { status: AiStatus }) {
 
   return (
     <Card className="p-5">
-      <h2 className="font-semibold">{t('review.title')}</h2>
+      <h2 className="text-[17px] font-semibold tracking-tight">{t('review.title')}</h2>
       <p className="text-subtle mt-1 text-sm">{t('review.help')}</p>
       <div className="mt-3">
         <Select aria-label={t('review.week')} value={week} onChange={(e) => setWeek(e.target.value as 'last' | 'this')} className="w-auto">

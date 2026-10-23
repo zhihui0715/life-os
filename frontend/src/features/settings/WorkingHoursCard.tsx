@@ -53,7 +53,7 @@ export function WorkingHoursCard() {
 
   return (
     <Card className="mb-4 p-5">
-      <h2 className="font-semibold">{t('workingHours.title')}</h2>
+      <h2 className="text-[17px] font-semibold tracking-tight">{t('workingHours.title')}</h2>
       <p className="text-subtle mt-1 mb-4 text-sm">{t('workingHours.help')}</p>
       <div className="flex flex-col gap-2">
         {DAYS.map((d, i) => {

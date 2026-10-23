@@ -45,7 +45,7 @@ export function AttentionPanel({ overlaps, workload, onFindTime }: { overlaps: O
   const empty = overlaps.length === 0 && workload.length === 0
   return (
     <Card className="p-4">
-      <h2 className="mb-3 flex items-center gap-2 font-semibold">
+      <h2 className="mb-3 flex items-center gap-2 text-[17px] font-semibold tracking-tight">
         <AlertTriangle size={16} aria-hidden className={empty ? 'text-subtle' : 'text-warning'} />
         {t('attention.title')}
       </h2>
@@ -130,7 +130,7 @@ export function ToSchedulePanel({ onFindTime }: { onFindTime: FindTime }) {
 
   return (
     <Card className="p-4">
-      <h2 className="mb-1 flex items-center gap-2 font-semibold">
+      <h2 className="mb-1 flex items-center gap-2 text-[17px] font-semibold tracking-tight">
         <Clock size={16} aria-hidden className="text-subtle" />
         {t('toSchedule.title')}
       </h2>
@@ -142,7 +142,7 @@ export function ToSchedulePanel({ onFindTime }: { onFindTime: FindTime }) {
             data-task-id={task.id}
             data-title={task.title}
             data-minutes={task.estimate_minutes ?? 60}
-            className="border-border bg-surface hover:border-border-strong flex cursor-grab items-center gap-2 rounded-lg border px-2 py-1.5 text-sm active:cursor-grabbing"
+            className="bg-sunken/70 hover:bg-sunken pressable flex cursor-grab items-center gap-2 rounded-xl px-2.5 py-2 text-sm active:cursor-grabbing"
           >
             <GripVertical size={14} aria-hidden className="text-subtle hidden shrink-0 md:block" />
             <span className="min-w-0 flex-1">
