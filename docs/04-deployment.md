@@ -17,7 +17,7 @@ Phone / laptop ──HTTPS──▶  Host's proxy (TLS)  ──▶  Container: g
 - **The database is not in the container.** Use a managed PostgreSQL 16 with automatic daily backups and
   point-in-time recovery (§4).
 - **HTTPS is required.** Phones only install a PWA from an HTTPS site, and session cookies are HTTPS-only in
-  production. Every host listed below provides HTTPS automatically.
+  production. Render (§3.1) and the other usual container hosts provide HTTPS automatically.
 
 ## 2. Settings (environment variables)
 
@@ -27,7 +27,6 @@ Phone / laptop ──HTTPS──▶  Host's proxy (TLS)  ──▶  Container: g
 | `SECRET_KEY` | 64 random hex characters | `python -c "import secrets; print(secrets.token_hex(32))"`. Never reuse the development one. Changing it signs everyone out. |
 | `TRUST_PROXY` | `true` | The host's HTTPS proxy sits in front: needed for real client IPs (rate limiting) and HTTPS detection |
 | `PORT` | set by most hosts | default 8000 |
-| `AI_MODEL` | optional | default `claude-opus-5-5`; `claude-haiku-5-5` costs much less |
 
 `APP_ENV=production` and `FRONTEND_DIST` are already set inside the image.
 
@@ -45,6 +44,33 @@ Phone / laptop ──HTTPS──▶  Host's proxy (TLS)  ──▶  Container: g
    airplane mode off → the change syncs (banner disappears).
 6. Optional: move your existing local data across. In the local app, Settings → *Download backup*; in the
    deployed app, Settings → *Restore from file…* (§4.2).
+
+### 3.1 Free: Render + Neon (what `render.yaml` sets up)
+
+Costs nothing. The trade-offs: the free server sleeps after ~15 minutes without visits and takes 30–60 s to wake
+(the installed app still opens at once from the phone and shows today's offline copy while it wakes), and Neon's free
+plan keeps only a short restore history, so download a JSON backup regularly (§4.2). Free plans change; check both
+sites' current limits.
+
+1. **Neon** (neon.tech): sign up, create a project in **Asia Pacific (Singapore)** with PostgreSQL 16. Copy the
+   **direct** connection string (turn *Connection pooling* off before copying; the pooled `-pooler` address doesn't
+   suit this app's database driver). It looks like `postgresql://…@ep-….ap-southeast-1.aws.neon.tech/neondb?sslmode=require`.
+2. **Render** (render.com): sign up with GitHub and allow access to this repository. *New → Blueprint*, pick this
+   repository; Render reads `render.yaml` (a free web service in Singapore, built from the `Dockerfile`, deploying
+   `main`). Paste the Neon string when it asks for `DATABASE_URL`. `SECRET_KEY` is generated for you and
+   `TRUST_PROXY` is already set.
+3. Wait for the first deploy (a few minutes). The log shows the migrations, then `Listening at: http://0.0.0.0:10000`.
+   Open `https://life-os-….onrender.com/api/v1/health` → `{"status":"ok"}`.
+4. **Create your account from this computer** (the free plan has no shell). In PowerShell, from the repository folder:
+   ```powershell
+   $env:DATABASE_URL = "<the Neon connection string>"
+   backend\.venv\Scripts\python.exe -m flask --app backend/wsgi.py create-user
+   Remove-Item Env:DATABASE_URL
+   ```
+   It asks for email, name and a password (at least 10 characters). The variable overrides `.env` for that window
+   only; the last line puts it back so later commands use your local database again. `flask set-password` works the
+   same way.
+5. Continue with steps 5–6 above (sign in, install on the phone, move your data across).
 
 **Updates:** push to `main` → CI must be green (§6) → redeploy. Migrations run automatically on start. Open apps
 show *A new version is ready → Reload*.

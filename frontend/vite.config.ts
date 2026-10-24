@@ -26,7 +26,7 @@ export default defineConfig({
         start_url: '/',
         scope: '/',
         display: 'standalone',
-        background_color: '#f2f2f7',
+        background_color: '#1c140d', // the splash screen behind the astrolabe icon while the installed app opens
         theme_color: '#f2f2f7',
         icons: [
           { src: 'pwa-192.png', sizes: '192x192', type: 'image/png' },
