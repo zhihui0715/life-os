@@ -37,12 +37,11 @@ export function TaskRow({ task, category, goal, onOpen }: Props) {
     setCelebrate(!done)
     play(done ? 'uncheck' : 'complete')
     if (!done) noteCompletion()
-    action.mutate(
-      { id: task.id, action: done ? 'reopen' : 'complete', title: task.title },
-      {
-        onSuccess: (r) => toast(isQueued(r) ? t('common:offline.queued') : t(done ? 'toast.reopened' : 'toast.completed')),
-        onError: (e) => toast(errorMessage(t, e), 'error'),
-      },
+    // mutateAsync, not mutate's callbacks: a completed task leaves the list (unmounting this row) before the
+    // mutation settles, and TanStack Query drops per-call callbacks of unmounted components, losing the toast
+    action.mutateAsync({ id: task.id, action: done ? 'reopen' : 'complete', title: task.title }).then(
+      (r) => toast(isQueued(r) ? t('common:offline.queued') : t(done ? 'toast.reopened' : 'toast.completed')),
+      (e) => toast(errorMessage(t, e), 'error'),
     )
   }
 
