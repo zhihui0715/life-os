@@ -25,7 +25,8 @@
   "show": {
     "tag": "Tags",
     "habit": "Habits",
-    "hub": "Due dates"
+    "hub": "Due dates",
+    "subtasks": "Subtasks"
   },
   "kind": {
     "goal": "Goal",
@@ -34,5 +35,26 @@
     "tag": "Tag",
     "habit": "Habit",
     "hub": "Due-date hub"
+  },
+  "now": "Now",
+  "hintOrbits": "Closer to the sun = due sooner · tap a dot",
+  "clearFilters": "Clear filters",
+  "webOnly": "Only in the web layout",
+  "layout": {
+    "label": "Layout",
+    "web": "Web",
+    "orbits": "Orbits"
+  },
+  "focus": {
+    "label": "Focus on",
+    "all": "Everything",
+    "goals": "Goals",
+    "tags": "Tags"
+  },
+  "priority": {
+    "label": "Priority",
+    "all": "Any priority",
+    "p1": "Urgent only",
+    "p12": "Urgent & high"
   }
 }

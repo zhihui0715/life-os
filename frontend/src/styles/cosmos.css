@@ -1,0 +1,100 @@
+/* Cosmos (Settings → Theme): the dark tokens retuned for a night sky, drawn live behind everything by
+   components/cosmos/SpaceSky.tsx. Cards become tinted glass, but stay nearly opaque so text keeps its contrast over
+   the brightest stars and nebulae (all text pairs below are ≥ 4.5:1 on --surface). Accents glow; headings use Space
+   Grotesk. The selectors repeat [data-theme][data-bg] so they outrank backgrounds.css. Loaded with the sky's chunk
+   (SpaceSky.tsx), so only people using Cosmos download it. */
+
+/* Space Grotesk (OFL) for Cosmos headings: the Latin subset only, downloaded the first time Cosmos shows a heading;
+   other scripts fall back to the system font. */
+@font-face {
+  font-family: 'Space Grotesk Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300 700;
+  src: url('../../node_modules/@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212;
+}
+
+html[data-look='cosmos'][data-theme][data-bg] {
+  --bg: #04050d;
+  --surface: rgb(15 17 38 / 0.86);
+  --surface-sunken: rgb(255 255 255 / 0.07);
+  --surface-raised: rgb(24 26 54 / 0.94);
+  --border: rgb(255 255 255 / 0.09);
+  --border-strong: rgb(255 255 255 / 0.2);
+  --bar: rgb(10 12 30 / 0.66);
+  --sidebar: rgb(7 8 22 / 0.5);
+
+  --text: #f1f2ff;
+  --text-muted: #c9cceb;
+  --text-subtle: #a3a8cf;
+
+  --shadow-sm: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 0 0 1px rgb(255 255 255 / 0.07), 0 12px 32px -14px rgb(0 0 0 / 0.7);
+  --shadow-lg: inset 0 1px 0 rgb(255 255 255 / 0.08), 0 0 0 1px rgb(255 255 255 / 0.1), 0 24px 70px -18px rgb(0 0 0 / 0.85),
+    0 0 60px -20px color-mix(in srgb, var(--accent) 45%, transparent);
+  --shadow-float: inset 0 1px 0 rgb(255 255 255 / 0.08), 0 0 0 1px rgb(255 255 255 / 0.1), 0 14px 40px -10px rgb(0 0 0 / 0.75);
+  --chart-grid: rgb(255 255 255 / 0.08);
+  --font-display: 'Space Grotesk Variable', var(--font-sans);
+}
+
+html[data-look='cosmos'] body {
+  background: transparent;
+}
+
+/* Glass: cards are tinted, nearly opaque panes with a lit edge. Only the floating chrome (tab bar, sidebar) blurs
+   what's behind it: blurring every card over a moving sky would redo each blur every frame. */
+html[data-look='cosmos'] .dark\:shadow-none {
+  box-shadow: var(--shadow-sm); /* in plain dark cards are flat; on the sky they get a lit glass edge */
+}
+
+/* Headings: Space Grotesk, with starlight running through the page title */
+html[data-look='cosmos'] :is(h1, h2, .font-display) {
+  font-family: var(--font-display);
+  letter-spacing: -0.025em;
+}
+html[data-look='cosmos'] main h1 {
+  background: linear-gradient(100deg, #ffffff 10%, #ddd8ff 50%, color-mix(in srgb, var(--accent) 55%, #ffffff) 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--accent) 35%, transparent));
+}
+
+/* Filled buttons and checks: a lit gradient with a soft glow */
+html[data-look='cosmos'] .bg-accent-fill {
+  background-image:
+    linear-gradient(135deg, rgb(255 255 255 / 0.2), transparent 55%),
+    linear-gradient(135deg, var(--accent-fill), color-mix(in srgb, var(--accent-fill) 60%, #6d28d9));
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.14),
+    0 6px 22px -6px color-mix(in srgb, var(--accent) 75%, transparent);
+}
+html[data-look='cosmos'] .bg-accent {
+  box-shadow: 0 0 12px -1px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+/* The current page in the sidebar: a beam of the accent, and its icon glows */
+html[data-look='cosmos'] .app-sidebar a[aria-current='page'] {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 26%, transparent), transparent 85%);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+html[data-look='cosmos'] :is(.app-sidebar, nav) a[aria-current='page'] svg {
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+html[data-look='cosmos'] :focus-visible {
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+html[data-look='cosmos'] ::selection {
+  background: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+/* Without transparency effects, glass falls back to solid night-blue */
+@media (prefers-reduced-transparency: reduce) {
+  html[data-look='cosmos'][data-theme][data-bg] {
+    --surface: #0f1126;
+    --surface-raised: #181a36;
+    --bar: #0f1126;
+    --sidebar: #07081a;
+  }
+}

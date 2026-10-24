@@ -19,7 +19,7 @@ from app.common.models import IdMixin, TimestampMixin, utcnow
 from app.extensions import db
 
 LOCALES = ("en", "zh-CN")
-THEMES = ("system", "light", "dark")
+THEMES = ("system", "light", "dark", "cosmos")
 # Appearance (frontend/src/lib/theme.ts draws them): the tint colour, and what sits behind the cards.
 ACCENTS = ("blue", "indigo", "purple", "pink", "red", "orange", "yellow", "green", "teal", "graphite")
 BACKGROUNDS = (
@@ -27,6 +27,7 @@ BACKGROUNDS = (
     "sunrise", "ocean", "lavender", "mint", "midnight",  # soft gradients
     "great-wave", "water-lilies", "bedroom", "plum-garden", "grande-jatte", "rainy-day",  # public-domain art
     "dots", "grid", "linen",  # paper
+    "nebula", "saturn", "aurora", "deep-field", "eclipse",  # space scenes, for the Cosmos theme
 )
 DEFAULT_TIMEZONE = "Asia/Kuala_Lumpur"
 WEEKDAYS = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")

@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test'
 import { apiCall, MAIN_PAGES, today } from './helpers'
 
 /**
- * Accessibility (axe-core, WCAG 2.1 A/AA rules) on every main screen, in both themes. The Stage 9 bar: no critical or
+ * Accessibility (axe-core, WCAG 2.1 A/AA rules) on every main screen, in all three looks (light, dark, Cosmos). The Stage 9 bar: no critical or
  * serious issues. Lesser findings are printed so they can be looked at, but don't fail the run.
  */
 // Check screens with content in them (lists, meters, charts), not just empty states.
@@ -21,13 +21,22 @@ test.beforeAll(async ({ browser }) => {
   await context.close()
 })
 
-for (const theme of ['light', 'dark'] as const) {
+for (const theme of ['light', 'dark', 'cosmos'] as const) {
   for (const path of MAIN_PAGES) {
     test(`a11y ${theme} ${path}`, async ({ page }) => {
-      await page.emulateMedia({ colorScheme: theme })
+      await page.emulateMedia({ colorScheme: theme === 'light' ? 'light' : 'dark' })
+      if (theme === 'cosmos') {
+        // Cosmos for this page only: the account the page loads says so (the shared test user keeps "system")
+        await page.route('**/api/v1/auth/me', async (route) => {
+          const response = await route.fetch()
+          const me = await response.json()
+          await route.fulfill({ response, json: { ...me, settings: { ...me.settings, theme: 'cosmos', background: 'saturn' } } })
+        })
+      }
       await page.goto(path)
       await expect(page.locator('main h1').first()).toBeVisible()
       await expect(page.getByRole('button', { name: 'Sign in' }), 'still signed in').toHaveCount(0)
+      if (theme === 'cosmos') await expect(page.locator('html')).toHaveAttribute('data-look', 'cosmos')
       await page.waitForLoadState('networkidle')
       // Measure contrast at rest: let entrance animations (fades, rises) finish first; looping ones are ignored.
       await page.waitForFunction(() =>

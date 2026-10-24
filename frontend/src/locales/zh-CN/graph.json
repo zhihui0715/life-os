@@ -25,7 +25,8 @@
   "show": {
     "tag": "标签",
     "habit": "习惯",
-    "hub": "到期"
+    "hub": "到期",
+    "subtasks": "子任务"
   },
   "kind": {
     "goal": "目标",
@@ -34,5 +35,26 @@
     "tag": "标签",
     "habit": "习惯",
     "hub": "到期分组"
+  },
+  "now": "现在",
+  "hintOrbits": "离太阳越近 = 越快到期 · 点一下圆点",
+  "clearFilters": "清除筛选",
+  "webOnly": "仅在网状布局中可用",
+  "layout": {
+    "label": "布局",
+    "web": "网状",
+    "orbits": "轨道"
+  },
+  "focus": {
+    "label": "聚焦",
+    "all": "全部",
+    "goals": "目标",
+    "tags": "标签"
+  },
+  "priority": {
+    "label": "优先级",
+    "all": "任意优先级",
+    "p1": "仅紧急",
+    "p12": "紧急和高"
   }
 }

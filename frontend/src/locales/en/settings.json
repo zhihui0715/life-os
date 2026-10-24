@@ -8,7 +8,8 @@
     "label": "Theme",
     "system": "Match system",
     "light": "Light",
-    "dark": "Dark"
+    "dark": "Dark",
+    "cosmos": "Cosmos (space)"
   },
   "timezone": {
     "label": "Timezone",
@@ -97,7 +98,8 @@
       "plain": "Plain",
       "gradient": "Gradients",
       "art": "Famous art",
-      "paper": "Paper"
+      "paper": "Paper",
+      "space": "Space scenes"
     },
     "accents": {
       "blue": "Blue",
@@ -126,7 +128,19 @@
       "rainy-day": "Rainy Day",
       "dots": "Dotted",
       "grid": "Grid",
-      "linen": "Linen"
+      "linen": "Linen",
+      "nebula": "Nebula",
+      "saturn": "Saturn",
+      "aurora": "Aurora",
+      "deep-field": "Deep field",
+      "eclipse": "Eclipse"
+    },
+    "cosmos": {
+      "title": "Cosmos",
+      "body": "A living night sky behind frosted-glass cards, with glowing accents.",
+      "on": "Cosmos is on. Pick a sky below.",
+      "try": "Try Cosmos",
+      "turnOff": "Turn off"
     }
   }
 }
