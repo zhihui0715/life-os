@@ -111,7 +111,7 @@ export function AppShell() {
           </button>
         </div>
 
-        <nav aria-label={t('nav.main')} className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-3">
+        <nav aria-label={t('nav.main')} className={cn('flex flex-1 flex-col overflow-y-auto px-2', !collapsed && 'lg:gap-0.5 lg:px-3')}>
           {NAV_ITEMS.map(({ to, key, icon: Icon, tint }) => (
             <NavLink
               key={to}
@@ -121,13 +121,16 @@ export function AppShell() {
               onClick={() => play('tab')}
               className={({ isActive }) =>
                 cn(
-                  'pressable flex h-10 items-center gap-3 rounded-[10px] px-3 text-[15px]',
+                  'pressable flex rounded-[10px]',
+                  // Slim sidebar (tablets, narrow laptops, or collapsed): the name sits small under the icon
+                  'flex-col items-center justify-center gap-px px-0.5 py-1 text-[10.5px] leading-tight',
+                  !collapsed && 'lg:h-10 lg:flex-row lg:justify-start lg:gap-3 lg:px-3 lg:py-0 lg:text-[15px] lg:leading-normal',
                   isActive ? 'bg-fg/[0.08] text-fg font-semibold' : 'text-muted hover:bg-fg/[0.04] hover:text-fg font-medium',
                 )
               }
             >
               <Icon size={19} strokeWidth={2.1} aria-hidden className="shrink-0" style={{ color: tint }} />
-              <span className={collapsed ? 'sr-only' : 'sr-only lg:not-sr-only'}>{t(`nav.${key}`)}</span>
+              <span className={cn('w-full truncate text-center', !collapsed && 'lg:w-auto lg:text-left')}>{t(`nav.${key}`)}</span>
             </NavLink>
           ))}
         </nav>
