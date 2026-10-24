@@ -16,11 +16,6 @@ import { ACCENT_SWATCH, ACCENTS, activeScene, ARTWORKS, BACKGROUNDS, setLook, se
 import type { Me, UserSettings } from '../../lib/types'
 import { ME_KEY, useMe } from '../auth/AuthProvider'
 
-const AVATARS = [
-  '🌱', '🌸', '🌻', '🍀', '🌙', '⭐', '☀️', '🌈', '🔥', '⚡', '🌊', '🏔️',
-  '🦊', '🐼', '🐱', '🐶', '🦉', '🐧', '🦋', '🐝', '🐢', '🦁', '🐳', '🐙',
-  '🚀', '🎯', '🎨', '📚', '🎧', '🎸', '⚽', '🧘', '☕', '🍵', '🍅', '💎',
-]
 const KINDS: BackgroundKind[] = ['plain', 'gradient', 'art', 'paper']
 const NON_ACADEMIA: ThemeSetting = 'system' // where turning Academia off goes
 /** Accent colour, background and avatar. Saved to the account, so every device gets the same look. */
@@ -157,8 +152,7 @@ export function AppearanceCard() {
       )}
 
       <p className="text-muted mt-6 mb-2.5 text-[13px] font-medium">{t('appearance.avatar')}</p>
-      <p className="text-subtle mb-2 text-[12.5px] font-medium">{t('appearance.books')}</p>
-      <div className="mb-4 grid grid-cols-4 gap-2 sm:grid-cols-8" role="radiogroup" aria-label={t('appearance.books')}>
+      <div className="grid grid-cols-4 gap-2 sm:grid-cols-8" role="radiogroup" aria-label={t('appearance.avatar')}>
         {BOOK_AVATARS.map((b) => (
           <button
             key={b}
@@ -176,24 +170,6 @@ export function AppearanceCard() {
             <span className={s.avatar === b ? 'animate-pop' : undefined}>
               <BookAvatar id={b} size={68} />
             </span>
-          </button>
-        ))}
-      </div>
-      <div className="grid grid-cols-8 gap-1.5 sm:grid-cols-12" role="radiogroup" aria-label={t('appearance.avatar')}>
-        {AVATARS.map((e) => (
-          <button
-            key={e}
-            type="button"
-            role="radio"
-            aria-checked={s.avatar === e}
-            aria-label={e}
-            onClick={() => pickAvatar(e)}
-            className={cn(
-              'pressable flex aspect-square items-center justify-center rounded-xl text-[22px]',
-              s.avatar === e ? 'bg-accent-soft shadow-[inset_0_0_0_2px_var(--accent)]' : 'hover:bg-sunken',
-            )}
-          >
-            <span className={s.avatar === e ? 'animate-pop' : undefined}>{e}</span>
           </button>
         ))}
       </div>

@@ -98,6 +98,21 @@ def end_session(auth_session: AuthSession) -> None:
     db.session.commit()
 
 
+def change_password(user: User, current: str, new: str, keep: AuthSession) -> None:
+    """Change your own password from Settings. Every other device is signed out; this one stays signed in."""
+    try:
+        _hasher.verify(user.password_hash, current)
+    except (VerificationError, InvalidHashError):
+        raise ApiError(400, "wrong_password", "Current password is incorrect.",
+                       fields={"current_password": [{"type": "wrong_password", "message": "Incorrect"}]})
+    if len(new) < MIN_PASSWORD_LENGTH:
+        raise ApiError(422, "validation_error", "Password is too short.",
+                       fields={"new_password": [{"type": "password_too_short", "message": f"At least {MIN_PASSWORD_LENGTH} characters"}]})
+    user.password_hash = _hasher.hash(new)
+    db.session.execute(delete(AuthSession).where(AuthSession.user_id == user.id, AuthSession.id != keep.id))
+    db.session.commit()
+
+
 def set_password(email: str, password: str) -> User:
     """Change a password (CLI only) and sign every device out, so an old or leaked password stops working at once."""
     user = db.session.scalar(select(User).where(User.email == normalise_email(email)))

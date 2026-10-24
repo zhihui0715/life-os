@@ -20,6 +20,13 @@
       "port": 4173
     },
     {
+      "name": "frontend-phone",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "frontend", "run", "preview", "--", "--host", "--port", "4174"],
+      "env": { "API_PROXY_TARGET": "http://127.0.0.1:5001" },
+      "port": 4174
+    },
+    {
       "name": "app-container",
       "url": "http://localhost:8000",
       "port": 8000

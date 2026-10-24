@@ -3,7 +3,7 @@ from pydantic import Field
 
 from app.common.validation import InputModel, parse_body
 from app.extensions import db, limiter
-from app.modules.auth.service import authenticate, end_session, start_session
+from app.modules.auth.service import authenticate, change_password, end_session, start_session
 from app.modules.settings.routes import settings_to_dict
 
 bp = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
@@ -12,6 +12,11 @@ bp = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
 class LoginIn(InputModel):
     email: str = Field(min_length=3, max_length=254)
     password: str = Field(min_length=1, max_length=256)
+
+
+class PasswordIn(InputModel):
+    current_password: str = Field(min_length=1, max_length=256)
+    new_password: str = Field(min_length=1, max_length=256)
 
 
 def _me_payload():
@@ -40,6 +45,14 @@ def login():
 def logout():
     end_session(g.auth_session)
     session.clear()
+    return {"ok": True}
+
+
+@bp.post("/password")
+@limiter.limit("5 per minute")
+def password():
+    data = parse_body(PasswordIn)
+    change_password(g.user, data.current_password, data.new_password, keep=g.auth_session)
     return {"ok": True}
 
 

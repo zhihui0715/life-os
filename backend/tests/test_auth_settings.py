@@ -119,9 +119,9 @@ def test_set_password_rejects_short_or_unknown(app, user):
 def test_appearance_settings(api):
     s = api.get("/api/v1/settings").get_json()
     assert (s["accent"], s["background"], s["avatar"]) == ("blue", "plain", None)
-    res = api.patch("/api/v1/settings", {"accent": "purple", "background": "great-wave", "avatar": "🦊"})
+    res = api.patch("/api/v1/settings", {"accent": "purple", "background": "great-wave", "avatar": "book-2"})
     assert res.status_code == 200, res.get_json()
-    assert (res.get_json()["accent"], res.get_json()["background"], res.get_json()["avatar"]) == ("purple", "great-wave", "🦊")
+    assert (res.get_json()["accent"], res.get_json()["background"], res.get_json()["avatar"]) == ("purple", "great-wave", "book-2")
     assert api.patch("/api/v1/settings", {"avatar": ""}).get_json()["avatar"] is None
     assert api.patch("/api/v1/settings", {"accent": "neon"}).status_code == 422
     assert api.patch("/api/v1/settings", {"background": "space"}).status_code == 422
@@ -140,3 +140,20 @@ def test_book_avatars(api):
     assert api.patch("/api/v1/settings", {"avatar": "book-3"}).get_json()["avatar"] == "book-3"
     assert api.patch("/api/v1/settings", {"avatar": "book-9"}).status_code == 422
     assert api.patch("/api/v1/settings", {"avatar": "book"}).status_code == 422
+    assert api.patch("/api/v1/settings", {"avatar": "🦊"}).status_code == 422  # emoji avatars are gone
+
+
+def test_change_password_keeps_this_device_and_signs_out_others(app, api, user):
+    other = ApiClient(app.test_client())
+    assert other.login(user.email).status_code == 200
+
+    wrong = api.post("/api/v1/auth/password", {"current_password": "nope", "new_password": "a-brand-new-password"})
+    assert wrong.status_code == 400 and wrong.get_json()["error"]["code"] == "wrong_password"
+    short = api.post("/api/v1/auth/password", {"current_password": TEST_PASSWORD, "new_password": "short"})
+    assert short.status_code == 422 and "new_password" in short.get_json()["error"]["fields"]
+
+    assert api.post("/api/v1/auth/password", {"current_password": TEST_PASSWORD, "new_password": "a-brand-new-password"}).status_code == 200
+    assert api.get("/api/v1/auth/me").status_code == 200  # this device stays signed in
+    assert other.get("/api/v1/auth/me").status_code == 401  # the other one is signed out
+    assert ApiClient(app.test_client()).login(user.email).status_code == 401  # old password no longer works
+    assert ApiClient(app.test_client()).login(user.email, "a-brand-new-password").status_code == 200
