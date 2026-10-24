@@ -14,7 +14,8 @@
     "settings": "设置",
     "more": "更多",
     "collapse": "收起侧边栏",
-    "expand": "展开侧边栏"
+    "expand": "展开侧边栏",
+    "graph": "图谱"
   },
   "actions": {
     "save": "保存",
@@ -110,7 +111,10 @@
     "backup_verify_failed": "恢复结果校验失败，因此未做任何更改。",
     "payload_too_large": "文件太大。",
     "idempotency_key_reused": "此更改与另一项更改冲突。",
-    "unknown": "出了点问题。"
+    "unknown": "出了点问题。",
+    "ai_unavailable": "本地 AI 没有运行。请在这台电脑上启动 Ollama。",
+    "ai_model_missing": "还没有下载 AI 模型。请查看 设置 → 本地 AI。",
+    "ai_failed": "本地 AI 没有给出可用的回答。请重试。"
   },
   "validation": {
     "missing": "此项为必填。",

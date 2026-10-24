@@ -9,6 +9,7 @@ import {
   Settings,
   Target,
   Timer,
+  Waypoints,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -25,6 +26,7 @@ export const NAV_ITEMS: NavItem[] = [
   { to: '/tasks', key: 'tasks', tint: 'var(--tint-tasks)', icon: CheckSquare, mobilePrimary: true },
   { to: '/calendar', key: 'calendar', tint: 'var(--tint-calendar)', icon: CalendarDays, mobilePrimary: true },
   { to: '/plan', key: 'plan', tint: 'var(--tint-plan)', icon: CalendarCheck },
+  { to: '/graph', key: 'graph', tint: 'var(--tint-graph)', icon: Waypoints },
   { to: '/goals', key: 'goals', tint: 'var(--tint-goals)', icon: Target },
   { to: '/habits', key: 'habits', tint: 'var(--tint-habits)', icon: Flame, mobilePrimary: true },
   { to: '/focus', key: 'focus', tint: 'var(--tint-focus)', icon: Timer },
