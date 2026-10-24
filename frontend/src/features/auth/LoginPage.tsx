@@ -27,13 +27,13 @@ export function LoginPage() {
 
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center px-4 py-10">
-      <div className="mb-6 flex items-center gap-2.5">
-        <img src="/icon.svg" alt="" className="h-9 w-9" />
-        <span className="text-lg font-semibold">{t('appName')}</span>
+      <div className="mb-8 flex flex-col items-center gap-3">
+        <img src="/icon.svg" alt="" className="animate-spin-in h-[76px] w-[76px] rounded-[18px] shadow-[0_12px_30px_-8px_rgb(0_0_0/0.35)]" />
+        <span className="font-display text-[22px] font-bold tracking-tight">{t('appName')}</span>
       </div>
-      <Card className="w-full max-w-sm p-6">
-        <h1 className="text-xl font-semibold">{t('auth.title')}</h1>
-        <p className="text-muted mt-1 mb-5">{t('auth.subtitle')}</p>
+      <Card className="page-enter w-full max-w-sm p-6 sm:p-7">
+        <h1 className="font-display text-[28px] leading-tight font-bold tracking-tight">{t('auth.title')}</h1>
+        <p className="text-subtle mt-1 mb-6">{t('auth.subtitle')}</p>
         <form noValidate className="flex flex-col gap-4" onSubmit={handleSubmit((values) => login.mutate(values))}>
           <Field label={t('auth.email')} error={err('email')}>
             {(a) => <Input {...a} type="email" autoComplete="username" autoFocus {...register('email')} />}
@@ -42,7 +42,7 @@ export function LoginPage() {
             {(a) => <Input {...a} type="password" autoComplete="current-password" {...register('password')} />}
           </Field>
           {login.error && (
-            <p role="alert" className="bg-danger-soft text-danger rounded-md px-3 py-2">
+            <p role="alert" className="bg-danger-soft text-danger animate-pop rounded-xl px-3.5 py-2.5">
               {errorMessage(t, login.error)}
             </p>
           )}

@@ -28,7 +28,7 @@ export function OfflineBanner() {
   return (
     <div className="mb-4 flex flex-col gap-2" role="status">
       {!online && (
-        <div className="border-warning/40 bg-warning-soft rounded-lg border px-4 py-3 text-sm">
+        <div className="bg-warning-soft rounded-2xl px-4 py-3 text-sm">
           <p className="flex items-center gap-2 font-medium">
             <CloudOff size={16} aria-hidden />
             {t('offline.title')}
@@ -38,7 +38,7 @@ export function OfflineBanner() {
         </div>
       )}
       {items.length > 0 && (
-        <div className="border-border bg-surface rounded-lg border px-4 py-2.5 text-sm">
+        <div className="bg-surface shadow-card rounded-2xl px-4 py-2.5 dark:shadow-none text-sm">
           <button type="button" className="flex w-full items-center gap-2 text-left" onClick={() => setShowDetails(!showDetails)} aria-expanded={showDetails}>
             <RefreshCw size={14} className={syncing ? 'animate-spin motion-reduce:animate-none' : ''} aria-hidden />
             <span className="flex-1">{t(online ? 'offline.syncing' : 'offline.waiting', { count: items.length })}</span>
@@ -54,7 +54,7 @@ export function OfflineBanner() {
         </div>
       )}
       {failed.length > 0 && (
-        <div className="border-danger/40 bg-danger-soft rounded-lg border px-4 py-2.5 text-sm">
+        <div className="bg-danger-soft rounded-2xl px-4 py-2.5 text-sm">
           <p className="flex items-center gap-2 font-medium">
             <TriangleAlert size={14} className="text-danger" aria-hidden />
             {t('offline.failed', { count: failed.length })}
@@ -84,7 +84,7 @@ export function UpdatePrompt() {
   } = useRegisterSW()
   if (!needRefresh) return null
   return (
-    <div className="border-accent/40 bg-accent-soft mb-4 flex flex-wrap items-center gap-3 rounded-lg border px-4 py-2.5 text-sm" role="status">
+    <div className="bg-accent-soft mb-4 flex flex-wrap items-center gap-3 rounded-2xl px-4 py-2.5 text-sm" role="status">
       <span className="flex-1">{t('offline.update')}</span>
       <Button size="sm" variant="primary" onClick={() => updateServiceWorker(true)}>
         {t('offline.reload')}

@@ -24,6 +24,7 @@ import { useCategories } from '../tasks/api'
 import { TaskDrawer } from '../tasks/TaskDrawer'
 import { useConflicts, useEditOccurrence, useEvent, useOccurrences, useTask, useUpdateEvent, type Range } from './api'
 import { EventDialog, type EventDialogMode } from './EventDialog'
+import { MobileAgenda } from './MobileAgenda'
 import { AttentionPanel, ToSchedulePanel } from './SidePanels'
 import { SuggestionDialog, useWhen } from './SuggestionDialog'
 
@@ -188,6 +189,11 @@ export function CalendarPage() {
     })
   }
 
+  // Stable callbacks for the phone agenda (it asks for its own visible range)
+  const onAgendaRange = useCallback((r: Range) => setRange((prev) => (prev && prev.start === r.start && prev.end === r.end ? prev : r)), [])
+  const onAgendaEdit = useCallback((o: Occurrence) => setDialog({ type: 'edit', occurrence: o }), [])
+  const onAgendaTask = useCallback((id: string) => setOpenTaskId(id), [])
+
   const confirmMove = () => {
     if (!move) return
     const o = move.occ
@@ -239,7 +245,7 @@ export function CalendarPage() {
       <PageHeader
         title={t('title')}
         actions={
-          <Button variant="primary" onClick={() => setDialog({ type: 'create', date: todayInZone(tz) })}>
+          <Button variant="primary" size={isMobile ? 'sm' : 'md'} onClick={() => setDialog({ type: 'create', date: todayInZone(tz) })}>
             <Plus size={16} aria-hidden />
             {t('newEvent')}
           </Button>
@@ -247,6 +253,23 @@ export function CalendarPage() {
       />
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
+        {isMobile ? (
+          occ.isError ? (
+            <ErrorState message={errorMessage(t, occ.error)} onRetry={() => occ.refetch()} />
+          ) : (
+            <MobileAgenda
+              tz={tz}
+              weekStart={me.settings.week_start}
+              data={occ.data}
+              loading={occ.isPending}
+              clashing={clashing}
+              onRange={onAgendaRange}
+              onCreate={(date) => setDialog({ type: 'create', date })}
+              onEdit={onAgendaEdit}
+              onOpenTask={onAgendaTask}
+            />
+          )
+        ) : (
         <Card className="min-w-0 p-2 sm:p-3">
           <div ref={calendarRef}>
           {occ.isError ? (
@@ -284,6 +307,7 @@ export function CalendarPage() {
           )}
           </div>
         </Card>
+        )}
 
         <div className="flex flex-col gap-4">
           <AttentionPanel overlaps={conflicts.data?.overlaps ?? []} workload={conflicts.data?.workload ?? []} onFindTime={setFindTime} />
@@ -317,7 +341,7 @@ export function CalendarPage() {
 function MoveScopePicker({ scope, onChange }: { scope: 'this' | 'all'; onChange: (s: 'this' | 'all') => void }) {
   const { t } = useTranslation('calendar')
   return (
-    <div className="border-border mt-3 rounded-lg border p-3">
+    <div className="bg-sunken/70 mt-3 rounded-xl p-3">
       <p className="mb-1 text-sm font-medium">{t('scope.label')}</p>
       {(['this', 'all'] as const).map((s) => (
         <label key={s} className="flex items-center gap-2 py-1 text-sm">

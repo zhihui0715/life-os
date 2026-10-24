@@ -44,9 +44,13 @@ TABLES = (
     "journal_entries",
     "focus_sessions",
     "activity_logs",
-    "ai_runs",
+    "weekly_reviews",
     "user_settings",
 )
+# Sections and fields of features that were removed. Files that still have them restore fine: they are checked
+# against their checksums like everything else, then left out.
+RETIRED_TABLES = {"ai_runs"}
+RETIRED_COLUMNS = {"user_settings": {"ai_enabled", "ai_monthly_token_budget"}}
 # Tables without user_id belong to the user through their parent row: table → (parent table, link column).
 CHILD_TABLES = {
     "task_tags": ("tasks", "task_id"),
@@ -185,9 +189,15 @@ def validate(backup) -> tuple[dict[str, list[dict]], dict[str, list[dict]]]:
     data, checksums = backup.get("data"), backup.get("checksums")
     if not isinstance(data, dict) or not isinstance(checksums, dict):
         raise _invalid("The backup file is incomplete.")
-    unknown = set(data) - set(TABLES)
+    unknown = set(data) - set(TABLES) - RETIRED_TABLES
     if unknown:
         raise _invalid(f"The backup contains unknown sections: {', '.join(sorted(unknown))}.")
+    for name in RETIRED_TABLES & set(data):  # their tables are gone; they were keyed by id like every other
+        rows = data[name]
+        intact = isinstance(rows, list) and all(isinstance(r, dict) for r in rows) \
+            and checksums.get(name) == _checksum(sorted(rows, key=lambda r: (str(r.get("id")),)))
+        if not intact:
+            raise _invalid(f"The {name} section doesn't match its checksum: the file was edited or damaged.")
 
     json_rows, db_rows = {}, {}
     for name in TABLES:
@@ -198,6 +208,9 @@ def validate(backup) -> tuple[dict[str, list[dict]], dict[str, list[dict]]]:
             raise _invalid(f"The backup is missing the {name} section.")
         if checksums.get(name) != _checksum(sorted(rows, key=_sort_key(name))):
             raise _invalid(f"The {name} section doesn't match its checksum: the file was edited or damaged.")
+        retired = RETIRED_COLUMNS.get(name)
+        if retired:
+            rows = [{k: v for k, v in r.items() if k not in retired} for r in rows]
         cols = {c.name: c for c in _columns(name)}
         converted = []
         for i, row in enumerate(rows):

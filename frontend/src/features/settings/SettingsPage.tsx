@@ -1,19 +1,22 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { LogOut } from 'lucide-react'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '../../components/ui/Button'
+import { Switch } from '../../components/ui/Switch'
 import { Field, Select } from '../../components/ui/Field'
 import { useToast } from '../../components/ui/Toast'
 import { Card, PageHeader } from '../../components/ui/states'
 import { api } from '../../lib/api'
 import { errorMessage } from '../../lib/errors'
 import { LOCALES } from '../../lib/i18n'
+import { onSoundChange, setSoundEnabled, soundEnabled } from '../../lib/sound'
 import type { Me, UserSettings } from '../../lib/types'
 import { ME_KEY, useAuth, useMe } from '../auth/AuthProvider'
-import { AiSettingsCard } from './AiSettingsCard'
 import { BackupCard } from './BackupCard'
+import { AppearanceCard } from './AppearanceCard'
+import { ReminderCard } from './ReminderCard'
 import { ScoreSettingsCard } from './ScoreSettingsCard'
 import { WorkingHoursCard } from './WorkingHoursCard'
 
@@ -47,7 +50,7 @@ export function SettingsPage() {
       <PageHeader title={t('title')} />
 
       <Card className="mb-4 p-5">
-        <h2 className="mb-4 font-semibold">{t('sections.preferences')}</h2>
+        <h2 className="mb-4 text-[17px] font-semibold tracking-tight">{t('sections.preferences')}</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label={t('common:language.label')}>
             {(a) => (
@@ -96,13 +99,15 @@ export function SettingsPage() {
         </div>
       </Card>
 
+      <AppearanceCard />
+      <SoundCard />
+      <ReminderCard />
       <WorkingHoursCard />
       <ScoreSettingsCard />
-      <AiSettingsCard />
       <BackupCard />
 
       <Card className="p-5">
-        <h2 className="mb-1 font-semibold">{t('sections.account')}</h2>
+        <h2 className="mb-1 text-[17px] font-semibold tracking-tight">{t('sections.account')}</h2>
         <p className="text-muted mb-4">{t('signedInAs', { email: me.user.email })}</p>
         <Button onClick={() => logout()}>
           <LogOut size={16} aria-hidden />
@@ -110,5 +115,24 @@ export function SettingsPage() {
         </Button>
       </Card>
     </>
+  )
+}
+
+/** Sounds and vibration are a per-device choice (a phone in a meeting vs. a desktop), so they live in this browser. */
+function SoundCard() {
+  const { t } = useTranslation('settings')
+  const [on, setOn] = useState(soundEnabled)
+  useEffect(() => {
+    const off = onSoundChange(setOn)
+    return () => void off()
+  }, [])
+  return (
+    <Card className="mb-4 flex items-center gap-4 p-5">
+      <div className="min-w-0 flex-1">
+        <h2 id="sound-label" className="text-[17px] font-semibold tracking-tight">{t('sound.label')}</h2>
+        <p className="text-subtle mt-0.5 text-[13px]">{t('sound.help')}</p>
+      </div>
+      <Switch checked={on} onChange={setSoundEnabled} labelledBy="sound-label" />
+    </Card>
   )
 }

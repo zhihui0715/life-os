@@ -114,3 +114,15 @@ def test_set_password_rejects_short_or_unknown(app, user):
         set_password(user.email, "short")
     with pytest.raises(ValueError):
         set_password("nobody@example.test", "long-enough-password")
+
+
+def test_appearance_settings(api):
+    s = api.get("/api/v1/settings").get_json()
+    assert (s["accent"], s["background"], s["avatar"]) == ("blue", "plain", None)
+    res = api.patch("/api/v1/settings", {"accent": "purple", "background": "great-wave", "avatar": "🦊"})
+    assert res.status_code == 200, res.get_json()
+    assert (res.get_json()["accent"], res.get_json()["background"], res.get_json()["avatar"]) == ("purple", "great-wave", "🦊")
+    assert api.patch("/api/v1/settings", {"avatar": ""}).get_json()["avatar"] is None
+    assert api.patch("/api/v1/settings", {"accent": "neon"}).status_code == 422
+    assert api.patch("/api/v1/settings", {"background": "space"}).status_code == 422
+    assert api.patch("/api/v1/settings", {"avatar": "Bob"}).status_code == 422

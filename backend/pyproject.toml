@@ -15,11 +15,11 @@ dependencies = [
   "python-dotenv>=1.1,<2",
   "tzdata>=2025.2",  # timezone database (Windows has none built in)
   "python-dateutil>=2.9,<3",  # RFC 5545 recurrence rules (RRULE)
-  "anthropic>=2.1,<3",  # optional AI assistance (Stage 7); unused without an API key
+  "reportlab>=4.4,<5",  # the readable PDF report in Backup (pure Python, includes CJK fonts)
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.4,<9", "pip-audit>=2.9,<3"]
+dev = ["pytest>=9.0.3,<10", "pip-audit>=2.9,<3"]
 prod = ["gunicorn>=25,<27"]  # production web server (Linux; used in the Docker image)
 
 [tool.pytest.ini_options]

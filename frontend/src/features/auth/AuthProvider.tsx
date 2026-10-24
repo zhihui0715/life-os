@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, type ReactNode } from 'react'
 import { api, ApiError, setCsrfToken } from '../../lib/api'
 import { clearOfflineData, setOfflineUser } from '../../lib/offline'
 import i18n from '../../lib/i18n'
-import { setTheme } from '../../lib/theme'
+import { setLook, setTheme } from '../../lib/theme'
 import type { Me } from '../../lib/types'
 
 interface AuthValue {
@@ -52,6 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (me) {
       if (i18n.language !== me.settings.locale) i18n.changeLanguage(me.settings.locale)
       setTheme(me.settings.theme)
+      setLook(me.settings.accent ?? 'blue', me.settings.background ?? 'plain')
     }
   }, [me])
 

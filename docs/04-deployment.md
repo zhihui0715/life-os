@@ -27,7 +27,6 @@ Phone / laptop ──HTTPS──▶  Host's proxy (TLS)  ──▶  Container: g
 | `SECRET_KEY` | 64 random hex characters | `python -c "import secrets; print(secrets.token_hex(32))"`. Never reuse the development one. Changing it signs everyone out. |
 | `TRUST_PROXY` | `true` | The host's HTTPS proxy sits in front: needed for real client IPs (rate limiting) and HTTPS detection |
 | `PORT` | set by most hosts | default 8000 |
-| `ANTHROPIC_API_KEY` | optional | leave unset to keep AI off |
 | `AI_MODEL` | optional | default `claude-opus-5-5`; `claude-haiku-5-5` costs much less |
 
 `APP_ENV=production` and `FRONTEND_DIST` are already set inside the image.
@@ -93,11 +92,11 @@ change, and replaces nothing without confirmation.
 | Sessions | Cookie `HttpOnly`, `SameSite=Lax`, `Secure` in production; 14-day lifetime; logout deletes the session; `flask set-password` signs out every device |
 | CSRF | Token required on every write (except login) |
 | Access control | Every `/api` route requires login unless explicitly public (login, health); every record is filtered by owner; idempotency keys are per user |
-| Injection | SQLAlchemy parameters only (no SQL built from strings); React escapes all text (no raw HTML anywhere); CSV exports neutralise spreadsheet formulas |
+| Injection | SQLAlchemy parameters only (no SQL built from strings); React escapes all text (no raw HTML anywhere) |
 | Browser hardening | Strict Content-Security-Policy (no inline or third-party scripts), `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, HSTS in production |
 | Caching | API responses `no-store`; offline copy limited to today's tasks/habits/schedule and settings; the journal is never stored on the device; logout clears it |
-| Abuse limits | 300 requests/min per IP overall; AI 10/min plus a monthly token budget; backup import 6/min, 50 MB max; other bodies 1 MB |
-| Privacy in logs | Request shape only (method, path, status, time); never bodies, journal text or AI prompts (tested) |
+| Abuse limits | 300 requests/min per IP overall; PDF report 6/min; backup import 6/min, 50 MB max; other bodies 1 MB |
+| Privacy in logs | Request shape only (method, path, status, time); never bodies or journal text (tested) |
 | Secrets | `.env` git-ignored and never committed; full-history secrets scan clean (`infra/security/secret_scan.py`, runs in CI) |
 | Dependencies | `pip-audit`: no known vulnerabilities; `npm audit` for shipped code: none. The test runner (Vitest) has advisories that don't ship; its upgrade is a separate task |
 | Container | Non-root user; no secrets baked in; health check |

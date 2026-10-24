@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '../../components/ui/cn'
+import { ProgressBar } from '../../components/ui/ProgressBar'
 import type { Goal } from '../../lib/types'
 
 /** Explains where the number comes from, e.g. "3 of 4 linked tasks done". */
@@ -16,28 +17,23 @@ export function progressSource(t: (key: string, opts?: Record<string, unknown>) 
 export function GoalProgress({ goal, size = 'md' }: { goal: Goal; size?: 'sm' | 'md' }) {
   const { t } = useTranslation('goals')
   const value = goal.progress
-  const tone = goal.status === 'completed' ? 'bg-success' : goal.status === 'active' ? 'bg-accent' : 'bg-subtle'
+  const tone = goal.status === 'completed' ? 'var(--success-fill)' : goal.status === 'active' ? 'var(--accent-fill)' : 'var(--text-subtle)'
 
   return (
     <div>
       <div className="mb-1.5 flex items-baseline justify-between gap-2">
-        <span className={cn('font-semibold tabular-nums', size === 'md' ? 'text-2xl' : 'text-sm')}>
+        <span className={cn('font-semibold tabular-nums', size === 'md' ? 'font-display text-[32px] leading-none font-bold tracking-tight' : 'text-[15px]')}>
           {value === null ? <span className="text-subtle text-sm font-medium">{t('progress.noData')}</span> : `${value}%`}
         </span>
         {size === 'md' && <span className="text-subtle text-right text-xs">{progressSource(t, goal)}</span>}
       </div>
-      <div
-        role={value === null ? undefined : 'progressbar'}
-        aria-valuenow={value ?? undefined}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-label={value === null ? undefined : t('progress.aria', { value })}
-        className={cn('overflow-hidden rounded-full', size === 'md' ? 'h-2.5' : 'h-1.5', value === null ? 'border-border-strong border border-dashed' : 'bg-sunken')}
-      >
-        {value !== null && (
-          <div className={cn('h-full rounded-full transition-[width] duration-[var(--duration-base)]', tone)} style={{ width: `${value}%` }} />
-        )}
-      </div>
+      <ProgressBar
+        value={value}
+        size={size}
+        color={tone}
+        celebrate={goal.status !== 'abandoned'}
+        label={value === null ? undefined : t('progress.aria', { value })}
+      />
     </div>
   )
 }

@@ -1,11 +1,15 @@
-import { ArrowRight, SlidersHorizontal, Sun } from 'lucide-react'
+import { CalendarCheck, NotebookPen, SlidersHorizontal, Sun } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
 import { Button } from '../../components/ui/Button'
+import { Avatar } from '../../components/ui/Avatar'
 import { cn } from '../../components/ui/cn'
-import { Card, EmptyState, PageHeader } from '../../components/ui/states'
+import { SunArt } from '../../components/ui/Illustrations'
+import { EmptyState, GroupSection, PageHeader } from '../../components/ui/states'
+import { useToast } from '../../components/ui/Toast'
+import { useAllDone } from '../../lib/celebrate'
 import type { Category, DashboardSectionKey, Task } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
 import { useCategories } from '../tasks/api'
@@ -13,7 +17,7 @@ import { QuickAddInput } from '../tasks/QuickAddInput'
 import { TaskDrawer } from '../tasks/TaskDrawer'
 import { TaskList, useTaskTotal } from '../tasks/TaskList'
 import { CustomizeDialog } from './CustomizeDialog'
-import { BalanceSection, FocusSection, GoalsSection, LearningSection, ScheduleSection } from './DashboardSections'
+import { BalanceSection, FocusSection, GoalsSection, LearningSection, ScheduleSection, ViewAll } from './DashboardSections'
 import { HabitsTodayCard, MoodCheckInCard } from './TodayCards'
 
 function greetingKey(timeZone: string) {
@@ -55,19 +59,25 @@ export function HomePage() {
       <PageHeader
         title={t(`greeting.${greetingKey(tz)}`, { name: me.user.display_name })}
         subtitle={dateLine}
+        icon={<Avatar emoji={me.settings.avatar} name={me.user.display_name} />}
         actions={
-          <Button size="sm" variant="ghost" onClick={() => setCustomizing(true)}>
+          <Button size="sm" variant="secondary" onClick={() => setCustomizing(true)} aria-label={t('home.customize')}>
             <SlidersHorizontal size={15} aria-hidden />
-            {t('home.customize')}
+            <span className="hidden sm:inline">{t('home.customize')}</span>
           </Button>
         }
       />
 
-      <div className="mb-4">
+      <div className="mb-3">
         <QuickAddInput view="today" />
       </div>
+      {/* Daily and weekly rituals, one tap away */}
+      <div className="mb-6 flex gap-2">
+        <Shortcut to="/plan" icon={CalendarCheck} label={t('planning:home.plan')} tint="var(--tint-plan)" />
+        <Shortcut to="/plan?tab=week" icon={NotebookPen} label={t('planning:home.review')} tint="var(--tint-journal)" />
+      </div>
 
-      <div className="grid items-start gap-4 lg:grid-cols-2">
+      <div className="stagger grid items-start gap-x-5 gap-y-6 lg:grid-cols-2">
         {visible.map((s) => (
           <div key={s.key} className={cn('min-w-0', WIDE.includes(s.key) && 'lg:col-span-2')}>
             {sections[s.key]()}
@@ -85,38 +95,36 @@ function TasksSection({ categories, onOpen }: { categories: Category[]; onOpen: 
   const { t } = useTranslation()
   const overdueTotal = useTaskTotal({ view: 'overdue' })
   const todayTotal = useTaskTotal({ view: 'today' })
+  const toast = useToast()
+  useAllDone(todayTotal == null || overdueTotal == null ? undefined : todayTotal + overdueTotal, () => toast(t('celebrate.allDone')))
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       {!!overdueTotal && (
-        <Card className="overflow-hidden">
-          <SectionHeader title={t('home.overdue')} count={overdueTotal} to="/tasks?view=overdue" tone="danger" />
+        <GroupSection
+          title={t('home.overdue')}
+          count={overdueTotal}
+          tone="danger"
+          action={<ViewAll to="/tasks?view=overdue" label={t('home.viewAll')} />}
+        >
           <TaskList filters={{ view: 'overdue' }} categories={categories} onOpen={onOpen} limit={5} compact />
-        </Card>
+        </GroupSection>
       )}
-      <Card className="overflow-hidden">
-        <SectionHeader title={t('home.today')} count={todayTotal} to="/tasks?view=today" />
+      <GroupSection title={t('home.today')} count={todayTotal} action={<ViewAll to="/tasks?view=today" label={t('home.viewAll')} />}>
         {todayTotal === 0 ? (
-          <EmptyState icon={Sun} title={t('home.todayEmptyTitle')} body={t('home.todayEmptyBody')} />
+          <EmptyState icon={Sun} art={<SunArt />} title={t('home.todayEmptyTitle')} body={t('home.todayEmptyBody')} />
         ) : (
           <TaskList filters={{ view: 'today' }} categories={categories} onOpen={onOpen} limit={10} compact />
         )}
-      </Card>
+      </GroupSection>
     </div>
   )
 }
 
-function SectionHeader({ title, count, to, tone }: { title: string; count?: number; to: string; tone?: 'danger' }) {
-  const { t } = useTranslation()
+function Shortcut({ to, icon: Icon, label, tint }: { to: string; icon: typeof Sun; label: string; tint: string }) {
   return (
-    <div className="border-border flex items-center justify-between border-b px-4 py-3">
-      <h2 className={tone === 'danger' ? 'text-danger font-semibold' : 'font-semibold'}>
-        {title}
-        {count != null && <span className="text-subtle ml-2 font-normal">{count}</span>}
-      </h2>
-      <Link to={to} className="text-accent inline-flex items-center gap-1 text-sm font-medium hover:underline">
-        {t('home.viewAll')}
-        <ArrowRight size={14} aria-hidden />
-      </Link>
-    </div>
+    <Link to={to} className="pressable bg-surface shadow-card flex h-11 flex-1 items-center justify-center gap-2 rounded-2xl px-3 text-[14px] font-semibold sm:flex-none sm:px-4 dark:shadow-none">
+      <Icon size={17} style={{ color: tint }} aria-hidden />
+      {label}
+    </Link>
   )
 }

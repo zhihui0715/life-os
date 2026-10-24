@@ -20,7 +20,7 @@ PATTERNS = {
     "assigned secret": r"(?i)\b(secret_key|api_key|password|token)\s*[=:]\s*['\"]?([A-Za-z0-9_\-+/=]{24,})",
 }
 # Known, deliberately public development/test values (local DB password, documented placeholders, test-only keys).
-ALLOW = ["lifeos_dev_only", "change-me", "e2e-only-secret-key", "e2e-password-123", "test-secret-key",
+ALLOW = ["lifeos_dev_only", "lifeos_ci_only", "change-me", "e2e-only-secret-key", "e2e-password-123", "test-secret-key",
          "correct-horse-battery", "stage-password-123"]
 
 log = subprocess.run(["git", "-C", repo, "log", "-p", "--all", "--no-color", "--format=COMMIT %h"],

@@ -1,16 +1,19 @@
-import { Archive, ArchiveRestore, ArrowLeft, Check, Pencil, Plus, Trash2 } from 'lucide-react'
+import { Archive, ArchiveRestore, Pencil, Plus, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router'
+import { useParams } from 'react-router'
 
 import { Button } from '../../components/ui/Button'
 import { cn } from '../../components/ui/cn'
 import { ConfirmDialog } from '../../components/ui/Dialog'
 import { Field, Input, Select, Textarea } from '../../components/ui/Field'
 import { useToast } from '../../components/ui/Toast'
+import { CheckMark } from '../../components/ui/CheckMark'
+import { BackLink, SectionTitle } from '../../components/ui/Segments'
 import { Card, ErrorState, ListSkeleton } from '../../components/ui/states'
 import { formatDay, formatInstant } from '../../lib/dates'
 import { errorMessage } from '../../lib/errors'
+import { play } from '../../lib/sound'
 import type { GoalDetail, GoalStatus, Milestone, Task } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
 import { useCategories } from '../tasks/api'
@@ -37,10 +40,7 @@ export function GoalDetailPage() {
 
   return (
     <>
-      <Link to="/goals" className="text-muted hover:text-fg mb-3 inline-flex items-center gap-1 text-sm">
-        <ArrowLeft size={14} aria-hidden />
-        {t('back')}
-      </Link>
+      <BackLink to="/goals">{t('back')}</BackLink>
 
       <GoalHeader goal={goal} onEdit={() => setEditing(true)} />
 
@@ -60,7 +60,7 @@ export function GoalDetailPage() {
           <Milestones goal={goal} />
 
           <section>
-            <h2 className="mb-2 font-semibold">{t('tasks.title')}</h2>
+            <SectionTitle>{t('tasks.title')}</SectionTitle>
             <Card className="overflow-hidden">
               <TaskList
                 filters={{ view: 'all', goal_id: goal.id }}
@@ -110,7 +110,7 @@ function GoalHeader({ goal, onEdit }: { goal: GoalDetail; onEdit: () => void }) 
   return (
     <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
       <div className="min-w-0">
-        <h1 className="text-2xl font-semibold tracking-tight break-words">{goal.title}</h1>
+        <h1 className="font-display text-[30px] leading-tight font-bold tracking-[-0.025em] break-words">{goal.title}</h1>
         <p className="text-subtle mt-1 flex flex-wrap gap-x-3 text-sm">
           <span>{t(`horizon.${goal.horizon}`)}</span>
           {goal.target_date && <span>{t('meta.target', { date: formatDay(goal.target_date, i18n.language, { year: 'numeric' }) })}</span>}
@@ -144,6 +144,7 @@ function GoalHeader({ goal, onEdit }: { goal: GoalDetail; onEdit: () => void }) 
 function Milestones({ goal }: { goal: GoalDetail }) {
   const { t, i18n } = useTranslation('goals')
   const toast = useToast()
+  const [celebrating, setCelebrating] = useState<string | null>(null)
   const add = useAddMilestone()
   const act = useMilestoneAction()
   const [title, setTitle] = useState('')
@@ -168,7 +169,7 @@ function Milestones({ goal }: { goal: GoalDetail }) {
 
   return (
     <section>
-      <h2 className="mb-2 font-semibold">{t('milestones.title')}</h2>
+      <SectionTitle>{t('milestones.title')}</SectionTitle>
       <Card className="overflow-hidden">
         {goal.milestones.length === 0 ? (
           <p className="text-subtle px-4 py-3 text-sm">{t('milestones.empty')}</p>
@@ -177,19 +178,20 @@ function Milestones({ goal }: { goal: GoalDetail }) {
             {goal.milestones.map((m) => {
               const done = !!m.completed_at
               return (
-                <li key={m.id} className="flex items-center gap-3 px-4 py-2.5">
+                <li key={m.id} className="flex items-center gap-3 px-4 py-3">
                   <button
                     type="button"
                     role="checkbox"
                     aria-checked={done}
                     aria-label={t(done ? 'milestones.reopen' : 'milestones.complete', { title: m.title })}
-                    onClick={() => act.mutate({ id: m.id, action: done ? 'reopen' : 'complete' }, { onError: (e) => toast(errorMessage(t, e), 'error') })}
-                    className={cn(
-                      'relative flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 before:absolute before:-m-3 before:h-11 before:w-11',
-                      done ? 'border-success bg-success text-white' : 'border-border-strong hover:border-accent',
-                    )}
+                    onClick={() => {
+                      setCelebrating(done ? null : m.id)
+                      play(done ? 'uncheck' : 'complete')
+                      act.mutate({ id: m.id, action: done ? 'reopen' : 'complete' }, { onError: (e) => toast(errorMessage(t, e), 'error') })
+                    }}
+                    className="group/check pressable relative flex shrink-0 items-center justify-center before:absolute before:-m-3 before:h-11 before:w-11"
                   >
-                    {done && <Check size={12} strokeWidth={3} aria-hidden />}
+                    <CheckMark checked={done} celebrate={celebrating === m.id} shape="square" size={21} />
                   </button>
                   <div className="min-w-0 flex-1">
                     <p className={cn('break-words', done && 'text-subtle line-through')}>{m.title}</p>
@@ -199,7 +201,7 @@ function Milestones({ goal }: { goal: GoalDetail }) {
                       {m.target_date && <span>{formatDay(m.target_date, i18n.language)}</span>}
                     </p>
                   </div>
-                  <Button variant="ghost" size="icon" aria-label={`${t('common:actions.delete')}: ${m.title}`} onClick={() => setToDelete(m)}>
+                  <Button variant="ghost" size="icon" className="text-subtle hover:text-danger hover:bg-danger-soft" aria-label={`${t('common:actions.delete')}: ${m.title}`} onClick={() => setToDelete(m)}>
                     <Trash2 size={16} aria-hidden />
                   </Button>
                 </li>
@@ -212,17 +214,19 @@ function Milestones({ goal }: { goal: GoalDetail }) {
             e.preventDefault()
             submit()
           }}
-          className="border-border flex items-center gap-2 border-t px-3"
+          className="border-border flex items-center gap-2.5 border-t px-4"
         >
-          <Plus size={18} className="text-subtle shrink-0" aria-hidden />
+          <span className="bg-accent-fill text-on-accent flex h-[21px] w-[21px] shrink-0 items-center justify-center rounded-full"><Plus size={14} strokeWidth={3} aria-hidden /></span>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             maxLength={200}
             aria-label={t('milestones.addLabel')}
             placeholder={t('milestones.add')}
-            className="placeholder:text-subtle h-11 min-w-0 flex-1 bg-transparent focus:outline-none"
+            className="placeholder:text-subtle h-12 min-w-0 flex-1 bg-transparent focus:outline-none"
           />
+          {/* With two fields (title and weight) browsers only submit on Enter if the form has a submit button */}
+          <button type="submit" className="sr-only">{t('common:actions.add')}</button>
           {goal.progress_mode === 'milestones' && (
             <label className="text-subtle flex items-center gap-1.5 text-xs" title={t('milestones.weightHelp')}>
               {t('milestones.weight')}
@@ -232,7 +236,7 @@ function Milestones({ goal }: { goal: GoalDetail }) {
                 max={100}
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
-                className="border-border bg-surface text-fg h-8 w-14 rounded-md border px-2 text-sm"
+                className="bg-sunken text-fg h-8 w-14 rounded-lg px-2 text-sm tabular-nums"
               />
             </label>
           )}
@@ -302,7 +306,7 @@ function Timeline({ goal }: { goal: GoalDetail }) {
 
   return (
     <section>
-      <h2 className="mb-2 font-semibold">{t('timeline.title')}</h2>
+      <SectionTitle>{t('timeline.title')}</SectionTitle>
       <Card className="p-4">
         <form
           className="flex flex-col gap-3"

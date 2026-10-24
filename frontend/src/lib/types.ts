@@ -15,12 +15,13 @@ export interface UserSettings {
   timezone: string
   week_start: number
   theme: ThemeSetting
+  accent: string
+  background: string
+  avatar: string | null
   working_hours: WorkingHours
   score_weights: ScoreWeights
   weekly_learning_target_min: number | null
   dashboard_layout: { key: DashboardSectionKey; visible: boolean }[]
-  ai_enabled: boolean
-  ai_monthly_token_budget: number
 }
 
 export interface Me {

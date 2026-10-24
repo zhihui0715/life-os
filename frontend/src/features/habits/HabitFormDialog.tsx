@@ -130,7 +130,7 @@ export function HabitFormDialog({ open, onClose, habit }: { open: boolean; onClo
                     type="button"
                     aria-pressed={on}
                     onClick={() => set('weekday_mask', f.weekday_mask ^ bit)}
-                    className={cn('h-9 min-w-11 rounded-md border px-2 text-sm', on ? 'border-accent bg-accent-soft text-accent font-medium' : 'border-border text-muted')}
+                    className={cn('pressable h-10 w-10 rounded-full text-[14px] font-semibold', on ? 'bg-accent-fill text-on-accent' : 'bg-sunken text-muted hover:text-fg')}
                   >
                     {days[i]}
                   </button>

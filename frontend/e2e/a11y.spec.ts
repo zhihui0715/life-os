@@ -29,6 +29,10 @@ for (const theme of ['light', 'dark'] as const) {
       await expect(page.locator('main h1').first()).toBeVisible()
       await expect(page.getByRole('button', { name: 'Sign in' }), 'still signed in').toHaveCount(0)
       await page.waitForLoadState('networkidle')
+      // Measure contrast at rest: let entrance animations (fades, rises) finish first; looping ones are ignored.
+      await page.waitForFunction(() =>
+        document.getAnimations().every((a) => a.playState !== 'running' || a.effect?.getTiming().iterations === Infinity),
+      )
       const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze()
       const blocking = results.violations.filter((v) => v.impact === 'critical' || v.impact === 'serious')
       const minor = results.violations.filter((v) => !blocking.includes(v))

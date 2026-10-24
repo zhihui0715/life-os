@@ -104,5 +104,17 @@
     "help": "Used to find free time and suggest slots. Outside these hours nothing is suggested.",
     "off": "Off",
     "saved": "Working hours saved"
+  },
+  "agenda": {
+    "today": "Today",
+    "prev": "Previous",
+    "next": "Next",
+    "view": "Calendar view",
+    "day": "Week",
+    "month": "Month",
+    "emptyTitle": "Nothing planned",
+    "emptyBody": "A free day. Plan it, or add an event.",
+    "plan": "Plan this day",
+    "clash": "Overlaps another event"
   }
 }

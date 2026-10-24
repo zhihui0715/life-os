@@ -1,12 +1,16 @@
-import { AlertCircle, CalendarClock, Check, Clock, Flag, ListChecks, Target } from 'lucide-react'
+import { AlertCircle, CalendarClock, Clock, Flag, ListChecks, Target } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
+import { CheckMark } from '../../components/ui/CheckMark'
 import { cn } from '../../components/ui/cn'
 import { useToast } from '../../components/ui/Toast'
 import { formatDay, formatInstant, formatMinutes } from '../../lib/dates'
 import { errorMessage } from '../../lib/errors'
 import { isQueued } from '../../lib/offline'
+import { noteCompletion } from '../../lib/celebrate'
+import { play } from '../../lib/sound'
 import type { Category, Goal, Task } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
 import { useTaskAction } from './api'
@@ -27,8 +31,12 @@ export function TaskRow({ task, category, goal, onOpen }: Props) {
   const action = useTaskAction()
   const done = task.status === 'done'
   const lang = i18n.language
+  const [celebrate, setCelebrate] = useState(false)
 
-  const toggle = () =>
+  const toggle = () => {
+    setCelebrate(!done)
+    play(done ? 'uncheck' : 'complete')
+    if (!done) noteCompletion()
     action.mutate(
       { id: task.id, action: done ? 'reopen' : 'complete', title: task.title },
       {
@@ -36,9 +44,10 @@ export function TaskRow({ task, category, goal, onOpen }: Props) {
         onError: (e) => toast(errorMessage(t, e), 'error'),
       },
     )
+  }
 
   return (
-    <li className="group hover:bg-sunken/60 flex flex-wrap items-start gap-x-3 gap-y-1.5 px-3 py-2.5 transition-colors sm:flex-nowrap sm:px-4">
+    <li className="group hover:bg-sunken/50 flex flex-wrap items-start gap-x-3 gap-y-1 px-3.5 py-2.5 transition-colors duration-[var(--duration-fast)] sm:flex-nowrap sm:px-4">
       <button
         type="button"
         role="checkbox"
@@ -47,16 +56,15 @@ export function TaskRow({ task, category, goal, onOpen }: Props) {
         onClick={toggle}
         disabled={!!task.archived_at}
         className={cn(
-          'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
-          'before:absolute before:-m-3 before:h-11 before:w-11 relative', // 44px touch target
-          done ? 'border-success bg-success text-white' : 'border-border-strong hover:border-accent',
+          'group/check pressable relative mt-px flex shrink-0 items-center justify-center',
+          'before:absolute before:-m-3 before:h-11 before:w-11', // 44px touch target
         )}
       >
-        {done && <Check size={12} strokeWidth={3} aria-hidden />}
+        <CheckMark checked={done} celebrate={celebrate} shape="square" size={21} />
       </button>
 
       <button type="button" onClick={() => onOpen(task)} className="min-w-0 flex-1 text-left">
-        <span className={cn('block break-words', done && 'text-subtle line-through')}>{task.title}</span>
+        <span className={cn('block text-[15.5px] break-words transition-colors duration-[var(--duration-base)]', done && 'text-subtle line-through decoration-border-strong')}>{task.title}</span>
         <span className="text-subtle mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
           {task.is_overdue && (
             <span className="text-danger inline-flex items-center gap-1 font-medium">
@@ -103,13 +111,13 @@ export function TaskRow({ task, category, goal, onOpen }: Props) {
       {(goal || task.tags.length > 0) && (
         <span className="order-last flex w-full flex-wrap items-center gap-1.5 pl-8 text-xs sm:order-none sm:w-auto sm:max-w-[40%] sm:justify-end sm:pt-0.5 sm:pl-0">
           {goal && (
-            <Link to={`/goals/${goal.id}`} className="bg-accent-soft text-accent inline-flex max-w-full items-center gap-1 truncate rounded px-1.5 py-0.5 hover:underline">
+            <Link to={`/goals/${goal.id}`} className="bg-accent-soft text-accent inline-flex max-w-full items-center gap-1 truncate rounded-full px-2 py-0.5 font-medium hover:underline">
               <Target size={11} aria-hidden className="shrink-0" />
               <span className="truncate">{goal.title}</span>
             </Link>
           )}
           {task.tags.map((tag) => (
-            <Link key={tag} to={`/tasks?view=all&tag=${encodeURIComponent(tag)}`} className="bg-sunken text-muted hover:text-fg rounded px-1.5 py-0.5">
+            <Link key={tag} to={`/tasks?view=all&tag=${encodeURIComponent(tag)}`} className="bg-sunken text-muted hover:text-fg rounded-full px-2 py-0.5">
               #{tag}
             </Link>
           ))}

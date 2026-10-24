@@ -121,5 +121,32 @@
   "tagFilter": {
     "active": "标签：{{tag}}",
     "clear": "移除标签筛选"
+  },
+  "sheet": {
+    "titlePlaceholder": "要做什么？",
+    "addNotes": "+ 添加备注",
+    "notesPlaceholder": "备注",
+    "tagHint": "在标题中加 #标签，例如：买牛奶 #家",
+    "when": "什么时候",
+    "today": "今天",
+    "tomorrow": "明天",
+    "weekend": "本周末",
+    "nextWeek": "下周",
+    "someday": "以后",
+    "pick": "选择日期",
+    "dueOn": "{{date}} 到期",
+    "inbox": "没有日期——放进收件箱",
+    "estimate": "需要多久",
+    "noEstimate": "不确定",
+    "min_one": "{{count}} 分钟",
+    "min_other": "{{count}} 分钟",
+    "hours_one": "{{count}} 小时",
+    "hours_other": "{{count}} 小时",
+    "goal": "目标",
+    "noGoal": "无目标",
+    "again": "添加后继续新建",
+    "addedCount_one": "已添加 {{count}} 个——继续",
+    "addedCount_other": "已添加 {{count}} 个——继续",
+    "add": "添加任务"
   }
 }

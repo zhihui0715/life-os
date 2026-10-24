@@ -2,7 +2,7 @@ import { expect, type APIRequestContext, type Page } from '@playwright/test'
 
 export { E2E_USER } from './user'
 
-export const MAIN_PAGES = ['/', '/tasks', '/calendar', '/goals', '/habits', '/focus', '/insights', '/journal', '/assistant', '/settings']
+export const MAIN_PAGES = ['/', '/tasks', '/calendar', '/goals', '/habits', '/focus', '/insights', '/journal', '/plan', '/settings']
 
 /** Today in the test account's timezone (Asia/Kuala_Lumpur, the default). */
 export function today(): string {

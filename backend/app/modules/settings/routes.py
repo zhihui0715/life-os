@@ -9,6 +9,8 @@ from app.common.auth import current_user
 from app.common.validation import InputModel, parse_body
 from app.extensions import db
 from app.modules.auth.models import (
+    ACCENTS,
+    BACKGROUNDS,
     DASHBOARD_SECTIONS,
     DEFAULT_DASHBOARD,
     DEFAULT_SCORE_WEIGHTS,
@@ -27,12 +29,13 @@ def settings_to_dict(s: UserSettings) -> dict:
         "timezone": s.timezone,
         "week_start": s.week_start,
         "theme": s.theme,
+        "accent": s.accent,
+        "background": s.background,
+        "avatar": s.avatar,
         "working_hours": s.working_hours or DEFAULT_WORKING_HOURS,
         "score_weights": s.score_weights or DEFAULT_SCORE_WEIGHTS,
         "weekly_learning_target_min": s.weekly_learning_target_min,
         "dashboard_layout": dashboard_layout(s),
-        "ai_enabled": s.ai_enabled,
-        "ai_monthly_token_budget": s.ai_monthly_token_budget,
     }
 
 
@@ -108,12 +111,38 @@ class SettingsPatch(InputModel):
     timezone: str | None = Field(default=None, max_length=64)
     week_start: int | None = Field(default=None, ge=1, le=7)
     theme: Literal["system", "light", "dark"] | None = None
+    accent: str | None = None
+    background: str | None = None
+    avatar: str | None = Field(default=None, max_length=16)
     working_hours: dict | None = None
     score_weights: dict | None = None
     weekly_learning_target_min: int | None = Field(default=None, ge=0, le=10_080)
     dashboard_layout: list | None = None
-    ai_enabled: bool | None = None
-    ai_monthly_token_budget: int | None = Field(default=None, ge=0, le=10_000_000)
+
+    @field_validator("accent")
+    @classmethod
+    def valid_accent(cls, v):
+        if v is not None and v not in ACCENTS:
+            raise ValueError(f"accent must be one of {', '.join(ACCENTS)}")
+        return v
+
+    @field_validator("background")
+    @classmethod
+    def valid_background(cls, v):
+        if v is not None and v not in BACKGROUNDS:
+            raise ValueError("unknown background")
+        return v
+
+    @field_validator("avatar")
+    @classmethod
+    def valid_avatar(cls, v):
+        """One emoji or symbol (a few code points for flags and skin tones); "" clears it."""
+        if v is None:
+            return v
+        v = v.strip()
+        if v and (any(ch.isspace() for ch in v) or any(ch.isascii() and ch.isalnum() for ch in v)):
+            raise ValueError("avatar must be an emoji or symbol")
+        return v or None
 
     @field_validator("score_weights")
     @classmethod
@@ -153,8 +182,8 @@ def update_settings():
     s = current_user().settings
     changes = data.model_dump(exclude_unset=True)
     for field, value in changes.items():
-        # weekly_learning_target_min may be cleared with null (or 0); other fields ignore null
-        if value is None and field != "weekly_learning_target_min":
+        # weekly_learning_target_min (null or 0) and avatar ("" or null) can be cleared; other fields ignore null
+        if value is None and field not in ("weekly_learning_target_min", "avatar"):
             continue
         if field == "weekly_learning_target_min" and value == 0:
             value = None

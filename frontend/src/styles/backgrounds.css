@@ -1,0 +1,156 @@
+/* Backgrounds (Settings → Appearance): what sits behind the cards. The cards stay solid, so text on them reads the
+   same everywhere; the ground only shows around them and through the frosted bars. Art is public domain (CC0, Art
+   Institute of Chicago, credits in public/wallpapers/credits.json), softened by a blur and a veil so headings on it
+   keep their contrast. Each style also styles its picker tile (.bg-tile). */
+
+html:not([data-bg='plain'])[data-bg] body {
+  background: transparent;
+}
+html:not([data-bg='plain'])[data-bg] body::before,
+html[data-bg-kind='art'] body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+html:not([data-bg='plain'])[data-bg] body::before {
+  background: var(--backdrop);
+}
+html[data-bg-kind='art'] body::before {
+  filter: blur(4px) saturate(1.1);
+  transform: scale(1.06); /* hides the blur's soft edge */
+  animation: drift 60s ease-in-out infinite alternate;
+}
+html[data-bg-kind='art'] body::after {
+  background: var(--veil);
+}
+@keyframes drift {
+  to {
+    transform: scale(1.12) translate3d(-1.5%, -1%, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-bg-kind='art'] body::before {
+    animation: none;
+  }
+}
+
+/* Anything other than plain: slightly stronger secondary text, and see-through chrome */
+html:not([data-bg='plain'])[data-bg] {
+  --text-subtle: #58585e;
+  --sidebar: rgb(236 236 241 / 0.72);
+}
+html[data-theme='dark']:not([data-bg='plain'])[data-bg] {
+  --text-subtle: #b0b0b6;
+  --sidebar: rgb(18 18 20 / 0.72);
+}
+html:not([data-bg='plain'])[data-bg] .app-sidebar {
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(180%) blur(24px);
+}
+html[data-bg-kind='art'] {
+  --veil: rgb(242 242 247 / 0.66);
+}
+html[data-theme='dark'][data-bg-kind='art'] {
+  --veil: rgb(0 0 0 / 0.7);
+}
+
+.bg-tile {
+  background: var(--backdrop, var(--bg));
+}
+
+
+html[data-bg='sunrise'],
+.bg-tile[data-tile='sunrise'] {
+  --backdrop: radial-gradient(at 12% 0%, #ffd6bd 0, transparent 55%), radial-gradient(at 88% 8%, #ffe7a3 0, transparent 50%), radial-gradient(at 50% 100%, #ffc4d8 0, transparent 60%), #fbf3ee;
+}
+
+html[data-theme='dark'][data-bg='sunrise'],
+html[data-theme='dark'] .bg-tile[data-tile='sunrise'] {
+  --backdrop: radial-gradient(at 12% 0%, #4a1f14 0, transparent 55%), radial-gradient(at 88% 8%, #3d2a0a 0, transparent 50%), radial-gradient(at 50% 100%, #3a1426 0, transparent 60%), #110b0a;
+}
+
+html[data-bg='ocean'],
+.bg-tile[data-tile='ocean'] {
+  --backdrop: radial-gradient(at 10% 5%, #c9e4ff 0, transparent 55%), radial-gradient(at 90% 20%, #bff0ee 0, transparent 50%), radial-gradient(at 40% 100%, #d9d5ff 0, transparent 60%), #eef5fb;
+}
+
+html[data-theme='dark'][data-bg='ocean'],
+html[data-theme='dark'] .bg-tile[data-tile='ocean'] {
+  --backdrop: radial-gradient(at 10% 5%, #0b2747 0, transparent 55%), radial-gradient(at 90% 20%, #06302f 0, transparent 50%), radial-gradient(at 40% 100%, #1d1b47 0, transparent 60%), #04080e;
+}
+
+html[data-bg='lavender'],
+.bg-tile[data-tile='lavender'] {
+  --backdrop: radial-gradient(at 15% 0%, #e3d5ff 0, transparent 55%), radial-gradient(at 85% 15%, #ffd6f0 0, transparent 50%), radial-gradient(at 50% 100%, #d6e2ff 0, transparent 60%), #f6f2fd;
+}
+
+html[data-theme='dark'][data-bg='lavender'],
+html[data-theme='dark'] .bg-tile[data-tile='lavender'] {
+  --backdrop: radial-gradient(at 15% 0%, #2a1a4a 0, transparent 55%), radial-gradient(at 85% 15%, #3a1538 0, transparent 50%), radial-gradient(at 50% 100%, #16234a 0, transparent 60%), #0b0811;
+}
+
+html[data-bg='mint'],
+.bg-tile[data-tile='mint'] {
+  --backdrop: radial-gradient(at 10% 0%, #cff3de 0, transparent 55%), radial-gradient(at 90% 10%, #e6f6c2 0, transparent 50%), radial-gradient(at 50% 100%, #c4eee7 0, transparent 60%), #f1f8f4;
+}
+
+html[data-theme='dark'][data-bg='mint'],
+html[data-theme='dark'] .bg-tile[data-tile='mint'] {
+  --backdrop: radial-gradient(at 10% 0%, #0e3320 0, transparent 55%), radial-gradient(at 90% 10%, #283a0e 0, transparent 50%), radial-gradient(at 50% 100%, #0b3330 0, transparent 60%), #050b08;
+}
+
+html[data-bg='midnight'],
+.bg-tile[data-tile='midnight'] {
+  --backdrop: radial-gradient(at 20% 0%, #d6dbf3 0, transparent 55%), radial-gradient(at 80% 20%, #e4d9f2 0, transparent 50%), radial-gradient(at 50% 100%, #d2e4f3 0, transparent 60%), #eef0f8;
+}
+
+html[data-theme='dark'][data-bg='midnight'],
+html[data-theme='dark'] .bg-tile[data-tile='midnight'] {
+  --backdrop: radial-gradient(1px 1px at 20px 30px, rgb(255 255 255 / 0.7), transparent), radial-gradient(1px 1px at 120px 80px, rgb(255 255 255 / 0.5), transparent), radial-gradient(1.5px 1.5px at 200px 160px, rgb(255 255 255 / 0.6), transparent), radial-gradient(1px 1px at 300px 40px, rgb(255 255 255 / 0.4), transparent), radial-gradient(at 20% 0%, #1b2150 0, transparent 55%), radial-gradient(at 80% 20%, #2d1745 0, transparent 50%), radial-gradient(at 50% 100%, #0a2236 0, transparent 60%), #03040b;
+}
+
+html[data-bg='great-wave'] {
+  --backdrop: url('/wallpapers/great-wave.jpg') center / cover no-repeat, #888;
+}
+
+html[data-bg='water-lilies'] {
+  --backdrop: url('/wallpapers/water-lilies.jpg') center / cover no-repeat, #888;
+}
+
+html[data-bg='bedroom'] {
+  --backdrop: url('/wallpapers/bedroom.jpg') center / cover no-repeat, #888;
+}
+
+html[data-bg='plum-garden'] {
+  --backdrop: url('/wallpapers/plum-garden.jpg') center / cover no-repeat, #888;
+}
+
+html[data-bg='grande-jatte'] {
+  --backdrop: url('/wallpapers/grande-jatte.jpg') center / cover no-repeat, #888;
+}
+
+html[data-bg='rainy-day'] {
+  --backdrop: url('/wallpapers/rainy-day.jpg') center / cover no-repeat, #888;
+}
+
+html[data-bg='dots'],
+.bg-tile[data-tile='dots'] {
+  --backdrop: radial-gradient(circle, color-mix(in srgb, var(--text) 16%, transparent) 1px, transparent 1.5px) 0 0 / 22px 22px, var(--bg);
+}
+html[data-bg='grid'],
+.bg-tile[data-tile='grid'] {
+  --backdrop:
+    linear-gradient(color-mix(in srgb, var(--accent) 9%, transparent) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 9%, transparent) 1px, transparent 1px) 0 0 / 24px 24px,
+    var(--bg);
+}
+html[data-bg='linen'],
+.bg-tile[data-tile='linen'] {
+  --backdrop: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .38 0 0 0 0 .3 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), #f3eee3;
+}
+html[data-theme='dark'][data-bg='linen'],
+html[data-theme='dark'] .bg-tile[data-tile='linen'] {
+  --backdrop: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .38 0 0 0 0 .3 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), #191713;
+}

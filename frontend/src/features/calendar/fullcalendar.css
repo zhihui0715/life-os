@@ -7,8 +7,8 @@
   --fc-today-bg-color: color-mix(in srgb, var(--accent-soft) 35%, transparent);
   --fc-now-indicator-color: var(--danger);
   --fc-highlight-color: color-mix(in srgb, var(--accent) 18%, transparent);
-  --fc-event-bg-color: var(--accent);
-  --fc-event-border-color: var(--accent);
+  --fc-event-bg-color: var(--accent-fill);
+  --fc-event-border-color: var(--accent-fill);
   --fc-event-text-color: var(--text-on-accent);
   --fc-button-bg-color: var(--surface);
   --fc-button-border-color: var(--border);
@@ -25,11 +25,35 @@
   font-size: 1.05rem;
   font-weight: 600;
 }
+/* Toolbar buttons read as iOS grey buttons; the chosen view is a white segment */
 .fc .fc-button {
   font-size: 0.8125rem;
-  font-weight: 500;
-  padding: 0.35rem 0.7rem;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border: 0 !important;
+  border-radius: 10px !important;
+  background: var(--surface-sunken);
+  color: var(--text);
   box-shadow: none !important;
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) ease;
+}
+.fc .fc-button:active:not(:disabled) {
+  transform: scale(0.96);
+}
+.fc .fc-button-group {
+  gap: 2px;
+  padding: 2px;
+  border-radius: 12px;
+  background: var(--surface-sunken);
+}
+.fc .fc-button-group .fc-button {
+  background: transparent;
+}
+.fc .fc-button-group .fc-button.fc-button-active {
+  background: var(--surface);
+  box-shadow: 0 3px 8px rgb(0 0 0 / 0.12) !important;
 }
 .fc .fc-button-primary:not(:disabled).fc-button-active {
   color: var(--accent);
@@ -45,8 +69,8 @@
 
 /* Event kinds */
 .fc .ev-appointment {
-  --fc-event-bg-color: var(--accent);
-  --fc-event-border-color: var(--accent);
+  --fc-event-bg-color: var(--accent-fill);
+  --fc-event-border-color: var(--accent-fill);
 }
 .fc .ev-task_block {
   background: var(--success-soft);

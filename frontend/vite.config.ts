@@ -18,7 +18,7 @@ export default defineConfig({
     // are kept by the app (src/lib/offline.ts), and /api requests always go to the network.
     VitePWA({
       registerType: 'prompt', // a new version waits for "Reload", so nothing you're typing is lost
-      includeAssets: ['icon.svg', 'apple-touch-icon.png'],
+      includeAssets: ['icon.svg', 'apple-touch-icon.png', 'notify-sw.js'],
       manifest: {
         name: 'Life OS',
         short_name: 'Life OS',
@@ -26,8 +26,8 @@ export default defineConfig({
         start_url: '/',
         scope: '/',
         display: 'standalone',
-        background_color: '#ffffff',
-        theme_color: '#4f46e5',
+        background_color: '#f2f2f7',
+        theme_color: '#f2f2f7',
         icons: [
           { src: 'pwa-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'pwa-512.png', sizes: '512x512', type: 'image/png' },
@@ -39,6 +39,7 @@ export default defineConfig({
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api\//],
         cleanupOutdatedCaches: true,
+        importScripts: ['notify-sw.js'], // opens the right page when a reminder is tapped (lib/reminders.ts)
       },
     }),
   ],

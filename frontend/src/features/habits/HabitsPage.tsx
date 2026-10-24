@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router'
 
 import { Button } from '../../components/ui/Button'
-import { cn } from '../../components/ui/cn'
+import { Segmented } from '../../components/ui/Segments'
+import { SproutArt } from '../../components/ui/Illustrations'
 import { Card, EmptyState, ErrorState, ListSkeleton, PageHeader } from '../../components/ui/states'
 import { errorMessage } from '../../lib/errors'
 import { useHabits } from './api'
@@ -31,18 +32,14 @@ export function HabitsPage() {
         }
       />
 
-      <div role="tablist" className="mb-4 flex gap-1">
-        {[false, true].map((a) => (
-          <button
-            key={String(a)}
-            role="tab"
-            aria-selected={a === archived}
-            onClick={() => setParams(a ? { show: 'archived' } : {})}
-            className={cn('h-9 rounded-full px-3.5 text-sm font-medium', a === archived ? 'bg-fg text-bg' : 'text-muted hover:bg-sunken hover:text-fg')}
-          >
-            {t(a ? 'showArchived' : 'showActive')}
-          </button>
-        ))}
+      <div className="mb-5 max-w-xs">
+        <Segmented
+          items={['active', 'archived'] as const}
+          value={archived ? 'archived' : 'active'}
+          onChange={(v) => setParams(v === 'archived' ? { show: 'archived' } : {})}
+          label={t('title')}
+          render={(v) => t(v === 'archived' ? 'showArchived' : 'showActive')}
+        />
       </div>
 
       {habits.isPending ? (
@@ -55,6 +52,7 @@ export function HabitsPage() {
             <p className="text-subtle p-6 text-center">{t('archivedEmpty')}</p>
           ) : (
             <EmptyState
+              art={<SproutArt />}
               icon={Flame}
               title={t('empty.title')}
               body={t('empty.body')}
@@ -64,12 +62,12 @@ export function HabitsPage() {
         </Card>
       ) : (
         <Card className="overflow-hidden">
-          <ul className="divide-border divide-y">
+          <ul className="divide-border stagger divide-y">
             {habits.data.map((h) => (
-              <li key={h.id} className="flex items-center gap-3 px-4 py-3">
+              <li key={h.id} className="flex items-center gap-3.5 px-4 py-3.5">
                 {!archived && <CheckButton habit={h} />}
                 <Link to={`/habits/${h.id}`} className="min-w-0 flex-1">
-                  <span className="block truncate font-medium">{h.name}</span>
+                  <span className="block truncate text-[16px] font-semibold">{h.name}</span>
                   <span className="text-subtle mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
                     <span>{summary(h)}</span>
                     <StreakBadge habit={h} />

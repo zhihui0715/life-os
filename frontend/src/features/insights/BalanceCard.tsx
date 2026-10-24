@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '../../components/ui/cn'
 import { Card } from '../../components/ui/states'
 import type { Overview } from '../../lib/types'
+import { ProgressBar } from '../../components/ui/ProgressBar'
 
 /** Signed change vs the previous period, with an icon so direction is never colour-only. */
 export function Delta({ now, before, unit = '' }: { now: number | null; before: number | null; unit?: string }) {
@@ -27,9 +28,7 @@ export function Meter({ value, label }: { value: number | null; label: string })
     return <div role="img" aria-label={`${label}: ${t('score.noComponentData')}`} className="border-border-strong h-2 rounded-full border border-dashed" />
   }
   return (
-    <div role="meter" aria-valuenow={Math.round(value)} aria-valuemin={0} aria-valuemax={100} aria-label={label} className="bg-accent-soft h-2 overflow-hidden rounded-full">
-      <div className="bg-accent h-full rounded-full" style={{ width: `${Math.max(value, 2)}%` }} />
-    </div>
+    <ProgressBar value={value} role="meter" label={label} />
   )
 }
 
@@ -42,8 +41,8 @@ export function BalanceCard({ data }: { data: Overview }) {
   return (
     <Card className="p-5">
       <div className="mb-1 flex flex-wrap items-center gap-2">
-        <h2 className="font-semibold">{t('score.title')}</h2>
-        <span className="bg-sunken text-muted rounded px-1.5 py-0.5 text-xs">{t('score.experimental')}</span>
+        <h2 className="text-[17px] font-semibold tracking-tight">{t('score.title')}</h2>
+        <span className="bg-sunken text-muted rounded-full px-2 py-0.5 text-xs font-medium">{t('score.experimental')}</span>
       </div>
 
       {s.value == null ? (
@@ -54,7 +53,7 @@ export function BalanceCard({ data }: { data: Overview }) {
         </div>
       ) : (
         <div className="my-3 flex flex-wrap items-end gap-x-3 gap-y-1">
-          <span className="text-5xl font-semibold tracking-tight">{Math.round(s.value)}</span>
+          <span className="font-display text-[64px] leading-none font-bold tracking-tight tabular-nums">{Math.round(s.value)}</span>
           <span className="text-subtle mb-1.5">/ 100</span>
           <span className="mb-2"><Delta now={s.value} before={data.previous.score} /></span>
         </div>

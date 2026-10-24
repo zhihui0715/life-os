@@ -74,5 +74,34 @@
     "logged": "已记录时间",
     "updated": "已更新活动",
     "deleted": "已删除活动"
+  },
+  "tomato": {
+    "mode": "计时类型",
+    "modes": {
+      "tomato": "🍅 番茄钟",
+      "custom": "自定义"
+    },
+    "label": "番茄",
+    "focus": "专注",
+    "short": "短休息",
+    "long": "长休息（每 {{count}} 个后）",
+    "autoStart": "休息结束后自动开始下一个番茄",
+    "start": "开始 {{count}} 分钟番茄",
+    "rule": "专注 {{focus}} 分钟，休息 {{short}} 分钟；每完成 {{every}} 个番茄，长休息 {{long}} 分钟。每个番茄都会记为一次专注。",
+    "today_one": "今天 {{count}} 个番茄",
+    "today_other": "今天 {{count}} 个番茄",
+    "sets_one": "{{count}} 组完成",
+    "sets_other": "{{count}} 组完成",
+    "breakStart": "番茄完成！休息 {{count}} 分钟吧。",
+    "longBreakStart": "完成一整组！好好休息 {{count}} 分钟。",
+    "doneTitle": "番茄完成 🍅",
+    "shortBreak": "短休息",
+    "longBreak": "长休息",
+    "breakHint": "站起来伸个懒腰，看看窗外，喝点水。",
+    "breakOverTitle": "休息结束",
+    "breakOverBody": "准备好下一个番茄了吗？",
+    "skip": "跳过休息",
+    "next": "开始下一个番茄",
+    "finish": "先到这里"
   }
 }

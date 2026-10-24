@@ -20,6 +20,14 @@ from app.extensions import db
 
 LOCALES = ("en", "zh-CN")
 THEMES = ("system", "light", "dark")
+# Appearance (frontend/src/lib/theme.ts draws them): the tint colour, and what sits behind the cards.
+ACCENTS = ("blue", "indigo", "purple", "pink", "red", "orange", "yellow", "green", "teal", "graphite")
+BACKGROUNDS = (
+    "plain",
+    "sunrise", "ocean", "lavender", "mint", "midnight",  # soft gradients
+    "great-wave", "water-lilies", "bedroom", "plum-garden", "grande-jatte", "rainy-day",  # public-domain art
+    "dots", "grid", "linen",  # paper
+)
 DEFAULT_TIMEZONE = "Asia/Kuala_Lumpur"
 WEEKDAYS = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")
 # Used for free-slot finding until the user sets their own hours in Settings.
@@ -35,8 +43,6 @@ DEFAULT_SCORE_WEIGHTS = {
     "enabled": {k: True for k in SCORE_COMPONENTS},
 }
 DASHBOARD_SECTIONS = ("focus", "schedule", "tasks", "habits", "mood", "balance", "goals", "learning")
-# ~100 daily plans or ~40 weekly reviews; on Claude Opus 5.5 roughly US$2 at most.
-DEFAULT_AI_MONTHLY_TOKENS = 300_000
 
 DEFAULT_DASHBOARD = [{"key": k, "visible": True} for k in DASHBOARD_SECTIONS]
 
@@ -54,14 +60,15 @@ class User(IdMixin, TimestampMixin, db.Model):
 
 
 class UserSettings(db.Model):
-    """One row per user. More columns (working hours, score weights, AI) arrive in later stages."""
+    """One row per user: preferences that follow the account to every device."""
 
     __tablename__ = "user_settings"
     __table_args__ = (
         CheckConstraint(f"locale IN {LOCALES}", name="locale"),
         CheckConstraint(f"theme IN {THEMES}", name="theme"),
         CheckConstraint("week_start BETWEEN 1 AND 7", name="week_start"),
-        CheckConstraint("ai_monthly_token_budget BETWEEN 0 AND 10000000", name="ai_budget"),
+        CheckConstraint(f"accent IN {ACCENTS}", name="accent"),
+        CheckConstraint(f"background IN {BACKGROUNDS}", name="background"),
     )
 
     user_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
@@ -71,6 +78,9 @@ class UserSettings(db.Model):
     )
     week_start: Mapped[int] = mapped_column(SmallInteger, nullable=False, default=1, server_default="1")
     theme: Mapped[str] = mapped_column(String(10), nullable=False, default="system", server_default="system")
+    accent: Mapped[str] = mapped_column(String(12), nullable=False, default="blue", server_default="blue")
+    background: Mapped[str] = mapped_column(String(20), nullable=False, default="plain", server_default="plain")
+    avatar: Mapped[str | None] = mapped_column(String(16))  # an emoji or symbol shown in the greeting; NULL = initial
     # {"mon": [["09:00", "18:00"]], ...} in the user's timezone. NULL = use DEFAULT_WORKING_HOURS.
     working_hours: Mapped[dict | None] = mapped_column(JSONB)
     # Life Balance Score: {"tasks": 30, ..., "enabled": {"tasks": true, ...}}. NULL = DEFAULT_SCORE_WEIGHTS.
@@ -78,11 +88,6 @@ class UserSettings(db.Model):
     weekly_learning_target_min: Mapped[int | None] = mapped_column(Integer)  # NULL = no target set
     # Home sections in order: [{"key": "tasks", "visible": true}, ...]. NULL = DEFAULT_DASHBOARD.
     dashboard_layout: Mapped[list | None] = mapped_column(JSONB)
-    # AI assistance is opt-in, and capped per calendar month (input + output tokens).
-    ai_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="false")
-    ai_monthly_token_budget: Mapped[int] = mapped_column(
-        Integer, nullable=False, default=DEFAULT_AI_MONTHLY_TOKENS, server_default=str(DEFAULT_AI_MONTHLY_TOKENS)
-    )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=utcnow, onupdate=utcnow
     )

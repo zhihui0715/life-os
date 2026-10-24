@@ -31,7 +31,7 @@ interface Row {
 function ChartTooltip({ active, payload, label, format }: TooltipProps<number, string> & { format: (v: number, key: string) => string }) {
   if (!active || !payload?.length) return null
   return (
-    <div className="border-border bg-surface shadow-pop rounded-lg border px-3 py-2 text-xs">
+    <div className="bg-surface shadow-float rounded-xl px-3 py-2 text-xs">
       <p className="text-muted mb-1 font-medium">{label}</p>
       {payload.map((p) => (
         <p key={String(p.dataKey)} className="text-fg flex items-center gap-2">

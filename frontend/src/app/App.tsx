@@ -21,7 +21,7 @@ const CalendarPage = lazy(() => import('../features/calendar/CalendarPage'))
 const InsightsPage = lazy(() => import('../features/insights/InsightsPage').then((m) => ({ default: m.InsightsPage })))
 // Pages opened less often load on demand, keeping the first download small (performance budget: scripts/check-bundle.mjs).
 // The service worker still pre-caches them, so they open offline too.
-const AssistantPage = lazy(() => import('../features/ai/AssistantPage').then((m) => ({ default: m.AssistantPage })))
+const PlanPage = lazy(() => import('../features/planning/PlanPage').then((m) => ({ default: m.PlanPage })))
 const FocusPage = lazy(() => import('../features/focus/FocusPage').then((m) => ({ default: m.FocusPage })))
 const GoalDetailPage = lazy(() => import('../features/goals/GoalDetailPage').then((m) => ({ default: m.GoalDetailPage })))
 const GoalsPage = lazy(() => import('../features/goals/GoalsPage').then((m) => ({ default: m.GoalsPage })))
@@ -120,7 +120,8 @@ const router = createBrowserRouter([
               </Suspense>
             ),
           },
-          { path: 'assistant', element: lazyPage(<AssistantPage />) },
+          { path: 'plan', element: lazyPage(<PlanPage />) },
+          { path: 'assistant', element: <Navigate to="/plan" replace /> }, // old bookmark
           { path: 'settings', element: lazyPage(<SettingsPage />) },
           { path: '*', element: <Navigate to="/" replace /> },
         ],

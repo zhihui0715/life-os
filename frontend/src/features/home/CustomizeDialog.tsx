@@ -56,7 +56,7 @@ export function CustomizeDialog({ open, onClose }: { open: boolean; onClose: () 
         {layout.map((item, i) => {
           const name = t(`home.sections.${item.key}`)
           return (
-            <li key={item.key} className="border-border flex items-center gap-2 rounded-lg border px-3 py-1.5">
+            <li key={item.key} className="bg-sunken/70 flex items-center gap-2 rounded-xl px-3 py-2">
               <label className="flex flex-1 items-center gap-2 text-sm">
                 <input type="checkbox" checked={item.visible}
                   onChange={(e) => setLayout((l) => l.map((x, j) => (j === i ? { ...x, visible: e.target.checked } : x)))} />

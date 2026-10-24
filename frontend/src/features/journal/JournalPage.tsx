@@ -89,7 +89,7 @@ export function JournalPage() {
             <Button size="icon" variant="ghost" aria-label={t('prev')} onClick={() => go(addDays(date, -1))}>
               <ChevronLeft size={18} aria-hidden />
             </Button>
-            <h2 className="min-w-0 flex-1 text-center font-semibold sm:flex-none sm:text-left">{longDate}</h2>
+            <h2 className="min-w-0 flex-1 text-center text-[17px] font-semibold tracking-tight sm:flex-none sm:text-left">{longDate}</h2>
             <Button size="icon" variant="ghost" aria-label={t('next')} onClick={() => go(addDays(date, 1))} disabled={date >= addDays(today, 1)}>
               <ChevronRight size={18} aria-hidden />
             </Button>
@@ -129,7 +129,7 @@ export function JournalPage() {
                 <span className={cn('text-xs', dirty ? 'text-warning' : 'text-subtle')} aria-live="polite">{status}</span>
                 <span className="text-subtle inline-flex items-center gap-1 text-xs"><Lock size={12} aria-hidden />{t('private')}</span>
                 {entry.data && (
-                  <Button variant="ghost" size="sm" className="text-danger ml-auto" onClick={() => setConfirmDelete(true)}>
+                  <Button variant="ghost" size="sm" className="text-danger hover:bg-danger-soft ml-auto" onClick={() => setConfirmDelete(true)}>
                     <Trash2 size={14} aria-hidden />
                     {t('delete.button')}
                   </Button>
@@ -140,12 +140,12 @@ export function JournalPage() {
         </Card>
 
         <Card className="p-4">
-          <label className="border-border focus-within:border-accent mb-3 flex h-9 items-center gap-2 rounded-lg border px-2.5">
+          <label className="bg-fg/[0.07] focus-within:bg-fg/[0.09] mb-3 flex h-9 items-center gap-2 rounded-xl px-2.5 transition-colors">
             <Search size={15} className="text-subtle shrink-0" aria-hidden />
             <span className="sr-only">{t('search.label')}</span>
             <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('search.placeholder')} maxLength={200} className="min-w-0 flex-1 bg-transparent text-sm focus:outline-none" />
           </label>
-          <h2 className="text-subtle mb-2 text-xs font-medium tracking-wide uppercase">{q ? t('search.label') : t('recent')}</h2>
+          <h2 className="text-muted mb-2 px-1 text-[13px] font-semibold">{q ? t('search.label') : t('recent')}</h2>
           {list.isPending ? (
             <ListSkeleton rows={3} />
           ) : !list.data?.length ? (
@@ -157,7 +157,7 @@ export function JournalPage() {
                   <button
                     type="button"
                     onClick={() => go(e.entry_date)}
-                    className={cn('hover:bg-sunken w-full rounded-md px-2 py-1.5 text-left', e.entry_date === date && 'bg-accent-soft')}
+                    className={cn('hover:bg-sunken w-full rounded-xl px-2 py-1.5 text-left', e.entry_date === date && 'bg-accent-soft')}
                   >
                     <span className="flex items-center justify-between gap-2 text-sm font-medium">
                       {formatDay(e.entry_date, i18n.language, { weekday: 'short' })}

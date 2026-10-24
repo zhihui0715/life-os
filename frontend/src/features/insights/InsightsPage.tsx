@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router'
 
 import { Button } from '../../components/ui/Button'
+import { ProgressBar } from '../../components/ui/ProgressBar'
+import { Segmented } from '../../components/ui/Segments'
 import { cn } from '../../components/ui/cn'
 import { Card, ErrorState, ListSkeleton, PageHeader } from '../../components/ui/states'
 import { formatDay, formatMinutes } from '../../lib/dates'
@@ -17,7 +19,7 @@ function MetricCard({ title, formula, children, className }: { title: string; fo
   const { t } = useTranslation('insights')
   return (
     <Card className={cn('p-4', className)}>
-      <h2 className="mb-2 font-semibold">{title}</h2>
+      <h2 className="mb-2 text-[17px] font-semibold tracking-tight">{title}</h2>
       {children}
       {formula && (
         <details className="mt-2">
@@ -34,7 +36,7 @@ function MetricCard({ title, formula, children, className }: { title: string; fo
 function Big({ value, suffix, children }: { value: string; suffix?: string; children?: ReactNode }) {
   return (
     <div className="mb-1 flex flex-wrap items-baseline gap-x-2">
-      <span className="text-3xl font-semibold tracking-tight">{value}</span>
+      <span className="font-display text-[34px] leading-none font-bold tracking-tight tabular-nums">{value}</span>
       {suffix && <span className="text-subtle text-sm">{suffix}</span>}
       {children}
     </div>
@@ -57,14 +59,7 @@ export function InsightsPage() {
       <PageHeader title={t('title')} />
 
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <div role="tablist" aria-label={t('period.label')} className="flex gap-1">
-          {(['week', 'month'] as const).map((p) => (
-            <button key={p} role="tab" aria-selected={p === period} onClick={() => setPeriod(p, 0)}
-              className={cn('h-9 rounded-full px-3.5 text-sm font-medium', p === period ? 'bg-fg text-bg' : 'text-muted hover:bg-sunken hover:text-fg')}>
-              {t(`period.${p}`)}
-            </button>
-          ))}
-        </div>
+        <Segmented items={['week', 'month'] as const} value={period} onChange={(p) => setPeriod(p, 0)} label={t('period.label')} render={(p) => t(`period.${p}`)} />
         <div className="flex items-center gap-1 sm:ml-auto">
           <Button size="icon" variant="ghost" aria-label={t('period.prev')} onClick={() => setPeriod(period, offset - 1)}>
             <ChevronLeft size={18} aria-hidden />
@@ -105,7 +100,7 @@ function Body({ data, trendWeeks }: { data: Overview; trendWeeks?: { start: stri
 
         <div className="flex min-w-0 flex-col gap-4">
           <Card className="p-4">
-            <h2 className="mb-1 font-semibold">{t('trend.title')}</h2>
+            <h2 className="mb-1 text-[17px] font-semibold tracking-tight">{t('trend.title')}</h2>
             <p className="text-subtle mb-2 text-xs">{t('trend.gap')}</p>
             {trendWeeks && trendWeeks.some((w) => w.score != null) ? <ScoreTrendChart data={trendWeeks} /> : <p className="text-subtle text-sm">{t('trend.noData')}</p>}
           </Card>
@@ -183,9 +178,7 @@ function Body({ data, trendWeeks }: { data: Overview; trendWeeks?: { start: stri
                         <span className="text-muted tabular-nums">{formatMinutes(row.minutes, lang)}</span>
                       </div>
                       {/* magnitude → one hue for every bar; the dot carries the category's identity */}
-                      <div className="bg-accent-soft h-1.5 overflow-hidden rounded-full">
-                        <div className="bg-accent h-full rounded-full" style={{ width: `${(100 * row.minutes) / data.time.total_minutes}%` }} />
-                      </div>
+                      <ProgressBar value={(100 * row.minutes) / data.time.total_minutes} celebrate={false} />
                     </li>
                   ))}
                 </ul>

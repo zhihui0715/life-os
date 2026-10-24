@@ -55,6 +55,8 @@ def fill_account(api):
     ok(api.post(f"/api/v1/focus-sessions/{focus['id']}/stop", {}))
     ok(api.post(f"/api/v1/tasks/{parent['id']}/complete"))
     ok(api.post("/api/v1/activity-logs", {"title": "Gym", "duration_minutes": 45}))
+    monday = today() - timedelta(days=today().weekday())
+    ok(api.put(f"/api/v1/planning/reviews/{monday.isoformat()}", {"went_well": "Shipped", "priorities": ["Rest", "复习"]}))
     ok(api.patch("/api/v1/settings", {
         "theme": "dark", "weekly_learning_target_min": 300,
         "working_hours": {"mon": [["08:00", "12:00"], ["13:00", "17:00"]]},  # JSON object
@@ -96,7 +98,7 @@ def test_export_contains_every_table_with_counts_and_checksums(api):
     b = export(api)
     assert b["format"] == "life-os-backup" and b["format_version"] == 1
     assert set(b["data"]) == set(service.TABLES)
-    assert all(b["counts"][t] >= 1 for t in service.TABLES if t != "ai_runs"), b["counts"]
+    assert all(b["counts"][t] >= 1 for t in service.TABLES), b["counts"]
     assert b["counts"]["tasks"] == 2 and b["counts"]["task_tags"] == 2 and b["counts"]["event_exceptions"] == 1
     assert all("user_id" not in row for rows in b["data"].values() for row in rows)
     assert b["data"]["habit_logs"][0]["value"] == "12.25"  # exact decimals, not floats
@@ -213,15 +215,9 @@ def test_import_accepts_files_larger_than_the_normal_limit(api):
     assert big.status_code == 413
 
 
-def test_csv_exports_are_spreadsheet_safe(api):
-    fill_account(api)
-    res = api.get("/api/v1/backup/export/tasks.csv")
-    assert res.status_code == 200 and res.mimetype == "text/csv"
-    body = res.data.decode("utf-8-sig")
-    assert body.splitlines()[0].startswith("title,status")
-    assert "'=Outline" in body and "写作" in body
-    activity = api.get("/api/v1/backup/export/activity.csv").data.decode("utf-8-sig")
-    assert "Gym" in activity and activity.splitlines()[0].startswith("date,title,minutes")
+def test_csv_exports_are_gone(api):
+    assert api.get("/api/v1/backup/export/tasks.csv").status_code == 404
+    assert api.get("/api/v1/backup/export/activity.csv").status_code == 404
 
 
 def test_backup_requires_login(anon):
@@ -232,10 +228,32 @@ def test_backup_requires_login(anon):
 def test_backup_made_before_a_table_existed_still_restores(api):
     fill_account(api)
     b = export(api)
-    del b["data"]["ai_runs"], b["checksums"]["ai_runs"], b["counts"]["ai_runs"]  # as a Stage 6 file looked
+    del b["data"]["weekly_reviews"], b["checksums"]["weekly_reviews"], b["counts"]["weekly_reviews"]  # an older file
     p = ok(preview(api, b))
-    assert p["tables"]["ai_runs"]["in_backup"] == 0
+    assert p["tables"]["weekly_reviews"]["in_backup"] == 0
     ok(apply(api, b, p["preview_token"], replace=True))
+
+
+def _with_checksum(b, name):
+    b["checksums"][name] = service._checksum(sorted(b["data"][name], key=service._sort_key(name)))
+
+
+def test_backup_from_the_ai_era_still_restores(api):
+    """Files made while AI assistance existed carry an ai_runs section and two AI settings; both are left out."""
+    fill_account(api)
+    b = export(api)
+    b["data"]["ai_runs"] = [{"id": "5b0e4c1e-0000-4000-8000-000000000001", "kind": "daily_plan", "status": "ok"}]
+    b["checksums"]["ai_runs"] = service._checksum(b["data"]["ai_runs"])
+    for row in b["data"]["user_settings"]:
+        row.update(ai_enabled=True, ai_monthly_token_budget=300000)
+    _with_checksum(b, "user_settings")
+    p = ok(preview(api, b))
+    assert "ai_runs" not in p["tables"]
+    assert p["tables"]["user_settings"]["changed"] == 0
+    ok(apply(api, b, p["preview_token"], replace=True))
+
+    b["checksums"]["ai_runs"] = "0" * 64  # a retired section is still checked
+    assert preview(api, b).status_code == 422
 
 
 def test_verify_restore_command(app, api):

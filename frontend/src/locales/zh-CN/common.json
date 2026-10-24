@@ -10,7 +10,7 @@
     "focus": "专注",
     "insights": "洞察",
     "journal": "日记",
-    "assistant": "助手",
+    "plan": "计划",
     "settings": "设置",
     "more": "更多",
     "collapse": "收起侧边栏",
@@ -109,13 +109,6 @@
     "account_not_empty": "此账户已有数据，请先确认替换。",
     "backup_verify_failed": "恢复结果校验失败，因此未做任何更改。",
     "payload_too_large": "文件太大。",
-    "ai_unavailable": "此服务器未配置 AI。",
-    "ai_disabled": "请先在设置中开启 AI 助手。",
-    "ai_budget_exhausted": "本月 AI 额度已用完，可在设置中调高。",
-    "ai_rate_limited": "AI 服务繁忙，请稍后再试。",
-    "ai_refused": "AI 拒绝了此请求，请尝试发送不同的数据。",
-    "ai_failed": "AI 请求未成功，请重试。",
-    "ai_misconfigured": "服务器的 AI 配置有误（请检查 API 密钥和模型）。",
     "idempotency_key_reused": "此更改与另一项更改冲突。",
     "unknown": "出了点问题。"
   },
@@ -133,7 +126,7 @@
   "offline": {
     "title": "当前处于离线状态",
     "works": "你仍可查看上次访问时保存的今日任务、习惯和日程，并可完成任务、习惯打卡和快速添加任务。这些操作会保存在本设备上，恢复联网后自动发送。",
-    "needsConnection": "其他功能——日记、目标、洞察、助手和编辑——都需要联网。最近未打开过的页面可能无法加载。",
+    "needsConnection": "其他功能——日记、目标、洞察、计划和编辑——都需要联网。最近未打开过的页面可能无法加载。",
     "waiting_other": "{{count}} 项更改等待同步",
     "syncing_other": "正在同步 {{count}} 项更改…",
     "show": "显示",
@@ -151,5 +144,29 @@
       "habit_uncheck": "取消“{{label}}”的打卡"
     },
     "notSaved": "离线时不可用。"
+  },
+  "reminder": {
+    "eventSoon": "{{time}} 开始",
+    "eventNow": "马上开始",
+    "deadline": "截止时间 {{time}}",
+    "habitsTitle_one": "今天还有 {{count}} 个习惯",
+    "habitsTitle_other": "今天还有 {{count}} 个习惯",
+    "planTitle": "计划今天",
+    "planBody": "选出三件要事，排进今天。",
+    "reviewTitle": "该做每周回顾了",
+    "reviewBody": "花五分钟回顾本周，定下下周三件要事。"
+  },
+  "celebrate": {
+    "allDone": "今天的事全部完成！🎉",
+    "streak": "🔥 {{name}} 连续 {{count}} 天！"
+  },
+  "create": {
+    "title": "新建",
+    "hint": "轻点查看选项，长按直接新建任务",
+    "task": "任务",
+    "event": "日程",
+    "habit": "习惯",
+    "journal": "日记",
+    "tomato": "番茄钟"
   }
 }

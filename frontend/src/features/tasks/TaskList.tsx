@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '../../components/ui/Button'
+import { DoneArt } from '../../components/ui/Illustrations'
 import { EmptyState, ErrorState, ListSkeleton } from '../../components/ui/states'
 import { errorMessage } from '../../lib/errors'
 import type { Category, Task, TaskFilters } from '../../lib/types'
@@ -38,6 +39,7 @@ export function TaskList({ filters, categories, onOpen, limit, compact, empty, h
     const view = filters.view ?? 'all'
     return (
       <EmptyState
+        art={<DoneArt />}
         icon={CheckSquare}
         title={empty?.title ?? t(`empty.${view}.title`)}
         body={empty ? empty.body : t(`empty.${view}.body`)}
@@ -47,7 +49,7 @@ export function TaskList({ filters, categories, onOpen, limit, compact, empty, h
 
   return (
     <>
-      <ul className="divide-border divide-y">
+      <ul className="divide-border stagger divide-y">
         {tasks.map((task) => (
           <TaskRow
             key={task.id}

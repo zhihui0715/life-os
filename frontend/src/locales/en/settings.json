@@ -22,13 +22,10 @@
   "signedInAs": "Signed in as {{email}}",
   "backup": {
     "title": "Backup & restore",
-    "help": "Download everything you've entered as one file, and keep it somewhere safe. You can restore it here or into a new account later.",
-    "download": "Download backup",
+    "help": "Everything you've entered, in one file that Life OS can restore — here or into a new account. Keep it somewhere safe.",
+    "download": "Download backup file",
     "restore": "Restore from file…",
     "checking": "Checking file…",
-    "csvHelp": "Spreadsheet copies (for viewing in Excel — these can't be restored):",
-    "csvTasks": "Tasks (CSV)",
-    "csvActivity": "Activity log (CSV)",
     "notJson": "That file isn't a backup file (expected a .json file downloaded from Life OS).",
     "previewTitle": "Check before restoring",
     "fileFrom": "Backup from {{date}}, account {{email}}.",
@@ -61,7 +58,75 @@
       "focus_sessions": "Focus sessions",
       "categories": "Categories",
       "tags": "Tags",
-      "user_settings": "Settings"
+      "user_settings": "Settings",
+      "weekly_reviews": "Weekly reviews"
+    },
+    "pdfTitle": "Readable report (PDF)",
+    "pdfHelp": "Your goals, tasks, habits, schedule, journal and weekly reviews, laid out to read, print or share. It can't be restored from.",
+    "pdfDownload": "Download PDF report",
+    "fileTitle": "Backup file (for restoring)"
+  },
+  "sound": {
+    "label": "Sounds & haptics",
+    "help": "Soft clicks, a chime when you finish a task or habit, and a bell when a focus session ends. Saved on this device."
+  },
+  "reminders": {
+    "label": "Reminders",
+    "help": "Notifications from Life OS while it's open — in a browser tab, or the installed app on a computer. On a phone they arrive while the app is open. Saved on this device.",
+    "denied": "Notifications are blocked for this site. Allow them in your browser's site settings, then switch this on again.",
+    "unsupported": "This browser can't show notifications.",
+    "events": "Before events",
+    "off": "Off",
+    "minutes": "{{count}} min",
+    "deadlines": "30 minutes before a task's deadline",
+    "habits": "Habits still to do",
+    "plan": "Plan my day",
+    "review": "Weekly review (last day of your week)",
+    "time": "Time for {{what}}",
+    "test": "Send a test reminder",
+    "testTitle": "Reminders are on",
+    "testBody": "This is how Life OS will remind you."
+  },
+  "appearance": {
+    "title": "Appearance",
+    "accent": "Accent colour",
+    "avatar": "Your avatar",
+    "avatarHelp": "Shown in your greeting and the sidebar. Tap it again to remove.",
+    "credit": "{{title}} — {{artist}}, {{year}}. Public domain, Art Institute of Chicago",
+    "kinds": {
+      "plain": "Plain",
+      "gradient": "Gradients",
+      "art": "Famous art",
+      "paper": "Paper"
+    },
+    "accents": {
+      "blue": "Blue",
+      "indigo": "Indigo",
+      "purple": "Purple",
+      "pink": "Pink",
+      "red": "Red",
+      "orange": "Orange",
+      "yellow": "Yellow",
+      "green": "Green",
+      "teal": "Teal",
+      "graphite": "Graphite"
+    },
+    "backgrounds": {
+      "plain": "Plain",
+      "sunrise": "Sunrise",
+      "ocean": "Ocean",
+      "lavender": "Lavender",
+      "mint": "Mint",
+      "midnight": "Midnight",
+      "great-wave": "The Great Wave",
+      "water-lilies": "Water Lilies",
+      "bedroom": "The Bedroom",
+      "plum-garden": "Plum Garden",
+      "grande-jatte": "La Grande Jatte",
+      "rainy-day": "Rainy Day",
+      "dots": "Dotted",
+      "grid": "Grid",
+      "linen": "Linen"
     }
   }
 }
