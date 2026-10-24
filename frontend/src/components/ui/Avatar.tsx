@@ -5,7 +5,7 @@ import { isBookAvatar } from './bookAvatars'
 // The book characters are drawings: they load the first time one is shown, not with the app
 const BookAvatar = lazy(() => import('./BookAvatar').then((m) => ({ default: m.BookAvatar })))
 
-/** Your chosen emoji or book character (Settings → Appearance), or your initial, in a soft circle that pops in. */
+/** Your chosen book character (Settings → Appearance), or your initial, in a soft circle that pops in. */
 export function Avatar({ emoji, name, size = 52 }: { emoji: string | null; name: string; size?: number }) {
   if (isBookAvatar(emoji)) {
     return (
@@ -20,9 +20,9 @@ export function Avatar({ emoji, name, size = 52 }: { emoji: string | null; name:
     <span
       aria-hidden
       className="bg-accent-soft text-accent animate-pop flex shrink-0 items-center justify-center rounded-full font-bold"
-      style={{ width: size, height: size, fontSize: emoji ? size * 0.52 : size * 0.42 }}
+      style={{ width: size, height: size, fontSize: size * 0.42 }}
     >
-      {emoji ?? name.trim().charAt(0).toUpperCase()}
+      {name.trim().charAt(0).toUpperCase()}
     </span>
   )
 }

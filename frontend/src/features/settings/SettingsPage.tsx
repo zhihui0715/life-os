@@ -17,6 +17,7 @@ import { ME_KEY, useAuth, useMe } from '../auth/AuthProvider'
 import { ReportEmailCard } from '../reports/ReportEmailCard'
 import { BackupCard } from './BackupCard'
 import { AppearanceCard } from './AppearanceCard'
+import { PasswordForm } from './PasswordForm'
 import { ReminderCard } from './ReminderCard'
 import { ScoreSettingsCard } from './ScoreSettingsCard'
 import { WorkingHoursCard } from './WorkingHoursCard'
@@ -113,6 +114,7 @@ export function SettingsPage() {
       <Card className="p-5">
         <h2 className="mb-1 text-[17px] font-semibold tracking-tight">{t('sections.account')}</h2>
         <p className="text-muted mb-4">{t('signedInAs', { email: me.user.email })}</p>
+        <PasswordForm />
         <Button onClick={() => logout()}>
           <LogOut size={16} aria-hidden />
           {t('common:actions.logout')}

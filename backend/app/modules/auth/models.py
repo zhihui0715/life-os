@@ -81,7 +81,7 @@ class UserSettings(db.Model):
     theme: Mapped[str] = mapped_column(String(10), nullable=False, default="system", server_default="system")
     accent: Mapped[str] = mapped_column(String(12), nullable=False, default="blue", server_default="blue")
     background: Mapped[str] = mapped_column(String(20), nullable=False, default="plain", server_default="plain")
-    avatar: Mapped[str | None] = mapped_column(String(16))  # an emoji or symbol shown in the greeting; NULL = initial
+    avatar: Mapped[str | None] = mapped_column(String(16))  # a book character ("book-1" … "book-8") shown in the greeting; NULL = initial
     # {"mon": [["09:00", "18:00"]], ...} in the user's timezone. NULL = use DEFAULT_WORKING_HOURS.
     working_hours: Mapped[dict | None] = mapped_column(JSONB)
     # Life Balance Score: {"tasks": 30, ..., "enabled": {"tasks": true, ...}}. NULL = DEFAULT_SCORE_WEIGHTS.

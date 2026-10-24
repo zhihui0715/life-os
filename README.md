@@ -137,7 +137,7 @@ Marot's library, a geometry engraving, an astrolabe, a manuscript leaf, a fern),
 Settings → **Appearance** (saved to your account): ten accent colours, a background — plain, five soft gradients,
 six public-domain masterpieces (Hokusai, Monet, Van Gogh, Hiroshige, Seurat, Caillebotte; CC0 from the Art Institute
 of Chicago, credits in `frontend/public/wallpapers/credits.json` and under the picker) or three paper textures — and
-an avatar for your greeting: one of eight cartoon book characters, or an emoji. Milestones get confetti: clearing today's list, a full set of tomatoes, a finished
+an avatar for your greeting: one of eight cartoon book characters. Milestones get confetti: clearing today's list, a full set of tomatoes, a finished
 weekly review, habit streaks of 3, 7, 14, 30… days.
 
 **Tomato clock** (Focus → 🍅 Tomato): 25 min focus → 5 min break, a longer break after every fourth tomato (lengths

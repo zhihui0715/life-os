@@ -86,7 +86,9 @@
     "email": "Email",
     "password": "Password",
     "signIn": "Sign in",
-    "signingIn": "Signing in…"
+    "signingIn": "Signing in…",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "language": {
     "label": "Language",
@@ -112,7 +114,8 @@
     "backup_verify_failed": "The restore couldn't be verified, so nothing was changed.",
     "payload_too_large": "The file is too large.",
     "idempotency_key_reused": "This change conflicted with another one.",
-    "unknown": "Something went wrong."
+    "unknown": "Something went wrong.",
+    "wrong_password": "Your current password is incorrect."
   },
   "validation": {
     "missing": "This field is required.",
@@ -123,7 +126,10 @@
     "less_than_equal": "Value is too large.",
     "duplicate": "This name is already in use.",
     "email": "Enter a valid email address.",
-    "invalid": "This value is not valid."
+    "invalid": "This value is not valid.",
+    "wrong_password": "This password is incorrect.",
+    "password_too_short": "Use at least {{min}} characters.",
+    "password_mismatch": "The passwords don't match."
   },
   "offline": {
     "title": "You're offline",

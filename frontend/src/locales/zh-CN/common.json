@@ -86,7 +86,9 @@
     "email": "邮箱",
     "password": "密码",
     "signIn": "登录",
-    "signingIn": "登录中…"
+    "signingIn": "登录中…",
+    "showPassword": "显示密码",
+    "hidePassword": "隐藏密码"
   },
   "language": {
     "label": "语言",
@@ -112,7 +114,8 @@
     "backup_verify_failed": "恢复结果校验失败，因此未做任何更改。",
     "payload_too_large": "文件太大。",
     "idempotency_key_reused": "此更改与另一项更改冲突。",
-    "unknown": "出了点问题。"
+    "unknown": "出了点问题。",
+    "wrong_password": "当前密码不正确。"
   },
   "validation": {
     "missing": "此项为必填。",
@@ -123,7 +126,10 @@
     "less_than_equal": "数值太大。",
     "duplicate": "该名称已被使用。",
     "email": "请输入有效的邮箱地址。",
-    "invalid": "该值无效。"
+    "invalid": "该值无效。",
+    "wrong_password": "密码不正确。",
+    "password_too_short": "至少需要 {{min}} 个字符。",
+    "password_mismatch": "两次输入的密码不一致。"
   },
   "offline": {
     "title": "当前处于离线状态",

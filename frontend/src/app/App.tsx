@@ -7,7 +7,6 @@ import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation } fr
 import { ToastProvider } from '../components/ui/Toast'
 import { ErrorState, ListSkeleton } from '../components/ui/states'
 import { AuthProvider, ME_KEY, useAuth } from '../features/auth/AuthProvider'
-import { LoginPage } from '../features/auth/LoginPage'
 import { HabitsPage } from '../features/habits/HabitsPage'
 import { HomePage } from '../features/home/HomePage'
 import { TasksPage } from '../features/tasks/TasksPage'
@@ -24,6 +23,7 @@ const InsightsPage = lazyWithReload(() => import('../features/insights/InsightsP
 // The service worker still pre-caches them, so they open offline too.
 const GraphPage = lazyWithReload(() => import('../features/graph/GraphPage').then((m) => ({ default: m.GraphPage })))
 const LandingPage = lazyWithReload(() => import('../features/landing/LandingPage'))
+const LoginPage = lazyWithReload(() => import('../features/auth/LoginPage').then((m) => ({ default: m.LoginPage })))
 const ReportsPage = lazyWithReload(() => import('../features/reports/ReportsPage').then((m) => ({ default: m.ReportsPage })))
 const PlanPage = lazyWithReload(() => import('../features/planning/PlanPage').then((m) => ({ default: m.PlanPage })))
 const FocusPage = lazyWithReload(() => import('../features/focus/FocusPage').then((m) => ({ default: m.FocusPage })))
@@ -82,13 +82,7 @@ function AuthGate() {
   }
   // Signed out: the landing page at the front door, the sign-in form anywhere else (/login, or a deep link)
   if (me === null)
-    return location.pathname === '/' ? (
-      <Suspense fallback={null}>
-        <LandingPage />
-      </Suspense>
-    ) : (
-      <LoginPage />
-    )
+    return <Suspense fallback={null}>{location.pathname === '/' ? <LandingPage /> : <LoginPage />}</Suspense>
   return <AppShell />
 }
 

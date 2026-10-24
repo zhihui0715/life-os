@@ -73,7 +73,7 @@ test('logout removes the offline copy', async ({ browser }) => {
   const { E2E_USER } = await import('./helpers')
   await page.goto('/login')
   await page.getByLabel('Email').fill(E2E_USER.email)
-  await page.getByLabel('Password').fill(E2E_USER.password)
+  await page.getByLabel('Password', { exact: true }).fill(E2E_USER.password)
   await page.getByRole('button', { name: 'Sign in' }).click()
   await expect(page.getByRole('heading', { name: /Good (morning|afternoon|evening)/ })).toBeVisible()
   await page.waitForTimeout(1500)

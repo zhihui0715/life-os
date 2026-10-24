@@ -16,9 +16,9 @@
     "help": "Decides when your day starts and ends for due dates and habits."
   },
   "weekStart": {
-    "label": "Week starts on",
     "1": "Monday",
-    "7": "Sunday"
+    "7": "Sunday",
+    "label": "Week starts on"
   },
   "signedInAs": "Signed in as {{email}}",
   "backup": {
@@ -155,7 +155,6 @@
       "turnOff": "Turn off",
       "accentNote": "Academia uses its own ink and brass colours."
     },
-    "books": "Book friends",
     "bookNames": {
       "book-1": "The Professor",
       "book-2": "The Graduate",
@@ -166,5 +165,15 @@
       "book-7": "The Librarian",
       "book-8": "The Sleepy Reader"
     }
+  },
+  "password": {
+    "title": "Change password",
+    "current": "Current password",
+    "new": "New password",
+    "confirm": "Repeat new password",
+    "help": "At least {{min}} characters. Your other devices will be signed out.",
+    "save": "Change password",
+    "saving": "Changing…",
+    "changed": "Password changed. Other devices were signed out."
   }
 }

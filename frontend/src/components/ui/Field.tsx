@@ -1,4 +1,6 @@
-import { useId, type InputHTMLAttributes, type ReactNode, type Ref, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
+import { useId, useState, type InputHTMLAttributes, type ReactNode, type Ref, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { cn } from './cn'
 
@@ -42,6 +44,26 @@ export function Field({ label, error, help, children, className }: FieldProps) {
 
 export function Input({ className, ref, ...props }: InputHTMLAttributes<HTMLInputElement> & { ref?: Ref<HTMLInputElement> }) {
   return <input ref={ref} className={cn(control, 'h-11', className)} {...props} />
+}
+
+/** A password box with an eye button that shows or hides what you typed. */
+export function PasswordInput({ className, ref, ...props }: Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & { ref?: Ref<HTMLInputElement> }) {
+  const { t } = useTranslation()
+  const [shown, setShown] = useState(false)
+  return (
+    <div className="relative">
+      <input ref={ref} type={shown ? 'text' : 'password'} className={cn(control, 'h-11 pr-11', className)} {...props} />
+      <button
+        type="button"
+        onClick={() => setShown((v) => !v)}
+        aria-label={shown ? t('auth.hidePassword') : t('auth.showPassword')}
+        aria-pressed={shown}
+        className="text-subtle hover:text-fg absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-xl"
+      >
+        {shown ? <EyeOff size={18} aria-hidden /> : <Eye size={18} aria-hidden />}
+      </button>
+    </div>
+  )
 }
 
 export function Textarea({

@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 import { LanguageSwitcher } from '../../app/LanguageSwitcher'
 import { Button } from '../../components/ui/Button'
-import { Field, Input } from '../../components/ui/Field'
+import { Field, Input, PasswordInput } from '../../components/ui/Field'
 import { Card } from '../../components/ui/states'
 import { errorMessage } from '../../lib/errors'
 import { useAuth } from './AuthProvider'
@@ -39,7 +39,7 @@ export function LoginPage() {
             {(a) => <Input {...a} type="email" autoComplete="username" autoFocus {...register('email')} />}
           </Field>
           <Field label={t('auth.password')} error={err('password')}>
-            {(a) => <Input {...a} type="password" autoComplete="current-password" {...register('password')} />}
+            {(a) => <PasswordInput {...a} autoComplete="current-password" {...register('password')} />}
           </Field>
           {login.error && (
             <p role="alert" className="bg-danger-soft text-danger animate-pop rounded-xl px-3.5 py-2.5">

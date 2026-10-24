@@ -149,15 +149,12 @@ class SettingsPatch(InputModel):
     @field_validator("avatar")
     @classmethod
     def valid_avatar(cls, v):
-        """One emoji or symbol (a few code points for flags and skin tones), or one of the drawn book characters
-        ("book-1" … "book-8"); "" clears it."""
+        """One of the drawn book characters ("book-1" … "book-8"); "" clears it."""
         if v is None:
             return v
         v = v.strip()
-        if BOOK_AVATAR.fullmatch(v):
-            return v
-        if v and (any(ch.isspace() for ch in v) or any(ch.isascii() and ch.isalnum() for ch in v)):
-            raise ValueError("avatar must be an emoji or symbol")
+        if v and not BOOK_AVATAR.fullmatch(v):
+            raise ValueError("avatar must be one of the book characters")
         return v or None
 
     @field_validator("score_weights")

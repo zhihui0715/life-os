@@ -507,7 +507,9 @@ const botanical: Painter = (g, w, h, small, rand) => {
   g.fillRect(0, 0, w, h)
   g.fillStyle = grain(g)
   g.fillRect(0, 0, w, h)
-  const len = Math.max(160, small * 0.36)
+  // On a phone the page's header and buttons fill the corners, so the ferns stay small there and the labels are left out
+  const phone = w < 700
+  const len = phone ? 110 : Math.max(160, small * 0.36)
   const plates: [number, number, number, number, string][] = [
     [w * 0.03, h * 0.95, -1.15, 0.12, '#55663a'],
     [w * 0.08, h * 0.98, -0.85, -0.1, '#6b5530'],
@@ -538,8 +540,10 @@ const botanical: Painter = (g, w, h, small, rand) => {
     g.fillRect(60, -8, 48, 16)
     g.restore()
   }
-  label(w * 0.06, h * 0.08, 'Pteridium aquilinum', 'Plate IV · No. 112')
-  label(w * 0.76, h * 0.84, 'Polypodium vulgare', 'Plate VII · No. 205')
+  if (!phone) {
+    label(w * 0.06, h * 0.08, 'Pteridium aquilinum', 'Plate IV · No. 112')
+    label(w * 0.76, h * 0.84, 'Polypodium vulgare', 'Plate VII · No. 205')
+  }
   vignette(g, w, h, '110,80,40', 0.22)
 }
 

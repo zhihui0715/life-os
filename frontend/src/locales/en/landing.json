@@ -225,6 +225,32 @@
       ],
       "left": "Filter by goal",
       "right": "Tap to focus"
+    },
+    "tiles": {
+      "tasks": [
+        "Draft chapter 3",
+        "Meet supervisor",
+        "Cite sources",
+        "Return books"
+      ],
+      "days": [
+        "M",
+        "T",
+        "W",
+        "T",
+        "F"
+      ],
+      "goal": "Finish my thesis",
+      "milestones": [
+        "Ethics approval",
+        "Chapter 3",
+        "Viva"
+      ],
+      "habit": "Read 30 pages",
+      "streak": "12-day streak",
+      "focusOn": "Draft chapter 3",
+      "journal": "Long day in the library. Chapter 3 is finally taking shape.",
+      "balance": "Life balance"
     }
   },
   "band": {

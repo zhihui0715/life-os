@@ -117,7 +117,7 @@ export default function LandingPage() {
         <Reports />
         <ADay />
 
-        <section id="studies" className={`l-studies l-open ${DARK_SCENES.has(study) ? '' : 'light'}`} aria-labelledby="studies-title">
+        <section id="studies" className={`l-studies l-sheet l-open ${DARK_SCENES.has(study) ? '' : 'light'}`} aria-labelledby="studies-title">
           <SceneCanvas key={study} scene={study} />
           <div className="s-text">
             <h2 id="studies-title" className="s-title" data-rise>
@@ -158,7 +158,7 @@ export default function LandingPage() {
           <h2 id="band-title" className="sr-only">
             {t('rooms.title')}
           </h2>
-          <div className="l-band l-open" aria-hidden>
+          <div className="l-band" aria-hidden>
             {[0, 1].map((copy) => (
               <div key={copy} className="track">
                 {(t('band.names', { returnObjects: true }) as string[]).map((n) => (
@@ -195,7 +195,7 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="l-footer">
+      <footer className="l-footer l-sheet">
         {/* The name, built from blocks in the study's colours, each labelled with what it is */}
         <div className="l-blocks" data-play>
           {BLOCKS.map((b, i) =>
@@ -528,7 +528,7 @@ function JournalToReport() {
     }
   }, [t])
   return (
-    <section id="day-page" className="l-split l-open" aria-labelledby="journal-title">
+    <section id="day-page" className="l-split l-sheet l-open" aria-labelledby="journal-title">
       <h2 id="journal-title" className="sr-only">
         {t('journal.left')} {t('journal.right')}
       </h2>
@@ -628,7 +628,7 @@ function Reports() {
   ]
   const most = Math.max(...f.time)
   return (
-    <section id="reports" className="l-pinned" aria-labelledby="reports-title">
+    <section id="reports" className="l-pinned l-sheet" aria-labelledby="reports-title">
       <h2 id="reports-title" className="p-title" data-rise>
         {t('reports.title')}
       </h2>
@@ -746,7 +746,7 @@ function ADay() {
     { bg: 'var(--sage)', fg: 'var(--ink)', clause: t('day.s4') },
   ]
   return (
-    <section id="day" className="l-strip" aria-labelledby="day-title" data-play>
+    <section id="day" className="l-strip l-sheet" aria-labelledby="day-title" data-play>
       {fields.map((f, i) => (
         <div key={i} style={{ background: f.bg, color: f.fg, '--f': i } as CSSProperties}>
           {i === 0 && <h2 id="day-title">{t('day.title')}</h2>}
@@ -794,7 +794,7 @@ function DayCard({ stage }: { stage: number }) {
 function Rooms() {
   const { t } = useTranslation('landing')
   return (
-    <section id="rooms" className="l-rooms" aria-labelledby="rooms-title">
+    <section id="rooms" className="l-rooms l-sheet" aria-labelledby="rooms-title">
       <h2 id="rooms-title" data-rise>
         {t('rooms.title')}
       </h2>
@@ -829,12 +829,14 @@ function Rooms() {
 
 /** A small, true piece of each room's screen */
 function RoomPicture({ room }: { room: (typeof ROOMS)[number] }) {
+  const { t } = useTranslation('landing')
+  const list = (key: string) => t(`rooms.tiles.${key}`, { returnObjects: true }) as string[]
   const box = 'w-full p-3'
   switch (room) {
     case 'tasks':
       return (
         <div data-ui className={box} aria-hidden>
-          {['Draft chapter 3', 'Meet supervisor', 'Cite sources', 'Return books'].map((x, i) => (
+          {list('tasks').map((x, i) => (
             <div key={x} className="flex items-center gap-2 py-1.5">
               <span className="pop h-3.5 w-3.5 rounded-full border-2" style={{ borderColor: ['#d70015', '#ff9f0a', '#ff9f0a', '#d9a400'][i], '--k': i } as CSSProperties} />
               <span className="truncate text-[12px] font-medium">{x}</span>
@@ -846,7 +848,7 @@ function RoomPicture({ room }: { room: (typeof ROOMS)[number] }) {
       return (
         <div data-ui className={box} aria-hidden>
           <div className="grid grid-cols-5 gap-1 text-center text-[10px] text-[#5f513f]">
-            {['M', 'T', 'W', 'T', 'F'].map((d, i) => (
+            {list('days').map((d, i) => (
               <span key={i}>{d}</span>
             ))}
           </div>
@@ -865,12 +867,12 @@ function RoomPicture({ room }: { room: (typeof ROOMS)[number] }) {
         <div data-ui className={box} aria-hidden>
           <div className="flex items-center gap-2">
             <Seal size={26} />
-            <span className="text-[12px] font-semibold">Finish my thesis</span>
+            <span className="text-[12px] font-semibold">{t('rooms.tiles.goal')}</span>
           </div>
           <div className="mt-2 h-2 rounded-full bg-[#efe5d0]">
             <div className="widen h-2 w-[55%] rounded-full bg-[#7a2a22]" />
           </div>
-          {['Ethics approval', 'Chapter 3', 'Viva'].map((m, i) => (
+          {list('milestones').map((m, i) => (
             <div key={m} className="mt-1.5 flex items-center gap-1.5 text-[11px]">
               <span className={`pop h-2.5 w-2.5 ${i === 0 ? 'bg-[#c9a25a]' : 'border border-[#c9a25a]'}`} style={{ '--k': i, rotate: '45deg' } as CSSProperties} />
               {m}
@@ -881,14 +883,14 @@ function RoomPicture({ room }: { room: (typeof ROOMS)[number] }) {
     case 'habits':
       return (
         <div data-ui className={box} aria-hidden>
-          <div className="text-[12px] font-semibold">Read 30 pages</div>
+          <div className="text-[12px] font-semibold">{t('rooms.tiles.habit')}</div>
           <div className="mt-2 flex gap-1">
             {[1, 1, 1, 0, 1, 1, 1].map((d, i) => (
               <span key={i} className="pop h-5 flex-1 rounded" style={{ background: d ? '#ff7a3d' : '#efe5d0', '--k': i } as CSSProperties} />
             ))}
           </div>
           <div className="mt-2 flex items-center gap-1 text-[11px] text-[#5f513f]">
-            <Flame size={11} /> 12-day streak
+            <Flame size={11} /> {t('rooms.tiles.streak')}
           </div>
         </div>
       )
@@ -902,7 +904,7 @@ function RoomPicture({ room }: { room: (typeof ROOMS)[number] }) {
               16:20
             </text>
           </svg>
-          <div className="mt-1 text-[11px] text-[#5f513f]">Draft chapter 3</div>
+          <div className="mt-1 text-[11px] text-[#5f513f]">{t('rooms.tiles.focusOn')}</div>
         </div>
       )
     case 'journal':
@@ -913,13 +915,13 @@ function RoomPicture({ room }: { room: (typeof ROOMS)[number] }) {
               <span key={m} className="pop h-5 w-5 rounded-full" style={{ background: m === 4 ? '#7a2a22' : '#efe5d0', '--k': m } as CSSProperties} />
             ))}
           </div>
-          <p className="mt-2 text-[11px] leading-snug text-[#3a2c1c]">Long day in the library. Chapter 3 is finally taking shape.</p>
+          <p className="mt-2 text-[11px] leading-snug text-[#3a2c1c]">{t('rooms.tiles.journal')}</p>
         </div>
       )
     case 'insights':
       return (
         <div data-ui className={box} aria-hidden>
-          <div className="text-[11px] text-[#5f513f]">Life balance</div>
+          <div className="text-[11px] text-[#5f513f]">{t('rooms.tiles.balance')}</div>
           <div className="text-[24px] font-bold">72</div>
           <div className="mt-1 flex h-14 items-end gap-1.5">
             {[60, 82, 48, 74].map((h, i) => (
