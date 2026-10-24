@@ -1,4 +1,7 @@
 @import 'tailwindcss';
+/* The landing page builds its own utilities into its own stylesheet (styles/landing.css), so visitors who never see
+   it signed in don't carry them. */
+@source not './features/landing';
 @import '@fontsource-variable/inter';
 @import './styles/tokens.css';
 @import './styles/accents.css';

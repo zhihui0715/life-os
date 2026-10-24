@@ -1,3 +1,4 @@
+import re
 from datetime import time
 from typing import Literal
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
@@ -22,6 +23,9 @@ from app.modules.auth.models import (
 
 bp = Blueprint("settings", __name__, url_prefix="/api/v1/settings")
 
+REPORT_KINDS = ("day", "week", "month")  # app/modules/reports
+BOOK_AVATAR = re.compile(r"book-[1-8]")  # the drawn book characters (frontend/src/components/ui/BookAvatar.tsx)
+
 
 def settings_to_dict(s: UserSettings) -> dict:
     return {
@@ -36,6 +40,7 @@ def settings_to_dict(s: UserSettings) -> dict:
         "score_weights": s.score_weights or DEFAULT_SCORE_WEIGHTS,
         "weekly_learning_target_min": s.weekly_learning_target_min,
         "dashboard_layout": dashboard_layout(s),
+        "report_emails": {k: bool((s.report_emails or {}).get(k)) for k in REPORT_KINDS},
     }
 
 
@@ -110,7 +115,7 @@ class SettingsPatch(InputModel):
     locale: Literal["en", "zh-CN"] | None = None
     timezone: str | None = Field(default=None, max_length=64)
     week_start: int | None = Field(default=None, ge=1, le=7)
-    theme: Literal["system", "light", "dark", "cosmos"] | None = None
+    theme: Literal["system", "light", "dark", "academia"] | None = None
     accent: str | None = None
     background: str | None = None
     avatar: str | None = Field(default=None, max_length=16)
@@ -118,6 +123,14 @@ class SettingsPatch(InputModel):
     score_weights: dict | None = None
     weekly_learning_target_min: int | None = Field(default=None, ge=0, le=10_080)
     dashboard_layout: list | None = None
+    report_emails: dict | None = None
+
+    @field_validator("report_emails")
+    @classmethod
+    def valid_report_emails(cls, v):
+        if v is not None and (set(v) - set(REPORT_KINDS) or any(not isinstance(x, bool) for x in v.values())):
+            raise ValueError("report_emails takes day, week and month, each true or false")
+        return v
 
     @field_validator("accent")
     @classmethod
@@ -136,10 +149,13 @@ class SettingsPatch(InputModel):
     @field_validator("avatar")
     @classmethod
     def valid_avatar(cls, v):
-        """One emoji or symbol (a few code points for flags and skin tones); "" clears it."""
+        """One emoji or symbol (a few code points for flags and skin tones), or one of the drawn book characters
+        ("book-1" … "book-8"); "" clears it."""
         if v is None:
             return v
         v = v.strip()
+        if BOOK_AVATAR.fullmatch(v):
+            return v
         if v and (any(ch.isspace() for ch in v) or any(ch.isascii() and ch.isalnum() for ch in v)):
             raise ValueError("avatar must be an emoji or symbol")
         return v or None
@@ -187,6 +203,8 @@ def update_settings():
             continue
         if field == "weekly_learning_target_min" and value == 0:
             value = None
+        if field == "report_emails":
+            value = {**(s.report_emails or {}), **value}
         setattr(s, field, value)
     db.session.commit()
     return settings_to_dict(s)

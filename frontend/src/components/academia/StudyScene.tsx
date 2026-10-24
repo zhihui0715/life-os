@@ -1,16 +1,16 @@
 import { useEffect, useRef } from 'react'
 
-import '../../styles/cosmos.css' // the theme's styles travel with its sky: only Cosmos users download them
-import { createSky, readSkyColours } from '../../lib/cosmos/sky'
+import '../../styles/academia.css' // the theme's styles travel with its scene: only Academia users download them
+import { createScene } from '../../lib/academia/scene'
 import { activeScene } from '../../lib/theme'
 
 const FRAME_MS = 1000 / 30 // a background doesn't need 60 fps; half the battery
 
 /**
- * The Cosmos theme's sky: a fixed canvas behind everything. It follows the chosen scene and accent, drifts a little
- * with scrolling and the pointer, sleeps while the tab is hidden, and holds still under reduced motion.
+ * The Academia theme's scene: a fixed canvas behind everything. It follows the chosen scene, drifts a little with
+ * scrolling and the pointer, sleeps while the tab is hidden, and holds still under reduced motion.
  */
-export default function SpaceSky() {
+export default function StudyScene() {
   const ref = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function SpaceSky() {
     const root = document.documentElement
     const motion = window.matchMedia?.('(prefers-reduced-motion: reduce)')
     let still = !!motion?.matches
-    const sky = createSky(activeScene(root.dataset.bg ?? ''), readSkyColours())
+    const sky = createScene(activeScene(root.dataset.bg ?? ''))
     let w = 0
     let h = 0
     let pointer = { x: 0, y: 0 }
@@ -65,10 +65,10 @@ export default function SpaceSky() {
     const onScroll = () => still && paint(0)
     // the scene and colours live on <html> (lib/theme.ts)
     const mo = new MutationObserver(() => {
-      sky.set(activeScene(root.dataset.bg ?? ''), readSkyColours())
+      sky.set(activeScene(root.dataset.bg ?? ''))
       if (still) paint(0)
     })
-    mo.observe(root, { attributes: true, attributeFilter: ['data-bg', 'data-accent', 'data-theme'] })
+    mo.observe(root, { attributes: true, attributeFilter: ['data-bg'] })
 
     resize()
     start()

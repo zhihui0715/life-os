@@ -84,6 +84,23 @@ Nothing is replaced until you confirm. A restore replaces the account's data wit
 
 ⚠️ `docker compose down -v` deletes the database volume — all local data. Don't use it unless you mean to.
 
+## Reports
+
+**Reports** (in the menu) shows a day, a week or a month at a glance, next to the period before: tasks done (and on
+which days), focus time, habits, goal progress, where the time went and how the journal felt. Step back through older
+periods and download any of them as a PDF; Settings → Backup has one-tap PDFs of today, this week and this month.
+
+**By email** (optional): switch on daily, weekly or monthly reports in Settings and they arrive as a PDF — yesterday's
+each morning, last week's at the start of a new week, last month's on the 1st. The server needs an SMTP account in
+`.env` (see `SMTP_*` in `.env.example`) and the sender run every hour:
+
+```bash
+flask --app backend/wsgi.py send-reports        # cron: 0 * * * *  — or a Windows Task Scheduler hourly task
+```
+
+Each report is sent once, from 07:00 in your own time zone (`--hour` changes that). *Send me last week's now* in
+Settings checks the setup.
+
 ## Install it & use it offline
 
 The installable version is the **built** app (the dev server on :5173 deliberately has no service worker):
@@ -107,10 +124,20 @@ When a new version is built, open pages show *A new version is ready → Reload*
 
 ## Look and feel
 
+**Themes** (Settings → Theme): match the system, light, dark, or **Academia** — a scholar's study. Its five scenes set
+the mood: *Library* (leather spines by candlelight), *Chalkboard* (half-erased proofs) and *Observatory* (a brass star
+chart) are dark academia; *Parchment* (ruled paper, a coffee ring) and *Botanical* (pressed ferns) are light. Headings
+turn to EB Garamond, cards to paper or leather, buttons to an oxblood seal; the graph becomes a scholar's chart.
+Academia and its scene load only when you use it. Signed out, the app's address shows a landing page about Life OS,
+laid out as the study's rooms in colour (try the Today page, the journal-to-report demo, the report switches and the
+study picker); the sign-in form is at `/login`. Its six pictures are public-domain museum works (Rembrandt's scholar,
+Marot's library, a geometry engraving, an astrolabe, a manuscript leaf, a fern), credited on the page and in
+`frontend/public/landing/credits.json`.
+
 Settings → **Appearance** (saved to your account): ten accent colours, a background — plain, five soft gradients,
 six public-domain masterpieces (Hokusai, Monet, Van Gogh, Hiroshige, Seurat, Caillebotte; CC0 from the Art Institute
 of Chicago, credits in `frontend/public/wallpapers/credits.json` and under the picker) or three paper textures — and
-an emoji avatar for your greeting. Milestones get confetti: clearing today's list, a full set of tomatoes, a finished
+an avatar for your greeting: one of eight cartoon book characters, or an emoji. Milestones get confetti: clearing today's list, a full set of tomatoes, a finished
 weekly review, habit streaks of 3, 7, 14, 30… days.
 
 **Tomato clock** (Focus → 🍅 Tomato): 25 min focus → 5 min break, a longer break after every fourth tomato (lengths
@@ -119,11 +146,13 @@ rings at each switch. Each tomato is saved as a focus session.
 
 ## Graph view
 
-**Graph** (in the menu) shows everything still to do as a network, like Obsidian's graph view: goals are the big
-nodes with their milestones and tasks around them, subtasks hang off their tasks, `#tags` and habits link in, and
-four due-date hubs (Overdue, Today, This week, Later) pull work together by time. Colour shows urgency; overdue tasks
-glow red and pulse. Drag, pinch or scroll to zoom, tap a dot to light up its neighbours, and open it from the card.
-The same tasks are also available as a list under the graph.
+**Graph** (in the menu) shows everything still to do as a network, like Obsidian's graph view, drawn as a scholar's
+chart: goals are wax seals (a gilt ring shows progress) with their milestones and tasks around them, subtasks hang off
+their tasks, `#tags` (ribbon bookmarks) and habits (hourglasses) link in, and due-date astrolabes (Overdue, Today,
+This week, Later) pull work together by time. Colour shows urgency; overdue tasks pulse. *Orbits* lays tasks on rings
+round "now" instead, nearer = sooner. Filter to one goal or tag, a priority, or without subtasks. Drag, pinch or
+scroll to zoom, tap a dot to light up its neighbours, and open it from the card. The same tasks are also available
+as a list under the graph.
 
 ## Planning and reminders
 
@@ -137,7 +166,9 @@ to an outside service.
   tomorrow or drop), reflect (went well / to improve / one lesson), and set next week's top 3. Saved per week.
 - **Reminders** (Settings → Reminders, per device): notifications before events and deadlines, a habit nudge, a
   morning "Plan your day" and an end-of-week review reminder. They come from the app while it's open (a tab, or the
-  installed app on a computer); on a phone they arrive while the app is open.
+  installed app on a computer); on a phone they arrive while the app is open. Sounds and reminders also have one-tap
+  switches under **More** on a phone. Phones only allow notifications on a secure (https) address, and an iPhone only
+  in the app added to the Home Screen; the switch says which is in the way.
 
 ## Project layout
 

@@ -15,7 +15,8 @@
     "more": "More",
     "collapse": "Collapse sidebar",
     "expand": "Expand sidebar",
-    "graph": "Graph"
+    "graph": "Graph",
+    "reports": "Reports"
   },
   "actions": {
     "save": "Save",

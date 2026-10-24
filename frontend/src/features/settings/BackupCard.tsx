@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Download, FileText, FileUp, TriangleAlert } from 'lucide-react'
+import { Download, FileText, FileUp, ScrollText, TriangleAlert } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 
 import { Button } from '../../components/ui/Button'
 import { Dialog } from '../../components/ui/Dialog'
@@ -118,6 +119,28 @@ export function BackupCard() {
             <Download size={14} aria-hidden />
             {t('backup.pdfDownload')}
           </Button>
+        </div>
+      </div>
+
+      {/* Daily, weekly and monthly reports: the latest of each as a PDF, or open them to read */}
+      <div className="bg-sunken/70 mt-3 flex items-start gap-3.5 rounded-2xl p-4">
+        <span className="bg-accent-soft text-accent flex h-11 w-11 shrink-0 items-center justify-center rounded-xl">
+          <ScrollText size={22} aria-hidden />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="font-semibold">{t('backup.reportsTitle')}</p>
+          <p className="text-subtle mt-0.5 mb-3 text-[13px]">{t('backup.reportsHelp')}</p>
+          <div className="flex flex-wrap gap-2">
+            {(['day', 'week', 'month'] as const).map((k) => (
+              <Button key={k} size="sm" onClick={() => download(`/reports/${k}.pdf`)}>
+                <Download size={14} aria-hidden />
+                {t(`backup.reportKinds.${k}`)}
+              </Button>
+            ))}
+            <Link to="/reports" className="pressable text-accent inline-flex h-8 items-center rounded-full px-3 text-[13px] font-semibold hover:underline">
+              {t('backup.reportsOpen')}
+            </Link>
+          </div>
         </div>
       </div>
 

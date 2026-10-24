@@ -14,6 +14,7 @@ import { LOCALES } from '../../lib/i18n'
 import { onSoundChange, setSoundEnabled, soundEnabled } from '../../lib/sound'
 import type { Me, UserSettings } from '../../lib/types'
 import { ME_KEY, useAuth, useMe } from '../auth/AuthProvider'
+import { ReportEmailCard } from '../reports/ReportEmailCard'
 import { BackupCard } from './BackupCard'
 import { AppearanceCard } from './AppearanceCard'
 import { ReminderCard } from './ReminderCard'
@@ -66,7 +67,7 @@ export function SettingsPage() {
           <Field label={t('theme.label')}>
             {(a) => (
               <Select {...a} value={s.theme} onChange={(e) => save.mutate({ theme: e.target.value as UserSettings['theme'] })}>
-                {(['system', 'light', 'dark', 'cosmos'] as const).map((v) => (
+                {(['system', 'light', 'dark', 'academia'] as const).map((v) => (
                   <option key={v} value={v}>
                     {t(`theme.${v}`)}
                   </option>
@@ -105,6 +106,9 @@ export function SettingsPage() {
       <WorkingHoursCard />
       <ScoreSettingsCard />
       <BackupCard />
+      <div className="mb-4">
+        <ReportEmailCard />
+      </div>
 
       <Card className="p-5">
         <h2 className="mb-1 text-[17px] font-semibold tracking-tight">{t('sections.account')}</h2>

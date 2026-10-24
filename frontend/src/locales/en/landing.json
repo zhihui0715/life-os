@@ -1,0 +1,270 @@
+{
+  "nav": {
+    "label": "Sections",
+    "day": "Your day",
+    "reports": "Reports",
+    "studies": "Studies",
+    "rooms": "Rooms",
+    "signIn": "Sign in"
+  },
+  "hero": {
+    "title": "One notebook for your whole life",
+    "body": "Life OS keeps your tasks, calendar, goals, habits, focus sessions and journal in one quiet place, on your own server, online or off.",
+    "cta": "Sign in",
+    "today": "Today",
+    "date": "Saturday 24 October",
+    "t1": "Draft chapter 3",
+    "t1meta": "Overdue · Finish my thesis",
+    "t2": "Meet supervisor",
+    "t2meta": "14:00 · Room 2.14",
+    "t3": "Cite sources in Zotero",
+    "t3meta": "Today · #research",
+    "t4": "Read Middlemarch, ch. 1–10",
+    "t4meta": "This week · #reading",
+    "habit": "Read 30 pages",
+    "streak": "12-day streak",
+    "focus": "Focus",
+    "focusOn": "Draft chapter 3 · 25:00",
+    "goal": "Finish my thesis",
+    "tick": "Mark “{{title}}” done"
+  },
+  "journal": {
+    "left": "Tonight's page,",
+    "right": "tomorrow's report",
+    "label": "Tonight's journal page",
+    "sample": "Long day in the library. Chapter 3 is finally taking shape, and the argument about the second source holds up. Tomorrow: the conclusion.",
+    "moodLabel": "Mood",
+    "moods": [
+      "Rough",
+      "Low",
+      "Okay",
+      "Good",
+      "Great"
+    ],
+    "report": "Daily report",
+    "reportDate": "Friday 23 October",
+    "done": "Tasks done",
+    "doneValue": "4 · 3 the day before",
+    "focus": "Focus",
+    "focusValue": "1 h 40 min",
+    "habits": "Habits",
+    "habitsValue": "2 of 2",
+    "mood": "Mood",
+    "page": "From your journal"
+  },
+  "reports": {
+    "title": "Reports, made for you",
+    "spanTitle": "Choose the span.",
+    "spanBody": "A day, a week or a month at a glance, each set beside the one before it.",
+    "spans": {
+      "day": "Day",
+      "week": "Week",
+      "month": "Month"
+    },
+    "emailTitle": "Have it arrive.",
+    "emailBody": "Switch on email and the report lands at seven in the morning, its PDF attached.",
+    "emailToggle": "Email it to me",
+    "timeTitle": "See where the time went.",
+    "timeBody": "Minutes by category, from the time you log and the focus sessions you finish.",
+    "timeToggle": "Show time by category",
+    "compareTitle": "Compare with last time.",
+    "compareBody": "Every number carries the one before it, so a good week is plain to see.",
+    "compareToggle": "Show the period before",
+    "kinds": {
+      "day": "Daily report",
+      "week": "Weekly report",
+      "month": "Monthly report"
+    },
+    "ranges": {
+      "day": "Friday 23 October",
+      "week": "19 – 25 October",
+      "month": "October 2026"
+    },
+    "done": "Tasks done",
+    "focus": "Focus",
+    "habits": "Habits",
+    "mood": "Mood",
+    "before": "before: {{n}}",
+    "sent": "Sent to you · 07:00",
+    "categories": {
+      "writing": "Writing",
+      "reading": "Reading",
+      "exercise": "Exercise"
+    },
+    "minutes": "{{h}} h {{m}} min"
+  },
+  "day": {
+    "title": "A day, then a week",
+    "s1": "First, it's written down.",
+    "s2": "Then it gets a morning slot.",
+    "s3": "Then you sit with it.",
+    "s4": "On Sunday, it's in the review.",
+    "card": "Draft chapter 3",
+    "inbox": "Inbox",
+    "slot": "Today · 09:00 – 10:30",
+    "goal": "Finish my thesis",
+    "tomatoes": "3 tomatoes · 1 h 15 min",
+    "doneLabel": "Done",
+    "review": "Weekly review · 23 done"
+  },
+  "studies": {
+    "title": "Choose your study",
+    "label": "Study",
+    "library": {
+      "name": "Library",
+      "body": "Leather spines by candlelight, a beam from a high window. Dark academia.",
+      "alt": "An engraved library: shelves of books to the ceiling, busts and globes above, a desk by the window."
+    },
+    "chalkboard": {
+      "name": "Chalkboard",
+      "body": "Slate green and half-erased proofs above a wooden chalk tray. Dark academia.",
+      "alt": "An engraved allegory of Geometry: a woman drawing with a compass, with a circle, a square and a triangle."
+    },
+    "observatory": {
+      "name": "Observatory",
+      "body": "A brass star chart on navy: the zodiac ring, the ecliptic, the constellations. Dark academia.",
+      "alt": "A brass astrolabe, its pierced plate of star pointers over a disc of engraved lines."
+    },
+    "parchment": {
+      "name": "Parchment",
+      "body": "Ruled cream paper with a red margin, an ink blot and a coffee ring. Light academia.",
+      "alt": "A manuscript leaf in black Latin script with initials in red and blue."
+    },
+    "botanical": {
+      "name": "Botanical",
+      "body": "Pressed ferns in sepia and green ink, with specimen labels. Light academia.",
+      "alt": "A fern frond, pale against a dark ground, printed by laying the leaf on light-sensitive paper."
+    }
+  },
+  "rooms": {
+    "title": "Every room, one notebook",
+    "tasks": {
+      "name": "Tasks",
+      "values": [
+        "Inbox",
+        "Today",
+        "Upcoming",
+        "Overdue"
+      ],
+      "left": "Subtasks",
+      "right": "Priorities"
+    },
+    "calendar": {
+      "name": "Calendar",
+      "values": [
+        "Day",
+        "Week",
+        "Month",
+        "Repeat"
+      ],
+      "left": "Working hours",
+      "right": "Time blocks"
+    },
+    "goals": {
+      "name": "Goals",
+      "values": [
+        "Milestones",
+        "Progress",
+        "Tasks",
+        "Habits"
+      ],
+      "left": "Target dates",
+      "right": "On track"
+    },
+    "habits": {
+      "name": "Habits",
+      "values": [
+        "Daily",
+        "Weekly",
+        "Streaks",
+        "Year"
+      ],
+      "left": "One-tap check-in",
+      "right": "Skips allowed"
+    },
+    "focus": {
+      "name": "Focus",
+      "values": [
+        "25 min",
+        "5 min",
+        "Bell",
+        "Log"
+      ],
+      "left": "Tomato clock",
+      "right": "Linked to tasks"
+    },
+    "journal": {
+      "name": "Journal",
+      "values": [
+        "Mood",
+        "Energy",
+        "Prompts",
+        "Lessons"
+      ],
+      "left": "A page a day",
+      "right": "Never cached"
+    },
+    "insights": {
+      "name": "Insights",
+      "values": [
+        "Balance",
+        "Trend",
+        "Time",
+        "Estimates"
+      ],
+      "left": "Your weights",
+      "right": "Week or month"
+    },
+    "graph": {
+      "name": "Graph",
+      "values": [
+        "Seals",
+        "Astrolabes",
+        "Ribbons",
+        "Orbits"
+      ],
+      "left": "Filter by goal",
+      "right": "Tap to focus"
+    }
+  },
+  "band": {
+    "names": [
+      "Tasks",
+      "Calendar",
+      "Goals",
+      "Habits",
+      "Focus",
+      "Journal",
+      "Insights",
+      "Reports",
+      "Graph"
+    ],
+    "note": "Every page links to the others: a habit counts toward its goal, a finished task lands in the week's report, and the graph shows what's still open."
+  },
+  "cta": {
+    "title": "Your notebook is waiting",
+    "body": "One account on your own server. It works offline, installs on your phone, and exports a full backup whenever you like.",
+    "button": "Sign in",
+    "scholar": "Rembrandt’s etching of a scholar standing at his desk, turned towards a glowing disc in the window."
+  },
+  "footer": {
+    "rooms": "Rooms",
+    "studies": "Studies",
+    "yours": "Yours",
+    "private": "Your data stays on your server",
+    "offline": "Works offline, syncs when back",
+    "export": "Backup and PDF reports any time",
+    "language": "Language",
+    "made": "Life OS · a personal study for your whole life",
+    "signIn": "Sign in",
+    "pictures": "Pictures, all public domain:",
+    "swatches": {
+      "seal": "Seal",
+      "brass": "Brass",
+      "botanical": "Botanical",
+      "parchment": "Parchment",
+      "observatory": "Observatory",
+      "chalkboard": "Chalkboard"
+    }
+  }
+}

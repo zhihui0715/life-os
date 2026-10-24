@@ -71,7 +71,7 @@ test('logout removes the offline copy', async ({ browser }) => {
   const context = await browser.newContext({ storageState: { cookies: [], origins: [] } })
   const page = await context.newPage()
   const { E2E_USER } = await import('./helpers')
-  await page.goto('/')
+  await page.goto('/login')
   await page.getByLabel('Email').fill(E2E_USER.email)
   await page.getByLabel('Password').fill(E2E_USER.password)
   await page.getByRole('button', { name: 'Sign in' }).click()

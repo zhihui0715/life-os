@@ -1,7 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Check, ExternalLink, Sparkles } from 'lucide-react'
+import { BookOpen, Check, ExternalLink } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { BookAvatar } from '../../components/ui/BookAvatar'
+import { SCENE_TILES } from '../../lib/academia/tiles'
+import { BOOK_AVATARS } from '../../components/ui/bookAvatars'
 import { Button } from '../../components/ui/Button'
 import { cn } from '../../components/ui/cn'
 import { useToast } from '../../components/ui/Toast'
@@ -19,22 +22,7 @@ const AVATARS = [
   '🚀', '🎯', '🎨', '📚', '🎧', '🎸', '⚽', '🧘', '☕', '🍵', '🍅', '💎',
 ]
 const KINDS: BackgroundKind[] = ['plain', 'gradient', 'art', 'paper']
-const NON_COSMOS: ThemeSetting = 'system' // where turning Cosmos off goes
-// Still previews of the space scenes for their picker tiles (the real ones are drawn live by SpaceSky). Kept here,
-// not in the stylesheet, so only the Settings page carries them.
-const SCENE_TILES: Record<Scene, string> = {
-  nebula:
-    'radial-gradient(1px 1px at 18% 22%, #fff, transparent), radial-gradient(1px 1px at 72% 64%, #fff, transparent), radial-gradient(1px 1px at 40% 80%, #fff, transparent), radial-gradient(at 30% 35%, #7b2fbf 0, transparent 50%), radial-gradient(at 70% 60%, #1f5fd1 0, transparent 50%), radial-gradient(at 25% 20%, #1aa6c2 0, transparent 35%), #060716',
-  saturn:
-    'radial-gradient(1px 1px at 20% 20%, #fff, transparent), radial-gradient(1px 1px at 60% 30%, #fff, transparent), radial-gradient(circle at 85% 88%, #e2c28e 0, #c08a52 26%, #2a1a10 34%, transparent 35%), radial-gradient(ellipse 80% 22% at 82% 86%, transparent 55%, rgb(232 211 168 / 0.55) 58%, transparent 75%), #05060d',
-  aurora:
-    'linear-gradient(180deg, transparent 72%, #010306 72%), radial-gradient(ellipse 90% 30% at 50% 38%, rgb(61 255 176 / 0.55), transparent 70%), radial-gradient(ellipse 70% 20% at 40% 25%, rgb(120 120 255 / 0.4), transparent 70%), radial-gradient(1px 1px at 30% 12%, #fff, transparent), #04121c',
-  'deep-field':
-    'radial-gradient(2px 1px at 20% 30%, #ffcf9a, transparent), radial-gradient(2px 1px at 70% 20%, #a8c4ff, transparent), radial-gradient(3px 1.5px at 45% 65%, #ffe6c7, transparent), radial-gradient(2px 1px at 80% 75%, #d7b8ff, transparent), radial-gradient(1px 1px at 30% 85%, #fff, transparent), radial-gradient(1px 1px at 60% 45%, #fff, transparent), #020207',
-  eclipse:
-    'radial-gradient(circle at 70% 30%, #020104 0, #020104 13%, #fff3dc 14%, rgb(255 213 154 / 0.5) 19%, transparent 38%), radial-gradient(1px 1px at 20% 70%, #fff, transparent), #0d0710',
-}
-
+const NON_ACADEMIA: ThemeSetting = 'system' // where turning Academia off goes
 /** Accent colour, background and avatar. Saved to the account, so every device gets the same look. */
 export function AppearanceCard() {
   const { t } = useTranslation('settings')
@@ -72,29 +60,32 @@ export function AppearanceCard() {
     save.mutate({ theme })
   }
   const art = ARTWORKS[s.background]
-  const cosmos = s.theme === 'cosmos'
-  // Cosmos shows its space scenes instead of the usual backgrounds; the selected one is what's on screen
-  const kinds: BackgroundKind[] = cosmos ? ['space'] : KINDS
-  const shown = cosmos ? activeScene(s.background) : s.background
+  const academia = s.theme === 'academia'
+  // Academia shows its scenes instead of the usual backgrounds; the selected one is what's on screen
+  const kinds: BackgroundKind[] = academia ? ['scene'] : KINDS
+  const shown = academia ? activeScene(s.background) : s.background
 
   return (
     <Card className="mb-4 p-5">
       <h2 className="text-[17px] font-semibold tracking-tight">{t('appearance.title')}</h2>
 
-      {/* Cosmos: a theme of its own, offered here where people pick a look */}
-      <div className="mt-4 flex items-center gap-3 overflow-hidden rounded-2xl p-3.5 text-white" style={{ background: SCENE_TILES.nebula }}>
-        <Sparkles size={20} className="shrink-0 drop-shadow-[0_0_6px_rgb(255_255_255/0.7)]" aria-hidden />
-        <div className="min-w-0 flex-1">
-          <p className="font-display font-semibold">{t('appearance.cosmos.title')}</p>
-          <p className="text-[12.5px] text-white/80">{t(cosmos ? 'appearance.cosmos.on' : 'appearance.cosmos.body')}</p>
+      {/* Academia: a theme of its own, offered here where people pick a look */}
+      <div className="mt-4 flex items-center gap-3 overflow-hidden rounded-2xl p-3.5 text-[#f2e8d4]" style={{ background: SCENE_TILES.library }}>
+        <BookOpen size={20} className="shrink-0 drop-shadow-[0_0_6px_rgb(255_200_120/0.7)]" aria-hidden />
+        <div className="min-w-0 flex-1 rounded-lg bg-[#1a120c]/70 px-2.5 py-1.5">
+          <p className="font-display text-[17px] font-semibold" style={{ fontFamily: "'EB Garamond Variable', Georgia, serif" }}>
+            {t('appearance.academia.title')}
+          </p>
+          <p className="text-[12.5px] text-[#f2e8d4]/85">{t(academia ? 'appearance.academia.on' : 'appearance.academia.body')}</p>
         </div>
-        <Button size="sm" variant={cosmos ? 'secondary' : 'primary'} onClick={() => pickTheme(cosmos ? NON_COSMOS : 'cosmos')} aria-pressed={cosmos}>
-          {t(cosmos ? 'appearance.cosmos.turnOff' : 'appearance.cosmos.try')}
+        <Button size="sm" variant={academia ? 'secondary' : 'primary'} onClick={() => pickTheme(academia ? NON_ACADEMIA : 'academia')} aria-pressed={academia}>
+          {t(academia ? 'appearance.academia.turnOff' : 'appearance.academia.try')}
         </Button>
       </div>
 
       <p className="text-muted mt-4 mb-2.5 text-[13px] font-medium">{t('appearance.accent')}</p>
-      <div className="flex flex-wrap gap-2.5" role="radiogroup" aria-label={t('appearance.accent')}>
+      {academia && <p className="text-subtle -mt-1.5 mb-2.5 text-[12.5px]">{t('appearance.academia.accentNote')}</p>}
+      <div className={cn('flex flex-wrap gap-2.5', academia && 'pointer-events-none opacity-40')} role="radiogroup" aria-label={t('appearance.accent')} aria-disabled={academia}>
         {ACCENTS.map((a) => (
           <button
             key={a}
@@ -138,7 +129,7 @@ export function AppearanceCard() {
                       'bg-tile relative block aspect-[4/5] overflow-hidden rounded-xl transition-shadow',
                       on ? 'shadow-[0_0_0_2.5px_var(--accent)]' : 'shadow-[0_0_0_1px_var(--border)]',
                     )}
-                    style={kind === 'space' ? { background: SCENE_TILES[b.id as Scene] } : undefined}
+                    style={kind === 'scene' ? { background: SCENE_TILES[b.id as Scene] } : undefined}
                   >
                     {kind === 'art' && (
                       <img src={`/wallpapers/thumbs/${b.id}.jpg`} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -166,6 +157,28 @@ export function AppearanceCard() {
       )}
 
       <p className="text-muted mt-6 mb-2.5 text-[13px] font-medium">{t('appearance.avatar')}</p>
+      <p className="text-subtle mb-2 text-[12.5px] font-medium">{t('appearance.books')}</p>
+      <div className="mb-4 grid grid-cols-4 gap-2 sm:grid-cols-8" role="radiogroup" aria-label={t('appearance.books')}>
+        {BOOK_AVATARS.map((b) => (
+          <button
+            key={b}
+            type="button"
+            role="radio"
+            aria-checked={s.avatar === b}
+            aria-label={t(`appearance.bookNames.${b}`)}
+            title={t(`appearance.bookNames.${b}`)}
+            onClick={() => pickAvatar(b)}
+            className={cn(
+              'pressable flex aspect-square items-center justify-center rounded-2xl',
+              s.avatar === b ? 'bg-accent-soft shadow-[inset_0_0_0_2px_var(--accent)]' : 'bg-sunken/60 hover:bg-sunken',
+            )}
+          >
+            <span className={s.avatar === b ? 'animate-pop' : undefined}>
+              <BookAvatar id={b} size={68} />
+            </span>
+          </button>
+        ))}
+      </div>
       <div className="grid grid-cols-8 gap-1.5 sm:grid-cols-12" role="radiogroup" aria-label={t('appearance.avatar')}>
         {AVATARS.map((e) => (
           <button
