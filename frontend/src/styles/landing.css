@@ -34,7 +34,8 @@
   --s3: clamp(23px, 2.3vw, 32px);
   --s4: clamp(42px, 5.2vw, 80px);
   --s5: clamp(56px, 9.5vw, 148px);
-  --serif: 'EB Garamond Variable', 'EB Garamond', Garamond, Georgia, 'Songti SC', 'STSong', serif;
+  /* Chinese has no glyphs in EB Garamond: it falls through to a Song/Ming serif, never to a sans */
+  --serif: 'EB Garamond Variable', 'EB Garamond', Garamond, Georgia, 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'Noto Serif CJK SC', SimSun, serif;
   --sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', Inter, system-ui, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 
   font-family: var(--serif);
@@ -1528,4 +1529,29 @@
   to {
     clip-path: inset(0 0 0 0 round var(--round) var(--round) 0 0);
   }
+}
+
+/* Chinese: Han characters need open tracking and a little more leading than Latin display type */
+.landing:lang(zh-CN) :is(h1, h2, h3, .half-title, .name, .clause, .l-band .track) {
+  letter-spacing: 0;
+  line-height: 1.18;
+}
+.landing:lang(zh-CN) .l-studies .name {
+  line-height: 1.05;
+}
+.landing:lang(zh-CN) .l-blocks small {
+  letter-spacing: 0.04em;
+}
+/* Chinese headings break only at punctuation, so a phrase is never split across lines */
+.landing:lang(zh-CN) :is(h1, h2, h3, .half-title, .clause, .about) {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+/* the journal page holds a full line of Chinese, not six characters */
+.landing:lang(zh-CN) .l-split .input {
+  max-width: min(100%, 30em);
+}
+.landing:lang(zh-CN) .l-split textarea {
+  font-size: var(--s2);
+  line-height: 1.6;
 }
