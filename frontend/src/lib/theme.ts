@@ -1,4 +1,4 @@
-export type ThemeSetting = 'system' | 'light' | 'dark' | 'cosmos'
+export type ThemeSetting = 'system' | 'light' | 'dark' | 'academia'
 
 export const ACCENTS = ['blue', 'indigo', 'purple', 'pink', 'red', 'orange', 'yellow', 'green', 'teal', 'graphite'] as const
 export type Accent = (typeof ACCENTS)[number]
@@ -9,18 +9,22 @@ export const ACCENT_SWATCH: Record<Accent, string> = {
   orange: '#ff9500', yellow: '#ffcc00', green: '#34c759', teal: '#30b0c7', graphite: '#8e8e93',
 }
 
-/** Space scenes, drawn live by components/cosmos/SpaceSky.tsx; only the Cosmos theme shows them. */
-export const SCENES = ['nebula', 'saturn', 'aurora', 'deep-field', 'eclipse'] as const
+/**
+ * Academia's scenes, drawn live by components/academia/StudyScene.tsx; only the Academia theme shows them. The scene
+ * sets the mood: the library, chalkboard and observatory are dark academia, parchment and botanical are light.
+ */
+export const SCENES = ['library', 'chalkboard', 'observatory', 'parchment', 'botanical'] as const
 export type Scene = (typeof SCENES)[number]
-export const DEFAULT_SCENE: Scene = 'nebula'
+export const DEFAULT_SCENE: Scene = 'library'
+export const DARK_SCENES: ReadonlySet<Scene> = new Set(['library', 'chalkboard', 'observatory'])
 
-export type BackgroundKind = 'plain' | 'gradient' | 'art' | 'paper' | 'space'
+export type BackgroundKind = 'plain' | 'gradient' | 'art' | 'paper' | 'scene'
 export const BACKGROUNDS: { id: string; kind: BackgroundKind }[] = [
   { id: 'plain', kind: 'plain' },
   ...['sunrise', 'ocean', 'lavender', 'mint', 'midnight'].map((id) => ({ id, kind: 'gradient' as const })),
   ...['great-wave', 'water-lilies', 'bedroom', 'plum-garden', 'grande-jatte', 'rainy-day'].map((id) => ({ id, kind: 'art' as const })),
   ...['dots', 'grid', 'linen'].map((id) => ({ id, kind: 'paper' as const })),
-  ...SCENES.map((id) => ({ id, kind: 'space' as const })),
+  ...SCENES.map((id) => ({ id, kind: 'scene' as const })),
 ]
 
 /** Public-domain artworks (Art Institute of Chicago, CC0) — shown with their credit when chosen. */
@@ -39,22 +43,22 @@ const media = () => window.matchMedia?.('(prefers-color-scheme: dark)')
 let current: ThemeSetting = 'system'
 let background = 'plain'
 
-/** Cosmos runs on the dark tokens plus its own layer (styles/cosmos.css), over a space scene. */
+/** Academia runs on its own tokens (styles/academia.css), light or dark as its scene says, over that scene. */
 function apply() {
   const root = document.documentElement
-  const cosmos = current === 'cosmos'
-  const dark = cosmos || current === 'dark' || (current === 'system' && media()?.matches)
+  const academia = current === 'academia'
+  const dark = academia ? DARK_SCENES.has(activeScene(background)) : current === 'dark' || (current === 'system' && media()?.matches)
   root.dataset.theme = dark ? 'dark' : 'light'
-  if (cosmos) root.dataset.look = 'cosmos'
+  if (academia) root.dataset.look = 'academia'
   else delete root.dataset.look
-  // Cosmos always has a scene behind it; the other themes never do
+  // Academia always has a scene behind it; the other themes never do
   const chosen = BACKGROUNDS.find((b) => b.id === background) ?? BACKGROUNDS[0]
-  const bg = cosmos ? (chosen.kind === 'space' ? chosen : BACKGROUNDS.find((b) => b.id === DEFAULT_SCENE)!) : chosen.kind === 'space' ? BACKGROUNDS[0] : chosen
+  const bg = academia ? (chosen.kind === 'scene' ? chosen : BACKGROUNDS.find((b) => b.id === DEFAULT_SCENE)!) : chosen.kind === 'scene' ? BACKGROUNDS[0] : chosen
   root.dataset.bg = bg.id
   root.dataset.bgKind = bg.kind
 }
 
-/** The scene Cosmos is showing (the chosen one, or the default when a non-space background is saved). */
+/** The scene Academia is showing (the chosen one, or the default when another kind of background is saved). */
 export function activeScene(saved: string): Scene {
   return (SCENES as readonly string[]).includes(saved) ? (saved as Scene) : DEFAULT_SCENE
 }
@@ -86,7 +90,7 @@ export function setLook(accent: string, chosen: string) {
 export function initTheme() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored === 'light' || stored === 'dark' || stored === 'system' || stored === 'cosmos') current = stored
+    if (stored === 'light' || stored === 'dark' || stored === 'system' || stored === 'academia') current = stored
     const look = JSON.parse(localStorage.getItem(LOOK_KEY) ?? 'null')
     if (look) setLook(look.accent, look.background)
   } catch {

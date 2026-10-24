@@ -6,7 +6,7 @@ import { Button } from '../../components/ui/Button'
 import { ChoiceChip } from '../../components/ui/Segments'
 import { Switch } from '../../components/ui/Switch'
 import { Card } from '../../components/ui/states'
-import { notify, onPrefsChange, readPrefs, remindersSupported, writePrefs, type ReminderPrefs } from '../../lib/reminders'
+import { notify, notifyBlocker, onPrefsChange, readPrefs, remindersSupported, setRemindersEnabled, writePrefs, type ReminderPrefs } from '../../lib/reminders'
 
 const LEADS = [0, 5, 10, 15, 30]
 
@@ -19,16 +19,10 @@ export function ReminderCard() {
 
   const change = (p: Partial<ReminderPrefs>) => writePrefs({ ...prefs, ...p })
 
-  const toggle = async (on: boolean) => {
-    if (on && Notification.permission !== 'granted') {
-      const result = await Notification.requestPermission()
-      setPermission(result)
-      if (result !== 'granted') return
-    }
-    change({ enabled: on })
-  }
+  const toggle = async (on: boolean) => setPermission(await setRemindersEnabled(on))
 
   const active = prefs.enabled && permission === 'granted'
+  const blocker = notifyBlocker()
 
   return (
     <Card className="mb-4 p-5">
@@ -39,8 +33,8 @@ export function ReminderCard() {
         </div>
         <Switch checked={active} onChange={toggle} labelledBy="reminders-label" disabled={!remindersSupported()} />
       </div>
-      {!remindersSupported() ? (
-        <p className="bg-warning-soft text-warning mt-4 rounded-xl px-3.5 py-2.5 text-[13px]">{t('reminders.unsupported')}</p>
+      {blocker ? (
+        <p className="bg-warning-soft text-warning mt-4 rounded-xl px-3.5 py-2.5 text-[13px]">{t(`reminders.blocked.${blocker}`)}</p>
       ) : permission === 'denied' ? (
         <p className="bg-warning-soft text-warning mt-4 rounded-xl px-3.5 py-2.5 text-[13px]">{t('reminders.denied')}</p>
       ) : null}

@@ -22,6 +22,7 @@ export interface UserSettings {
   score_weights: ScoreWeights
   weekly_learning_target_min: number | null
   dashboard_layout: { key: DashboardSectionKey; visible: boolean }[]
+  report_emails: { day: boolean; week: boolean; month: boolean }
 }
 
 export interface Me {

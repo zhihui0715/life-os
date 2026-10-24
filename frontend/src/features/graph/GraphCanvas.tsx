@@ -1,8 +1,8 @@
 import { forceCenter, forceCollide, forceLink, forceManyBody, forceRadial, forceSimulation, forceX, forceY, type Simulation, type SimulationLinkDatum, type SimulationNodeDatum } from 'd3-force'
 import { useEffect, useRef } from 'react'
 
-import { createSky, drawGlow as glowOn, readSkyColours } from '../../lib/cosmos/sky'
-import { activeScene, type Scene } from '../../lib/theme'
+import { createScene, drawGlow as glowOn, SERIF } from '../../lib/academia/scene'
+import { activeScene, DARK_SCENES, type Scene } from '../../lib/theme'
 import type { GraphLink, GraphNode, Urgency } from './api'
 import type { Layout } from './filter'
 import { KIND_VAR, LINK_DISTANCE, ORBIT, orbitRadius, radius, URGENCY_VAR } from './style'
@@ -25,8 +25,9 @@ interface Props {
 
 /**
  * Draws the graph on a canvas and runs the physics (d3-force). Drag empty space to pan, drag a node to move it,
- * pinch or scroll to zoom, tap a node to focus it and its neighbours. Drawn as deep space: goals are ringed planets,
- * due-date hubs are suns with their tasks in orbit, tasks are stars in their urgency colour, and overdue ones flare.
+ * pinch or scroll to zoom, tap a node to focus it and its neighbours. Drawn as a scholar's chart over an Academia
+ * scene: goals are wax seals (their progress a gilt ring), due dates brass astrolabes with their tasks in orbit, tasks
+ * ink dots in their urgency colour (overdue ones pulse), tags ribbon bookmarks, habits hourglasses.
  * In the orbits layout, tasks circle a central "now" on rings by urgency (the nearer, the sooner) and slowly revolve,
  * inner rings faster, with goals out on the edge.
  */
@@ -43,10 +44,17 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, layout, 
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
     let w = 0
     let h = 0
-    // the sky: in Cosmos the scene you picked, elsewhere a nebula
+    // the backdrop: in Academia the scene you picked; elsewhere the observatory by night, parchment by day
     const root = document.documentElement
-    const scene = (): Scene => (root.dataset.look === 'cosmos' ? activeScene(root.dataset.bg ?? '') : 'nebula')
-    const sky = createSky(scene(), readSkyColours())
+    const scene = (): Scene =>
+      root.dataset.look === 'academia' ? activeScene(root.dataset.bg ?? '') : root.dataset.theme === 'dark' ? 'observatory' : 'parchment'
+    const sky = createScene(scene())
+    // ink for the chart, by the darkness of the page it's drawn on
+    const inks = {
+      dark: { line: '#e9d9b8', text: 'rgba(242,232,212,0.96)', soft: 'rgba(214,198,168,0.85)', halo: 'rgba(18,12,8,0.85)', seal: '#8c2f25', brass: '#d8ad60' },
+      light: { line: '#3b2b1d', text: 'rgba(42,31,22,0.96)', soft: 'rgba(79,62,46,0.88)', halo: 'rgba(250,244,230,0.92)', seal: '#7a2a22', brass: '#9a6f2a' },
+    }
+    const darkScene = () => DARK_SCENES.has(scene())
     const resize = () => {
       const r = canvas.getBoundingClientRect()
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
@@ -71,7 +79,7 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, layout, 
     readColours()
     const mo = new MutationObserver(() => {
       readColours()
-      sky.set(scene(), readSkyColours())
+      sky.set(scene())
     })
     mo.observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-accent', 'data-bg', 'data-look'] })
 
@@ -136,42 +144,85 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, layout, 
     const nodeColour = (n: SimNode) =>
       n.kind === 'task' ? colours[URGENCY_VAR[n.urgency ?? 'none']] : n.kind === 'hub' ? colours[URGENCY_VAR[(n.ref as Urgency) ?? 'none']] : colours[KIND_VAR[n.kind]]
 
-    // a lit sphere: base colour, a highlight up-left and a shadowed limb down-right
-    const sphere = (colour: string, x: number, y: number, r: number) => {
-      ctx.fillStyle = colour
+    const circle = (x: number, y: number, r: number) => {
       ctx.beginPath()
       ctx.arc(x, y, r, 0, Math.PI * 2)
-      ctx.fill()
-      const lit = ctx.createRadialGradient(x - r * 0.4, y - r * 0.45, r * 0.05, x - r * 0.2, y - r * 0.2, r * 1.1)
-      lit.addColorStop(0, 'rgba(255,255,255,0.75)')
-      lit.addColorStop(0.35, 'rgba(255,255,255,0.12)')
-      lit.addColorStop(1, 'rgba(255,255,255,0)')
-      ctx.fillStyle = lit
-      ctx.fill()
-      const shade = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.4, x, y, r)
-      shade.addColorStop(0, 'rgba(4,5,16,0)')
-      shade.addColorStop(1, 'rgba(4,5,16,0.6)')
-      ctx.fillStyle = shade
-      ctx.fill()
     }
-    // a tilted planetary ring, drawn in two halves so the planet sits inside it
-    const ring = (colour: string, x: number, y: number, r: number, half: 'back' | 'front', alpha: number) => {
-      ctx.globalAlpha = alpha
-      ctx.strokeStyle = colour
-      ctx.lineWidth = 2.2
+    // a wax seal: a scalloped disc, lit from the top left, pressed with the goal's initial
+    const seal = (x: number, y: number, r: number, colour: string, letter: string) => {
       ctx.beginPath()
-      ctx.ellipse(x, y, r * 1.75, r * 0.5, -0.38, half === 'back' ? Math.PI : 0, half === 'back' ? Math.PI * 2 : Math.PI)
+      for (let i = 0; i <= 72; i++) {
+        const a = (i / 72) * Math.PI * 2
+        const rr = r * (1 + 0.07 * Math.sin(a * 9) + 0.03 * Math.sin(a * 23))
+        ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr)
+      }
+      const wax = ctx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r * 1.1)
+      wax.addColorStop(0, '#c4574a')
+      wax.addColorStop(0.55, colour)
+      wax.addColorStop(1, '#4a140f')
+      ctx.fillStyle = wax
+      ctx.fill()
+      ctx.strokeStyle = 'rgba(0,0,0,0.3)'
+      ctx.lineWidth = 1.4
+      circle(x, y, r * 0.68)
+      ctx.stroke()
+      ctx.strokeStyle = 'rgba(255,220,200,0.25)'
+      ctx.lineWidth = 1
+      circle(x + 0.8, y + 0.8, r * 0.68)
+      ctx.stroke()
+      ctx.fillStyle = 'rgba(255,228,210,0.85)'
+      ctx.font = `italic 600 ${r * 0.95}px ${SERIF}`
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.fillText(letter, x, y + r * 0.05)
+    }
+    // an astrolabe: a brass rim with degree ticks round a disc of the hub's colour
+    const astrolabe = (x: number, y: number, r: number, colour: string, brass: string, spin: number) => {
+      ctx.fillStyle = colour
+      const a0 = ctx.globalAlpha
+      ctx.globalAlpha = a0 * 0.22
+      circle(x, y, r)
+      ctx.fill()
+      ctx.globalAlpha = a0
+      ctx.strokeStyle = brass
+      ctx.lineWidth = 2.2
+      circle(x, y, r)
+      ctx.stroke()
+      ctx.lineWidth = 1
+      circle(x, y, r * 0.64)
+      ctx.stroke()
+      for (let i = 0; i < 24; i++) {
+        const a = spin + (i / 24) * Math.PI * 2
+        const inner = i % 6 === 0 ? r * 0.64 : r * 0.84
+        ctx.beginPath()
+        ctx.moveTo(x + Math.cos(a) * inner, y + Math.sin(a) * inner)
+        ctx.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r)
+        ctx.stroke()
+      }
+      ctx.fillStyle = colour
+      circle(x, y, r * 0.3)
+      ctx.fill()
+      ctx.strokeStyle = brass
       ctx.stroke()
     }
-    const sparkle = (x: number, y: number, r: number, spin: number) => {
+    // a ribbon bookmark with a swallowtail end
+    const ribbon = (x: number, y: number, r: number) => {
+      const hw = r * 0.62
       ctx.beginPath()
-      for (let i = 0; i < 8; i++) {
-        const a = spin + (i * Math.PI) / 4
-        const d = i % 2 === 0 ? r * 1.5 : r * 0.4
-        ctx.lineTo(x + Math.cos(a) * d, y + Math.sin(a) * d)
-      }
+      ctx.moveTo(x - hw, y - r * 1.15)
+      ctx.lineTo(x + hw, y - r * 1.15)
+      ctx.lineTo(x + hw, y + r * 1.15)
+      ctx.lineTo(x, y + r * 0.6)
+      ctx.lineTo(x - hw, y + r * 1.15)
       ctx.closePath()
-      ctx.fill()
+    }
+    const hourglass = (x: number, y: number, r: number) => {
+      ctx.beginPath()
+      ctx.moveTo(x - r, y - r)
+      ctx.lineTo(x + r, y - r)
+      ctx.lineTo(x - r, y + r)
+      ctx.lineTo(x + r, y + r)
+      ctx.closePath()
     }
     const linkSeed = simLinks.map((_, i) => ((i * 2654435761) % 1000) / 1000)
 
@@ -202,61 +253,57 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, layout, 
         fitted = true
       }
       sky.draw(ctx, time, v.x, v.y, reduce)
+      const dark = darkScene()
+      const ink = dark ? inks.dark : inks.light
       ctx.save()
       ctx.translate(w / 2 + v.x, h / 2 + v.y)
       ctx.scale(v.k, v.k)
 
       if (orbits) {
-        // the rings, each in its urgency colour and named at the top, round the sun of "now"
+        // the rings of an orrery, each in its urgency colour and named in small capitals, round the brass "now"
         for (const u of ['overdue', 'today', 'week', 'later', 'none'] as const) {
           const r = ORBIT[u]
-          ctx.globalAlpha = lit(u) ? 0.3 : 0.07
+          ctx.globalAlpha = lit(u) ? 0.45 : 0.1
           ctx.strokeStyle = colours[URGENCY_VAR[u]]
-          ctx.lineWidth = 1.2 / v.k
+          ctx.lineWidth = 1.3 / v.k
           if (u === 'none') ctx.setLineDash([3 / v.k, 6 / v.k])
-          ctx.beginPath()
-          ctx.arc(0, 0, r, 0, Math.PI * 2)
+          circle(0, 0, r)
           ctx.stroke()
           ctx.setLineDash([])
-          ctx.globalAlpha = lit(u) ? 0.8 : 0.25
+          ctx.globalAlpha = lit(u) ? 0.9 : 0.3
           ctx.fillStyle = colours[URGENCY_VAR[u]]
-          ctx.font = `650 ${10 / Math.max(v.k, 0.6)}px system-ui, -apple-system, sans-serif`
+          ctx.font = `600 ${11 / Math.max(v.k, 0.6)}px ${SERIF}`
           ctx.textAlign = 'center'
           ctx.textBaseline = 'bottom'
           ctx.fillText(rings[u].toUpperCase(), 0, -r - 4)
         }
-        ctx.globalAlpha = 0.08
-        ctx.strokeStyle = '#ffffff'
-        ctx.beginPath()
-        ctx.arc(0, 0, ORBIT.goal, 0, Math.PI * 2)
+        ctx.globalAlpha = 0.25
+        ctx.strokeStyle = ink.brass
+        ctx.lineWidth = 1 / v.k
+        circle(0, 0, ORBIT.goal)
         ctx.stroke()
-        ctx.globalCompositeOperation = 'lighter'
-        drawGlow(colours['--warning-fill'], 0, 0, 70 * (reduce ? 1 : 1 + 0.06 * Math.sin(time * 0.0015)), 0.5)
-        drawGlow('#fff4d6', 0, 0, 30, 0.95)
-        ctx.globalCompositeOperation = 'source-over'
-        ctx.globalAlpha = 0.9
-        ctx.fillStyle = 'rgba(244,246,255,0.96)'
-        ctx.font = `650 ${12 / Math.max(v.k, 0.6)}px system-ui, -apple-system, sans-serif`
+        ctx.globalAlpha = 1
+        astrolabe(0, 0, 26, colours['--warning-fill'], ink.brass, reduce ? 0 : time * 0.0002)
+        ctx.fillStyle = ink.text
+        ctx.font = `italic 600 ${13 / Math.max(v.k, 0.6)}px ${SERIF}`
         ctx.textBaseline = 'top'
-        ctx.fillText(rings.now, 0, 26)
+        ctx.fillText(rings.now, 0, 32)
       }
 
-      // orbits: faint turning circles round each due-date sun, where its tasks settle
+      // faint turning orbits round each due-date astrolabe, where its tasks settle
       for (const n of nodes) {
         if (n.kind !== 'hub' || isDim(n)) continue
-        ctx.globalAlpha = focus && !focus.has(n.id) ? 0.03 : 0.14
+        ctx.globalAlpha = focus && !focus.has(n.id) ? 0.04 : 0.22
         ctx.strokeStyle = nodeColour(n)
         ctx.lineWidth = 1 / v.k
         ctx.setLineDash([2 / v.k, 6 / v.k])
         ctx.lineDashOffset = reduce ? 0 : -time * 0.004
-        ctx.beginPath()
-        ctx.arc(n.x ?? 0, n.y ?? 0, LINK_DISTANCE.due, 0, Math.PI * 2)
+        circle(n.x ?? 0, n.y ?? 0, LINK_DISTANCE.due)
         ctx.stroke()
         ctx.setLineDash([])
       }
 
-      // links: thin beams blending from one end's colour to the other's; in focus, photons travel along them
-      ctx.globalCompositeOperation = 'lighter'
+      // links: ink lines (dotted to a due date); in focus they take the accent and a drop of ink runs along them
       simLinks.forEach((l, i) => {
         const s = l.source as SimNode
         const t = l.target as SimNode
@@ -266,14 +313,8 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, layout, 
         const ty = t.y ?? 0
         const on = focus ? focus.has(s.id) && focus.has(t.id) : true
         const faded = isDim(s) || isDim(t)
-        ctx.globalAlpha = faded ? 0.04 : focus ? (on ? 0.9 : 0.04) : 0.32
-        if (focus && on) ctx.strokeStyle = colours['--accent']
-        else {
-          const g = ctx.createLinearGradient(sx, sy, tx, ty)
-          g.addColorStop(0, nodeColour(s))
-          g.addColorStop(1, nodeColour(t))
-          ctx.strokeStyle = g
-        }
+        ctx.globalAlpha = faded ? 0.05 : focus ? (on ? 0.9 : 0.05) : 0.34
+        ctx.strokeStyle = focus && on ? colours['--accent'] : ink.line
         ctx.lineWidth = (focus && on ? 1.6 : 0.9) / Math.sqrt(v.k)
         if (l.kind === 'due') ctx.setLineDash([2 / v.k, 5 / v.k])
         ctx.beginPath()
@@ -283,7 +324,9 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, layout, 
         ctx.setLineDash([])
         if (focus && on && !faded && !reduce) {
           const p = (time / 1400 + linkSeed[i]) % 1
-          drawGlow('#ffffff', sx + (tx - sx) * p, sy + (ty - sy) * p, 5, 0.9)
+          ctx.fillStyle = colours['--accent']
+          circle(sx + (tx - sx) * p, sy + (ty - sy) * p, 2.6 / Math.sqrt(v.k))
+          ctx.fill()
         }
       })
 
@@ -293,125 +336,123 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, layout, 
         const x = n.x ?? 0
         const y = n.y ?? 0
         const faded = isDim(n) || (focus !== null && !focus.has(n.id))
-        const dim = faded ? 0.14 : 1
+        const dim = faded ? 0.15 : 1
         const colour = nodeColour(n)
 
-        ctx.globalCompositeOperation = 'lighter'
-        // overdue tasks send out a flare
+        // overdue tasks pulse a ring of their colour
         if (n.kind === 'task' && n.urgency === 'overdue' && !faded && !reduce) {
           const p = (time % 1800) / 1800
-          ctx.globalAlpha = 0.5 * (1 - p)
+          ctx.globalAlpha = 0.55 * (1 - p)
           ctx.strokeStyle = colour
           ctx.lineWidth = 1.5
-          ctx.beginPath()
-          ctx.arc(x, y, r + 2 + p * 14, 0, Math.PI * 2)
+          circle(x, y, r + 2 + p * 12)
           ctx.stroke()
+        }
+        // by candlelight, everything glows a little
+        if (dark && !faded) {
+          ctx.globalCompositeOperation = 'lighter'
+          drawGlow(n.kind === 'goal' ? ink.seal : colour, x, y, r * (n.kind === 'hub' ? 2.6 : 2.4), n.kind === 'task' ? 0.4 : 0.25)
+          ctx.globalCompositeOperation = 'source-over'
         }
 
+        ctx.globalAlpha = dim
         if (n.kind === 'hub') {
-          // a sun: a wide corona, then a white-hot core fading to its colour
-          const pulse = reduce ? 1 : 1 + 0.05 * Math.sin(time * 0.002 + x)
-          drawGlow(colour, x, y, r * 3.6 * pulse, 0.55 * dim)
-          drawGlow(colour, x, y, r * 1.8, 0.8 * dim)
-          ctx.globalCompositeOperation = 'source-over'
-          ctx.globalAlpha = dim
-          const core = ctx.createRadialGradient(x, y, 0, x, y, r * 0.75)
-          core.addColorStop(0, '#ffffff')
-          core.addColorStop(0.45, colour)
-          core.addColorStop(1, colour)
-          ctx.fillStyle = core
-          ctx.beginPath()
-          ctx.arc(x, y, r * 0.75, 0, Math.PI * 2)
-          ctx.fill()
-        } else if (n.kind === 'goal' || n.kind === 'milestone') {
-          // a planet with an atmosphere; goals wear a ring and an orbit that fills with their progress
-          drawGlow(colour, x, y, r * 2.4, 0.45 * dim)
-          ctx.globalCompositeOperation = 'source-over'
-          if (n.kind === 'goal') ring(colour, x, y, r, 'back', 0.55 * dim)
-          ctx.globalAlpha = dim
-          sphere(colour, x, y, r)
-          if (n.kind === 'goal') {
-            ring(colour, x, y, r, 'front', 0.85 * dim)
-            if (n.progress != null) {
-              ctx.strokeStyle = '#ffffff'
-              ctx.globalAlpha = 0.16 * dim
-              ctx.lineWidth = 1.5
-              ctx.beginPath()
-              ctx.arc(x, y, r * 2.05, 0, Math.PI * 2)
-              ctx.stroke()
-              ctx.globalAlpha = 0.95 * dim
-              ctx.lineWidth = 2
-              ctx.lineCap = 'round'
-              ctx.beginPath()
-              ctx.arc(x, y, r * 2.05, -Math.PI / 2, -Math.PI / 2 + (Math.PI * 2 * n.progress) / 100)
-              ctx.stroke()
-              ctx.lineCap = 'butt'
-            }
+          astrolabe(x, y, r * 0.8, colour, ink.brass, reduce ? 0 : time * 0.00015 + x)
+        } else if (n.kind === 'goal') {
+          if (n.progress != null) {
+            // a gilt ring fills with the goal's progress
+            ctx.strokeStyle = ink.brass
+            ctx.globalAlpha = 0.22 * dim
+            ctx.lineWidth = 2
+            circle(x, y, r * 1.45)
+            ctx.stroke()
+            ctx.globalAlpha = dim
+            ctx.lineWidth = 2.6
+            ctx.lineCap = 'round'
+            ctx.beginPath()
+            ctx.arc(x, y, r * 1.45, -Math.PI / 2, -Math.PI / 2 + (Math.PI * 2 * n.progress) / 100)
+            ctx.stroke()
+            ctx.lineCap = 'butt'
           }
-        } else if (n.kind === 'tag') {
-          // a four-point sparkle, turning slowly
-          const spin = reduce ? Math.PI / 4 : time * 0.0004
-          drawGlow(colour, x, y, r * 3, 0.5 * dim)
           ctx.globalAlpha = dim
-          ctx.fillStyle = colour
-          sparkle(x, y, r, spin)
-          ctx.fillStyle = '#ffffff'
-          sparkle(x, y, r * 0.45, spin)
-        } else if (n.kind === 'habit') {
-          // a small moon with a satellite going round it
-          drawGlow(colour, x, y, r * 2.6, 0.4 * dim)
-          ctx.globalCompositeOperation = 'source-over'
-          ctx.globalAlpha = dim
-          sphere(colour, x, y, r)
-          const a = reduce ? -Math.PI / 4 : time * 0.0012 + y
-          ctx.globalAlpha = 0.35 * dim
-          ctx.strokeStyle = colour
-          ctx.lineWidth = 0.8
+          seal(x, y, r, ink.seal, (n.label.trim()[0] ?? '·').toUpperCase())
+        } else if (n.kind === 'milestone') {
+          // a gilt lozenge
           ctx.beginPath()
-          ctx.arc(x, y, r + 5, 0, Math.PI * 2)
-          ctx.stroke()
-          ctx.globalAlpha = dim
-          ctx.fillStyle = '#ffffff'
-          ctx.beginPath()
-          ctx.arc(x + Math.cos(a) * (r + 5), y + Math.sin(a) * (r + 5), 1.4, 0, Math.PI * 2)
+          ctx.moveTo(x, y - r)
+          ctx.lineTo(x + r * 0.8, y)
+          ctx.lineTo(x, y + r)
+          ctx.lineTo(x - r * 0.8, y)
+          ctx.closePath()
+          ctx.fillStyle = ink.brass
           ctx.fill()
+          ctx.strokeStyle = ink.line
+          ctx.lineWidth = 1
+          ctx.stroke()
+        } else if (n.kind === 'tag') {
+          ribbon(x, y, r)
+          ctx.fillStyle = colour
+          ctx.fill()
+          ctx.strokeStyle = ink.line
+          ctx.lineWidth = 0.9
+          ctx.stroke()
+        } else if (n.kind === 'habit') {
+          hourglass(x, y, r)
+          ctx.fillStyle = colour
+          ctx.fill()
+          ctx.strokeStyle = ink.line
+          ctx.lineWidth = 1
+          ctx.stroke()
+          ctx.beginPath()
+          ctx.moveTo(x - r - 1.5, y - r)
+          ctx.lineTo(x + r + 1.5, y - r)
+          ctx.moveTo(x - r - 1.5, y + r)
+          ctx.lineTo(x + r + 1.5, y + r)
+          ctx.lineWidth = 1.8
+          ctx.stroke()
         } else {
-          // a task is a star: a twinkling halo in its urgency colour round a bright point
-          const tw = reduce ? 1 : 0.85 + 0.15 * Math.sin(time * 0.003 + x * 0.7)
-          drawGlow(colour, x, y, r * 3.4 * tw, 0.75 * dim)
-          drawGlow('#ffffff', x, y, r * 1.1, 0.9 * dim)
+          // a task: a drop of ink in its urgency colour, outlined
+          ctx.fillStyle = colour
+          circle(x, y, r)
+          ctx.fill()
+          ctx.strokeStyle = ink.line
+          ctx.globalAlpha = 0.75 * dim
+          ctx.lineWidth = 1.1
+          ctx.stroke()
+          ctx.globalAlpha = 0.5 * dim
+          ctx.fillStyle = '#ffffff'
+          circle(x - r * 0.3, y - r * 0.3, r * 0.28)
+          ctx.fill()
         }
-        ctx.globalCompositeOperation = 'source-over'
 
         if (n.id === sel) {
-          // a targeting reticle turning round the selected body
-          const rr = (n.kind === 'goal' ? r * 2.4 : n.kind === 'hub' ? r * 1.2 : r * 1.8) + 5 / v.k
+          // a dashed circle, slowly turning, round the selected one
+          const rr = (n.kind === 'goal' ? r * 1.75 : n.kind === 'hub' ? r * 1.1 : r * 1.9) + 5 / v.k
           ctx.globalAlpha = 0.95
-          ctx.strokeStyle = '#ffffff'
+          ctx.strokeStyle = ink.text
           ctx.lineWidth = 1.5 / v.k
           ctx.setLineDash([6 / v.k, 5 / v.k])
           ctx.lineDashOffset = reduce ? 0 : -time * 0.01
-          ctx.beginPath()
-          ctx.arc(x, y, rr, 0, Math.PI * 2)
+          circle(x, y, rr)
           ctx.stroke()
           ctx.setLineDash([])
         }
 
-        // labels: big bodies always, the rest when zoomed in or in focus
+        // labels: big things always, the rest when zoomed in or in focus
         const showLabel = n.kind === 'goal' || n.kind === 'hub' || (focus?.has(n.id) ?? false) || v.k > 1.3 || (n.kind === 'tag' && v.k > 0.8)
         if (showLabel && !faded) {
           const big = n.kind === 'goal' || n.kind === 'hub'
-          const size = (big ? 13 : 11) / Math.max(v.k, 0.6)
-          ctx.font = `${big ? 650 : 500} ${size}px system-ui, -apple-system, sans-serif`
+          const size = (big ? 15 : 11) / Math.max(v.k, 0.6)
+          ctx.font = big ? `600 ${size}px ${SERIF}` : `500 ${size}px system-ui, -apple-system, sans-serif`
           ctx.textAlign = 'center'
           ctx.textBaseline = 'top'
           const text = n.kind === 'hub' ? `${n.label} · ${n.count}` : n.kind === 'tag' ? `#${n.label}` : n.label.length > 28 ? `${n.label.slice(0, 27)}…` : n.label
-          const ly = y + (n.kind === 'goal' ? r * 1.3 : n.kind === 'hub' ? r * 0.9 : r * 1.6) + 4
+          const ly = y + (n.kind === 'goal' ? r * 1.6 : n.kind === 'hub' ? r * 0.9 : r * 1.6) + 4
           ctx.globalAlpha = 1
           ctx.lineWidth = 3 / v.k
-          ctx.strokeStyle = 'rgba(4,5,16,0.85)'
+          ctx.strokeStyle = ink.halo
           ctx.strokeText(text, x, ly)
-          ctx.fillStyle = big ? 'rgba(244,246,255,0.96)' : 'rgba(205,212,235,0.82)'
+          ctx.fillStyle = big ? ink.text : ink.soft
           ctx.fillText(text, x, ly)
         }
       }

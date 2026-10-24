@@ -1,0 +1,66 @@
+{
+  "nav": {
+    "features": "Features",
+    "day": "A day with it",
+    "themes": "Themes",
+    "privacy": "Privacy",
+    "signIn": "Sign in"
+  },
+  "hero": {
+    "eyebrow": "A personal study for your whole life",
+    "title": "Keep your days like a scholar keeps a notebook.",
+    "body": "Tasks, calendar, goals, habits, focus sessions, a journal and reports, gathered in one quiet, private place. It works offline and installs on your phone like an app.",
+    "cta": "Open your notebook",
+    "more": "See what's inside",
+    "note": "Personal and self-hosted: one account, your own server."
+  },
+  "mock": {
+    "today": "Today",
+    "t1": "Draft chapter 3",
+    "t2": "Meet supervisor at 2 pm",
+    "t3": "Read Middlemarch, ch. 1–10",
+    "goal": "Finish my thesis",
+    "streak": "12-day reading streak",
+    "focus": "Focus · 25:00"
+  },
+  "features": {
+    "title": "Everything a well-kept life needs",
+    "body": "Eight rooms in one house, all talking to each other.",
+    "tasks": { "title": "Tasks", "body": "Quick capture with #tags and dates in plain words, subtasks, priorities, and smart views: Today, Upcoming, Overdue." },
+    "calendar": { "title": "Calendar", "body": "Day, week and month views with repeating events, working hours and time blocked for your tasks." },
+    "goals": { "title": "Goals", "body": "Long aims broken into milestones, with progress that fills in as linked tasks and habits get done." },
+    "habits": { "title": "Habits", "body": "Daily or weekly habits, one-tap check-ins, streaks and a year of history at a glance." },
+    "focus": { "title": "Focus", "body": "A pomodoro timer tied to the task at hand, with a gentle bell and a log of your deep work." },
+    "journal": { "title": "Journal", "body": "A page a day for mood, energy and thoughts, with prompts for when the page is blank." },
+    "reports": { "title": "Insights & reports", "body": "Charts of how your time goes, plus daily, weekly and monthly reports to read, download or receive by email." },
+    "graph": { "title": "The graph", "body": "Everything unfinished as a living map: goals as wax seals, deadlines as astrolabes, tasks circling what's due." }
+  },
+  "day": {
+    "title": "A day with Life OS",
+    "morning": { "time": "Morning", "title": "Plan the day", "body": "See what's due, drag tasks into the calendar and choose the three things that matter." },
+    "noon": { "time": "Midday", "title": "Focus", "body": "Start a focus session on the task in front of you; reminders keep the rest out of mind." },
+    "evening": { "time": "Evening", "title": "Check in", "body": "Tick off habits, write a few lines in the journal, and let tomorrow's plan carry over." },
+    "week": { "time": "Sunday", "title": "Review", "body": "A weekly review and a report of the week: what moved, what stalled, what's next." }
+  },
+  "themes": {
+    "title": "A study to suit your mood",
+    "body": "Pick the light iOS look, a dark one, or Academia: a library by candlelight, a chalkboard, an observatory, parchment or a botanist's plates.",
+    "library": "Library",
+    "chalkboard": "Chalkboard",
+    "observatory": "Observatory",
+    "parchment": "Parchment",
+    "botanical": "Botanical"
+  },
+  "privacy": {
+    "title": "Yours, and only yours",
+    "offline": { "title": "Works offline", "body": "Keeps working without a connection and syncs when you're back." },
+    "install": { "title": "Installs like an app", "body": "Add it to your phone's Home Screen for notifications and a full-screen app." },
+    "own": { "title": "Your own server", "body": "Your data lives in your database. Nothing is sold, tracked or shared." },
+    "export": { "title": "Take it with you", "body": "Download a full backup any time, and readable PDF reports." }
+  },
+  "footer": {
+    "title": "Your notebook is waiting.",
+    "cta": "Sign in",
+    "made": "Life OS · a personal study for your whole life"
+  }
+}

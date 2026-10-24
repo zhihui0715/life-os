@@ -1,0 +1,138 @@
+/* Academia (Settings → Theme): a scholar's study, light or dark as the chosen scene says (lib/theme.ts). Light
+   academia is cream parchment, sepia ink and an oxblood seal; dark academia is a leather-and-walnut library lit by
+   brass and candlelight. Headings are set in EB Garamond, body text stays in the app's sans for legibility at small
+   sizes. Cards are nearly opaque paper or leather (text pairs below are ≥ 4.5:1 on --surface and --surface-sunken).
+   The scene behind is drawn by components/academia/StudyScene.tsx; this file travels in its chunk, so only people
+   using Academia download it. The selectors repeat three attributes to outrank accents.css and backgrounds.css:
+   Academia brings its own ink colours whatever accent is saved. */
+
+@font-face {
+  font-family: 'EB Garamond Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 800;
+  src: url('../../node_modules/@fontsource-variable/eb-garamond/files/eb-garamond-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212;
+}
+@font-face {
+  font-family: 'EB Garamond Variable';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 400 800;
+  src: url('../../node_modules/@fontsource-variable/eb-garamond/files/eb-garamond-latin-wght-italic.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212;
+}
+
+/* Light academia: parchment, sepia, oxblood */
+html[data-look='academia'][data-theme='light'][data-bg] {
+  --bg: #efe4cc;
+  --surface: rgb(252 248 238 / 0.95);
+  --surface-sunken: #ebe0c8;
+  --surface-raised: #fffaf0;
+  --border: #dccbaa;
+  --border-strong: #b9a27a;
+  --bar: rgb(250 244 230 / 0.86);
+  --sidebar: rgb(240 230 208 / 0.84);
+
+  --text: #2a1f16;
+  --text-muted: #4f3e2e;
+  --text-subtle: #67533e;
+
+  --accent: #7a2a22;
+  --accent-hover: #63211b;
+  --accent-fill: #7a2a22;
+  --accent-soft: #f2e0d6;
+  --text-on-accent: #fff8ec;
+  --p3: #7a2a22;
+
+  --shadow-sm: inset 0 1px 0 rgb(255 255 255 / 0.7), 0 0 0 1px rgb(120 90 50 / 0.16), 0 8px 22px -14px rgb(80 50 20 / 0.45);
+  --shadow-lg: 0 0 0 1px rgb(120 90 50 / 0.18), 0 26px 60px -20px rgb(70 40 15 / 0.45);
+  --shadow-float: 0 0 0 1px rgb(120 90 50 / 0.18), 0 12px 30px -12px rgb(70 40 15 / 0.4);
+  --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .33 0 0 0 0 .18 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Dark academia: walnut, leather, brass and candlelight */
+html[data-look='academia'][data-theme='dark'][data-bg] {
+  --bg: #120d09;
+  --surface: rgb(31 24 18 / 0.93);
+  --surface-sunken: rgb(255 236 200 / 0.07);
+  --surface-raised: rgb(42 32 24 / 0.97);
+  --border: rgb(220 190 140 / 0.15);
+  --border-strong: rgb(220 190 140 / 0.3);
+  --bar: rgb(24 18 13 / 0.8);
+  --sidebar: rgb(20 14 10 / 0.72);
+
+  --text: #f2e8d4;
+  --text-muted: #d6c6a8;
+  --text-subtle: #b19e80;
+
+  --accent: #d8ad60;
+  --accent-hover: #e8c47e;
+  --accent-fill: #8c2f25;
+  --accent-soft: #3a2a17;
+  --text-on-accent: #fff4e0;
+  --p3: #d8ad60;
+
+  --shadow-sm: inset 0 1px 0 rgb(255 225 170 / 0.06), 0 0 0 1px rgb(220 190 140 / 0.12), 0 14px 34px -16px rgb(0 0 0 / 0.8);
+  --shadow-lg: inset 0 1px 0 rgb(255 225 170 / 0.08), 0 0 0 1px rgb(220 190 140 / 0.16), 0 26px 70px -18px rgb(0 0 0 / 0.85);
+  --shadow-float: inset 0 1px 0 rgb(255 225 170 / 0.08), 0 0 0 1px rgb(220 190 140 / 0.16), 0 14px 40px -10px rgb(0 0 0 / 0.75);
+  --chart-grid: rgb(220 190 140 / 0.1);
+  --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .9 0 0 0 0 .75 0 0 0 0 .5 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+html[data-look='academia'] body {
+  background: transparent;
+}
+
+/* Paper (or leather) grain on every card and sheet */
+html[data-look='academia'] :is(.bg-surface, .bg-raised) {
+  background-image: var(--paper);
+}
+html[data-look='academia'] .dark\:shadow-none {
+  box-shadow: var(--shadow-sm); /* in plain dark cards are flat; here they get a pressed edge */
+}
+
+/* The scholar's serif for headings, the sidebar name and anything marked display */
+html[data-look='academia'] :is(h1, h2, h3, .font-display) {
+  font-family: 'EB Garamond Variable', 'EB Garamond', Garamond, Georgia, 'Songti SC', 'STSong', serif;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  font-feature-settings: 'liga', 'dlig', 'onum';
+}
+html[data-look='academia'] main h1 {
+  font-weight: 650;
+}
+
+/* Filled buttons and ticks: an oxblood seal with a gilt hairline */
+html[data-look='academia'] .bg-accent-fill {
+  background-image: linear-gradient(180deg, rgb(255 255 255 / 0.14), transparent 60%);
+  box-shadow:
+    inset 0 0 0 1px rgb(216 173 96 / 0.5),
+    0 4px 14px -6px rgb(90 25 15 / 0.55);
+}
+
+/* The current page in the sidebar carries a ribbon bookmark */
+html[data-look='academia'] .app-sidebar a[aria-current='page'] {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+html[data-look='academia'] :focus-visible {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+html[data-look='academia'] ::selection {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-look='academia'][data-theme='light'][data-bg] {
+    --surface: #fcf8ee;
+    --bar: #fcf8ee;
+    --sidebar: #f0e6d0;
+  }
+  html[data-look='academia'][data-theme='dark'][data-bg] {
+    --surface: #1f1812;
+    --bar: #1f1812;
+    --sidebar: #140e0a;
+  }
+}

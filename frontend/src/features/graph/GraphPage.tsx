@@ -270,17 +270,17 @@ export function GraphPage() {
               <GraphCanvas nodes={nodes} links={links} selected={selected?.id ?? null} dimmed={dimmed} onSelect={(n) => { if (n) play('tap'); setSelected(n) }} layout={layout} ringLabels={ringLabels} controls={controls} />
             </div>
             <div className="absolute top-3 right-3 flex flex-col gap-1.5">
-              <Button size="icon" className="h-9 w-9 bg-white/10 text-white ring-1 ring-white/15 backdrop-blur-md hover:bg-white/20" aria-label={t('zoomIn')} onClick={() => controls.current?.zoom(1.3)}>
+              <Button size="icon" className="bg-surface/90 shadow-float h-9 w-9 backdrop-blur" aria-label={t('zoomIn')} onClick={() => controls.current?.zoom(1.3)}>
                 <Plus size={16} aria-hidden />
               </Button>
-              <Button size="icon" className="h-9 w-9 bg-white/10 text-white ring-1 ring-white/15 backdrop-blur-md hover:bg-white/20" aria-label={t('zoomOut')} onClick={() => controls.current?.zoom(1 / 1.3)}>
+              <Button size="icon" className="bg-surface/90 shadow-float h-9 w-9 backdrop-blur" aria-label={t('zoomOut')} onClick={() => controls.current?.zoom(1 / 1.3)}>
                 <Minus size={16} aria-hidden />
               </Button>
-              <Button size="icon" className="h-9 w-9 bg-white/10 text-white ring-1 ring-white/15 backdrop-blur-md hover:bg-white/20" aria-label={t('fit')} onClick={() => controls.current?.fit()}>
+              <Button size="icon" className="bg-surface/90 shadow-float h-9 w-9 backdrop-blur" aria-label={t('fit')} onClick={() => controls.current?.fit()}>
                 <Maximize2 size={15} aria-hidden />
               </Button>
             </div>
-            <p className="pointer-events-none absolute bottom-3 left-4 text-[11px] text-white/45">{t(layout === 'orbits' ? 'hintOrbits' : 'hint')}</p>
+            <p className="bg-surface/80 text-subtle pointer-events-none absolute bottom-3 left-3 rounded-full px-2.5 py-1 text-[11px] backdrop-blur">{t(layout === 'orbits' ? 'hintOrbits' : 'hint')}</p>
           </>
         )}
 

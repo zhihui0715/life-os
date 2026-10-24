@@ -9,7 +9,7 @@
     "system": "Match system",
     "light": "Light",
     "dark": "Dark",
-    "cosmos": "Cosmos (space)"
+    "academia": "Academia (library & parchment)"
   },
   "timezone": {
     "label": "Timezone",
@@ -65,7 +65,15 @@
     "pdfTitle": "Readable report (PDF)",
     "pdfHelp": "Your goals, tasks, habits, schedule, journal and weekly reviews, laid out to read, print or share. It can't be restored from.",
     "pdfDownload": "Download PDF report",
-    "fileTitle": "Backup file (for restoring)"
+    "fileTitle": "Backup file (for restoring)",
+    "reportsTitle": "Daily, weekly & monthly reports",
+    "reportsHelp": "A PDF of today, this week or this month so far: tasks done, focus, habits, goals, time and journal. Older ones are on the Reports page.",
+    "reportKinds": {
+      "day": "Today",
+      "week": "This week",
+      "month": "This month"
+    },
+    "reportsOpen": "Open Reports"
   },
   "sound": {
     "label": "Sounds & haptics",
@@ -75,7 +83,6 @@
     "label": "Reminders",
     "help": "Notifications from Life OS while it's open — in a browser tab, or the installed app on a computer. On a phone they arrive while the app is open. Saved on this device.",
     "denied": "Notifications are blocked for this site. Allow them in your browser's site settings, then switch this on again.",
-    "unsupported": "This browser can't show notifications.",
     "events": "Before events",
     "off": "Off",
     "minutes": "{{count}} min",
@@ -86,7 +93,12 @@
     "time": "Time for {{what}}",
     "test": "Send a test reminder",
     "testTitle": "Reminders are on",
-    "testBody": "This is how Life OS will remind you."
+    "testBody": "This is how Life OS will remind you.",
+    "blocked": {
+      "insecure": "Notifications need a secure address. This page was opened over plain http:// (for example a computer's network address on your phone), so the browser won't allow them. Open Life OS at its https:// address, or on the computer itself at localhost.",
+      "install-ios": "On iPhone and iPad, notifications only work in the installed app: tap Share, then \"Add to Home Screen\", open Life OS from the new icon and switch this on there.",
+      "unsupported": "This browser can't show notifications."
+    }
   },
   "appearance": {
     "title": "Appearance",
@@ -99,7 +111,7 @@
       "gradient": "Gradients",
       "art": "Famous art",
       "paper": "Paper",
-      "space": "Space scenes"
+      "scene": "Scenes"
     },
     "accents": {
       "blue": "Blue",
@@ -129,18 +141,30 @@
       "dots": "Dotted",
       "grid": "Grid",
       "linen": "Linen",
-      "nebula": "Nebula",
-      "saturn": "Saturn",
-      "aurora": "Aurora",
-      "deep-field": "Deep field",
-      "eclipse": "Eclipse"
+      "library": "Library",
+      "chalkboard": "Chalkboard",
+      "observatory": "Observatory",
+      "parchment": "Parchment",
+      "botanical": "Botanical"
     },
-    "cosmos": {
-      "title": "Cosmos",
-      "body": "A living night sky behind frosted-glass cards, with glowing accents.",
-      "on": "Cosmos is on. Pick a sky below.",
-      "try": "Try Cosmos",
-      "turnOff": "Turn off"
+    "academia": {
+      "title": "Academia",
+      "body": "A scholar’s study: leather-bound libraries or cream parchment, serif headings and an oxblood seal.",
+      "on": "Academia is on. Pick a scene below: the first three are dark, the last two light.",
+      "try": "Try Academia",
+      "turnOff": "Turn off",
+      "accentNote": "Academia uses its own ink and brass colours."
+    },
+    "books": "Book friends",
+    "bookNames": {
+      "book-1": "The Professor",
+      "book-2": "The Graduate",
+      "book-3": "The Bookworm",
+      "book-4": "The Poet",
+      "book-5": "The Dreamer",
+      "book-6": "The Scholar",
+      "book-7": "The Librarian",
+      "book-8": "The Sleepy Reader"
     }
   }
 }

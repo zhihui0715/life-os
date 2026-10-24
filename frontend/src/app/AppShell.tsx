@@ -7,11 +7,12 @@ import { Avatar } from '../components/ui/Avatar'
 import { Button } from '../components/ui/Button'
 import { cn } from '../components/ui/cn'
 import { Dialog } from '../components/ui/Dialog'
+import { Switch } from '../components/ui/Switch'
 import { FocusWidget } from '../features/focus/FocusWidget'
 import { usePomodoroEngine } from '../features/focus/usePomodoroEngine'
 import { lazyWithReload } from '../lib/lazyPage'
-import { startReminders } from '../lib/reminders'
-import { play } from '../lib/sound'
+import { notifyBlocker, onPrefsChange, readPrefs, setRemindersEnabled, startReminders } from '../lib/reminders'
+import { onSoundChange, play, setSoundEnabled, soundEnabled } from '../lib/sound'
 import { useMe } from '../features/auth/AuthProvider'
 import { CreateMenu, CreateSheets, type Sheet } from './CreateMenu'
 import { ErrorBoundary } from './ErrorBoundary'
@@ -20,14 +21,14 @@ import { NAV_ITEMS } from './nav'
 
 const STORAGE_KEY = 'lifeos.sidebarCollapsed'
 
-// The Cosmos sky is its own chunk: only people using that theme download it
-const SpaceSky = lazyWithReload(() => import('../components/cosmos/SpaceSky'))
+// The Academia scene is its own chunk: only people using that theme download it
+const StudyScene = lazyWithReload(() => import('../components/academia/StudyScene'))
 const subscribeLook = (notify: () => void) => {
   const mo = new MutationObserver(notify)
   mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-look'] })
   return () => mo.disconnect()
 }
-const isCosmos = () => document.documentElement.dataset.look === 'cosmos'
+const isAcademia = () => document.documentElement.dataset.look === 'academia'
 
 function readCollapsed() {
   try {
@@ -47,7 +48,7 @@ export function AppShell() {
   const [sheet, setSheet] = useState<Sheet>(null)
   useReminderLoop()
   const me = useMe()
-  const cosmos = useSyncExternalStore(subscribeLook, isCosmos)
+  const academia = useSyncExternalStore(subscribeLook, isAcademia)
 
   const toggleCollapsed = () => {
     play('tap')
@@ -75,9 +76,9 @@ export function AppShell() {
 
   return (
     <div className="min-h-dvh md:flex">
-      {cosmos && (
+      {academia && (
         <Suspense fallback={null}>
-          <SpaceSky />
+          <StudyScene />
         </Suspense>
       )}
       {/* Sidebar (tablet: icons; desktop: icons + labels, collapsible), styled like a macOS source list */}
@@ -245,11 +246,53 @@ export function AppShell() {
             </NavLink>
           ))}
         </div>
+        <QuickToggles />
       </Dialog>
 
       <CreateSheets sheet={sheet} setSheet={setSheet} />
       <FocusWidget />
       <PomodoroEngine />
+    </div>
+  )
+}
+
+/**
+ * Sounds and reminders, one tap away on a phone (they're per-device choices; Settings has the details). Reminders
+ * explain what's in the way when the phone can't show notifications.
+ */
+function QuickToggles() {
+  const { t } = useTranslation('settings')
+  const [sound, setSound] = useState(soundEnabled)
+  const [prefs, setPrefs] = useState(readPrefs)
+  const [permission, setPermission] = useState(() => (notifyBlocker() ? 'denied' : Notification.permission))
+  useEffect(() => {
+    const off = onSoundChange(setSound)
+    return () => void off()
+  }, [])
+  useEffect(() => onPrefsChange(setPrefs), [])
+  const blocker = notifyBlocker()
+  return (
+    <div className="bg-sunken/60 mt-4 overflow-hidden rounded-2xl">
+      <label className="border-border flex min-h-[52px] items-center gap-3 border-b px-3.5">
+        <span id="quick-sound" className="flex-1 text-[16px] font-medium">
+          {t('sound.label')}
+        </span>
+        <Switch checked={sound} onChange={setSoundEnabled} labelledBy="quick-sound" />
+      </label>
+      <div className="flex min-h-[52px] items-center gap-3 px-3.5 py-2">
+        <div className="min-w-0 flex-1">
+          <span id="quick-reminders" className="block text-[16px] font-medium">
+            {t('reminders.label')}
+          </span>
+          {(blocker || permission === 'denied') && <span className="text-subtle block text-[12.5px]">{t(blocker ? `reminders.blocked.${blocker}` : 'reminders.denied')}</span>}
+        </div>
+        <Switch
+          checked={prefs.enabled && permission === 'granted'}
+          onChange={async (on) => setPermission(await setRemindersEnabled(on))}
+          labelledBy="quick-reminders"
+          disabled={!!blocker}
+        />
+      </div>
     </div>
   )
 }

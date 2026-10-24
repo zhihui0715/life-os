@@ -19,7 +19,7 @@ from app.common.models import IdMixin, TimestampMixin, utcnow
 from app.extensions import db
 
 LOCALES = ("en", "zh-CN")
-THEMES = ("system", "light", "dark", "cosmos")
+THEMES = ("system", "light", "dark", "academia")
 # Appearance (frontend/src/lib/theme.ts draws them): the tint colour, and what sits behind the cards.
 ACCENTS = ("blue", "indigo", "purple", "pink", "red", "orange", "yellow", "green", "teal", "graphite")
 BACKGROUNDS = (
@@ -27,7 +27,7 @@ BACKGROUNDS = (
     "sunrise", "ocean", "lavender", "mint", "midnight",  # soft gradients
     "great-wave", "water-lilies", "bedroom", "plum-garden", "grande-jatte", "rainy-day",  # public-domain art
     "dots", "grid", "linen",  # paper
-    "nebula", "saturn", "aurora", "deep-field", "eclipse",  # space scenes, for the Cosmos theme
+    "library", "chalkboard", "observatory", "parchment", "botanical",  # scenes for the Academia theme
 )
 DEFAULT_TIMEZONE = "Asia/Kuala_Lumpur"
 WEEKDAYS = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")
@@ -89,6 +89,9 @@ class UserSettings(db.Model):
     weekly_learning_target_min: Mapped[int | None] = mapped_column(Integer)  # NULL = no target set
     # Home sections in order: [{"key": "tasks", "visible": true}, ...]. NULL = DEFAULT_DASHBOARD.
     dashboard_layout: Mapped[list | None] = mapped_column(JSONB)
+    # Reports by email: {"day": bool, "week": bool, "month": bool}, and the last period start sent for each
+    report_emails: Mapped[dict | None] = mapped_column(JSONB)
+    report_emails_sent: Mapped[dict | None] = mapped_column(JSONB)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=utcnow, onupdate=utcnow
     )

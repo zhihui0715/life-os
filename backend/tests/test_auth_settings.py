@@ -128,9 +128,15 @@ def test_appearance_settings(api):
     assert api.patch("/api/v1/settings", {"avatar": "Bob"}).status_code == 422
 
 
-def test_cosmos_theme_and_space_scenes(api):
-    res = api.patch("/api/v1/settings", {"theme": "cosmos", "background": "saturn"})
+def test_academia_theme_and_scenes(api):
+    res = api.patch("/api/v1/settings", {"theme": "academia", "background": "library"})
     assert res.status_code == 200, res.get_json()
-    assert (res.get_json()["theme"], res.get_json()["background"]) == ("cosmos", "saturn")
-    assert api.patch("/api/v1/settings", {"theme": "galaxy"}).status_code == 422
-    assert api.patch("/api/v1/settings", {"background": "black-hole"}).status_code == 422
+    assert (res.get_json()["theme"], res.get_json()["background"]) == ("academia", "library")
+    assert api.patch("/api/v1/settings", {"theme": "cosmos"}).status_code == 422
+    assert api.patch("/api/v1/settings", {"background": "saturn"}).status_code == 422
+
+
+def test_book_avatars(api):
+    assert api.patch("/api/v1/settings", {"avatar": "book-3"}).get_json()["avatar"] == "book-3"
+    assert api.patch("/api/v1/settings", {"avatar": "book-9"}).status_code == 422
+    assert api.patch("/api/v1/settings", {"avatar": "book"}).status_code == 422

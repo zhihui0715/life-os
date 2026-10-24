@@ -30,8 +30,39 @@ const LATE_WINDOW_MIN = 3 * 60 // a morning reminder opened at 3 pm is no longer
 
 const listeners = new Set<(p: ReminderPrefs) => void>()
 
+/**
+ * Why this device can't show notifications, or null when it can. Phones are where this bites: browsers only allow
+ * notifications on a secure page (https, or localhost), so the app opened at a plain http:// network address can't
+ * ask; and an iPhone only offers them to the app once it's added to the Home Screen.
+ */
+export type NotifyBlocker = 'insecure' | 'install-ios' | 'unsupported'
+export function notifyBlocker(): NotifyBlocker | null {
+  if (typeof window === 'undefined') return 'unsupported'
+  if (!window.isSecureContext) return 'insecure'
+  if ('Notification' in window) return null
+  const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  return ios ? 'install-ios' : 'unsupported'
+}
+
 export function remindersSupported() {
-  return typeof window !== 'undefined' && 'Notification' in window
+  return notifyBlocker() === null
+}
+
+/** Asks for permission; older Safari only answers through a callback, newer browsers with a promise. */
+function askPermission(): Promise<NotificationPermission> {
+  return new Promise((resolve) => {
+    const answer = Notification.requestPermission(resolve)
+    if (answer) void answer.then(resolve)
+  })
+}
+
+/** Switches reminders on (asking for permission first if needed) or off. Returns the permission it ended with. */
+export async function setRemindersEnabled(on: boolean): Promise<NotificationPermission> {
+  if (!remindersSupported()) return 'denied'
+  let permission = Notification.permission
+  if (on && permission !== 'granted') permission = await askPermission()
+  if (!on || permission === 'granted') writePrefs({ ...readPrefs(), enabled: on })
+  return permission
 }
 
 export function readPrefs(): ReminderPrefs {

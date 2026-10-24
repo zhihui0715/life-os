@@ -6,6 +6,7 @@ import {
   CheckSquare,
   Flame,
   Home,
+  ScrollText,
   Settings,
   Target,
   Timer,
@@ -31,6 +32,7 @@ export const NAV_ITEMS: NavItem[] = [
   { to: '/habits', key: 'habits', tint: 'var(--tint-habits)', icon: Flame, mobilePrimary: true },
   { to: '/focus', key: 'focus', tint: 'var(--tint-focus)', icon: Timer },
   { to: '/insights', key: 'insights', tint: 'var(--tint-insights)', icon: BarChart3 },
+  { to: '/reports', key: 'reports', tint: 'var(--tint-plan)', icon: ScrollText },
   { to: '/journal', key: 'journal', tint: 'var(--tint-journal)', icon: BookOpen },
   { to: '/settings', key: 'settings', tint: 'var(--tint-settings)', icon: Settings },
 ]

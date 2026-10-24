@@ -2,7 +2,7 @@ import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { Suspense, useEffect, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router'
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation } from 'react-router'
 
 import { ToastProvider } from '../components/ui/Toast'
 import { ErrorState, ListSkeleton } from '../components/ui/states'
@@ -23,6 +23,8 @@ const InsightsPage = lazyWithReload(() => import('../features/insights/InsightsP
 // Pages opened less often load on demand, keeping the first download small (performance budget: scripts/check-bundle.mjs).
 // The service worker still pre-caches them, so they open offline too.
 const GraphPage = lazyWithReload(() => import('../features/graph/GraphPage').then((m) => ({ default: m.GraphPage })))
+const LandingPage = lazyWithReload(() => import('../features/landing/LandingPage'))
+const ReportsPage = lazyWithReload(() => import('../features/reports/ReportsPage').then((m) => ({ default: m.ReportsPage })))
 const PlanPage = lazyWithReload(() => import('../features/planning/PlanPage').then((m) => ({ default: m.PlanPage })))
 const FocusPage = lazyWithReload(() => import('../features/focus/FocusPage').then((m) => ({ default: m.FocusPage })))
 const GoalDetailPage = lazyWithReload(() => import('../features/goals/GoalDetailPage').then((m) => ({ default: m.GoalDetailPage })))
@@ -57,10 +59,11 @@ const queryClient: QueryClient = new QueryClient({
   },
 })
 
-/** Shows the login page, a loading state, or the app — depending on whether you're signed in. */
+/** Shows the landing or login page, a loading state, or the app — depending on whether you're signed in. */
 function AuthGate() {
   const { me, meError, retryMe } = useAuth()
   const { t } = useTranslation()
+  const location = useLocation()
 
   if (me === undefined && meError) {
     return (
@@ -77,7 +80,15 @@ function AuthGate() {
       </div>
     )
   }
-  if (me === null) return <LoginPage />
+  // Signed out: the landing page at the front door, the sign-in form anywhere else (/login, or a deep link)
+  if (me === null)
+    return location.pathname === '/' ? (
+      <Suspense fallback={null}>
+        <LandingPage />
+      </Suspense>
+    ) : (
+      <LoginPage />
+    )
   return <AppShell />
 }
 
@@ -124,6 +135,7 @@ const router = createBrowserRouter([
           },
           { path: 'plan', element: lazyPage(<PlanPage />) },
           { path: 'graph', element: lazyPage(<GraphPage />) },
+          { path: 'reports', element: lazyPage(<ReportsPage />) },
           { path: 'assistant', element: <Navigate to="/plan" replace /> }, // old bookmark
           { path: 'settings', element: lazyPage(<SettingsPage />) },
           { path: '*', element: <Navigate to="/" replace /> },

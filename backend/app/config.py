@@ -40,6 +40,14 @@ class Config:
     # True when running behind the host's HTTPS proxy (it sets X-Forwarded-For / X-Forwarded-Proto).
     TRUST_PROXY = os.environ.get("TRUST_PROXY", "").lower() in ("1", "true", "yes")
 
+    # Reports by email (app/common/mail.py): unset SMTP_HOST means email is off
+    SMTP_HOST = os.environ.get("SMTP_HOST") or None
+    SMTP_PORT = os.environ.get("SMTP_PORT") or None
+    SMTP_USER = os.environ.get("SMTP_USER") or None
+    SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD") or None
+    SMTP_FROM = os.environ.get("SMTP_FROM") or None
+    SMTP_SECURITY = os.environ.get("SMTP_SECURITY") or "starttls"
+
     RATELIMIT_ENABLED = True
     RATELIMIT_STORAGE_URI = "memory://"
     RATELIMIT_HEADERS_ENABLED = True

@@ -1,0 +1,74 @@
+/* The landing page (features/landing): light academia whatever theme this browser last used, with EB Garamond for
+   headings. Loaded with the page's own chunk, so signed-in use never downloads it — and it carries the page's own
+   Tailwind utilities (index.css leaves the landing folder out of the app's stylesheet). */
+@import 'tailwindcss/utilities.css' source(none);
+@source '../features/landing';
+
+@font-face {
+  font-family: 'EB Garamond Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 800;
+  src: url('../../node_modules/@fontsource-variable/eb-garamond/files/eb-garamond-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212;
+}
+@font-face {
+  font-family: 'EB Garamond Variable';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 400 800;
+  src: url('../../node_modules/@fontsource-variable/eb-garamond/files/eb-garamond-latin-wght-italic.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212;
+}
+
+.landing {
+  --ink: #2a1f16;
+  --ink-soft: #5a4632;
+  --paper: #f6eedb;
+  --card: #fcf8ee;
+  --rule: #dccbaa;
+  --seal: #7a2a22;
+  --brass: #9a6f2a;
+  color: var(--ink);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .33 0 0 0 0 .18 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(at 15% 0%, #fbf5e6 0, transparent 50%),
+    radial-gradient(at 90% 30%, #efe1c2 0, transparent 45%),
+    var(--paper);
+  color-scheme: light;
+}
+.landing .serif {
+  font-family: 'EB Garamond Variable', 'EB Garamond', Garamond, Georgia, 'Songti SC', 'STSong', serif;
+  font-feature-settings: 'liga', 'dlig', 'onum';
+}
+/* ruled notebook lines with a red margin, for the hero's notebook */
+.landing .ruled {
+  background:
+    linear-gradient(90deg, transparent 38px, rgb(181 65 58 / 0.4) 38px 39px, transparent 39px),
+    repeating-linear-gradient(180deg, transparent 0 35px, rgb(125 156 192 / 0.28) 35px 36px),
+    var(--card);
+}
+.landing .fleuron::before,
+.landing .fleuron::after {
+  content: '';
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(90deg, transparent, var(--rule));
+}
+.landing .fleuron::after {
+  background: linear-gradient(90deg, var(--rule), transparent);
+}
+@keyframes landing-float {
+  50% {
+    transform: translateY(-8px) rotate(var(--tilt, 0deg));
+  }
+}
+.landing .float {
+  transform: rotate(var(--tilt, 0deg));
+  animation: landing-float 6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing .float {
+    animation: none;
+  }
+}
