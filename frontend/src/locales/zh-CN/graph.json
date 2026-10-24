@@ -1,0 +1,38 @@
+{
+  "title": "图谱",
+  "subtitle_one": "还有 {{count}} 件事要做",
+  "subtitle_other": "还有 {{count}} 件事要做",
+  "legend": "只显示",
+  "search": "在图谱中查找",
+  "open": "打开",
+  "hint": "拖动移动 · 双指或滚轮缩放 · 点按圆点",
+  "zoomIn": "放大",
+  "zoomOut": "缩小",
+  "fit": "显示全部",
+  "asList": "以列表显示",
+  "emptyTitle": "没有待办了",
+  "emptyBody": "未完成的任务、目标及其关联会以地图形式显示在这里。",
+  "aria": "共 {{tasks}} 个未完成任务的图谱，其中 {{overdue}} 个已逾期，关联 {{goals}} 个目标。下方列出了相同的任务。",
+  "tasksCount_one": "{{count}} 个任务",
+  "tasksCount_other": "{{count}} 个任务",
+  "urgency": {
+    "overdue": "已逾期",
+    "today": "今天",
+    "week": "本周",
+    "later": "以后",
+    "none": "无日期"
+  },
+  "show": {
+    "tag": "标签",
+    "habit": "习惯",
+    "hub": "到期"
+  },
+  "kind": {
+    "goal": "目标",
+    "milestone": "里程碑",
+    "task": "任务",
+    "tag": "标签",
+    "habit": "习惯",
+    "hub": "到期分组"
+  }
+}

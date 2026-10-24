@@ -27,6 +27,8 @@ def setup_hours(api, hours):
 
 def test_ai_endpoints_are_gone(api):
     assert api.get("/api/v1/ai/status").status_code == 404
+    assert api.post("/api/v1/ai/daily-plan", {}).status_code == 404
+    assert api.post("/api/v1/ai/weekly-review", {}).status_code == 404
     assert "ai_enabled" not in ok(api.get("/api/v1/settings"))
 
 

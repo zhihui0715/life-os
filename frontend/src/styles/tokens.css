@@ -46,6 +46,8 @@
   --tint-insights: #34c759;
   --tint-journal: #af52de;
   --tint-plan: #5e5ce6;
+  --tint-graph: #bf5af2;
+  --urgency-week: #d9a400; /* gold: between today's orange and later's blue */
   --tint-settings: #8e8e93;
 
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.04);
@@ -114,6 +116,8 @@
   --tint-insights: #30d158;
   --tint-journal: #bf5af2;
   --tint-plan: #7d7aff;
+  --tint-graph: #da8fff;
+  --urgency-week: #ffd60a;
   --tint-settings: #8e8e93;
 
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);

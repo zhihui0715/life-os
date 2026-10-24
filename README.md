@@ -117,6 +117,14 @@ weekly review, habit streaks of 3, 7, 14, 30… days.
 adjustable, Pomodoro technique). The tomato ripens from green to red as you focus and sleeps during breaks; a bell
 rings at each switch. Each tomato is saved as a focus session.
 
+## Graph view
+
+**Graph** (in the menu) shows everything still to do as a network, like Obsidian's graph view: goals are the big
+nodes with their milestones and tasks around them, subtasks hang off their tasks, `#tags` and habits link in, and
+four due-date hubs (Overdue, Today, This week, Later) pull work together by time. Colour shows urgency; overdue tasks
+glow red and pulse. Drag, pinch or scroll to zoom, tap a dot to light up its neighbours, and open it from the card.
+The same tasks are also available as a list under the graph.
+
 ## Planning and reminders
 
 Everything here works from your own data by fixed rules (`backend/app/modules/planning/service.py`); nothing is sent

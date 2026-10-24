@@ -1,0 +1,38 @@
+{
+  "title": "Graph",
+  "subtitle_one": "{{count}} thing still to do",
+  "subtitle_other": "{{count}} things still to do",
+  "legend": "Show only",
+  "search": "Find in graph",
+  "open": "Open",
+  "hint": "Drag to move · pinch or scroll to zoom · tap a dot",
+  "zoomIn": "Zoom in",
+  "zoomOut": "Zoom out",
+  "fit": "Fit everything",
+  "asList": "Show as a list",
+  "emptyTitle": "Nothing left to do",
+  "emptyBody": "Unfinished tasks, goals and their links will appear here as a map.",
+  "aria": "Graph of {{tasks}} unfinished tasks, {{overdue}} overdue, linked to {{goals}} goals. The same tasks are listed below.",
+  "tasksCount_one": "{{count}} task",
+  "tasksCount_other": "{{count}} tasks",
+  "urgency": {
+    "overdue": "Overdue",
+    "today": "Today",
+    "week": "This week",
+    "later": "Later",
+    "none": "No date"
+  },
+  "show": {
+    "tag": "Tags",
+    "habit": "Habits",
+    "hub": "Due dates"
+  },
+  "kind": {
+    "goal": "Goal",
+    "milestone": "Milestone",
+    "task": "Task",
+    "tag": "Tag",
+    "habit": "Habit",
+    "hub": "Due-date hub"
+  }
+}
