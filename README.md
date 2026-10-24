@@ -128,8 +128,11 @@ When a new version is built, open pages show *A new version is ready → Reload*
 the mood: *Library* (leather spines by candlelight), *Chalkboard* (half-erased proofs) and *Observatory* (a brass star
 chart) are dark academia; *Parchment* (ruled paper, a coffee ring) and *Botanical* (pressed ferns) are light. Headings
 turn to EB Garamond, cards to paper or leather, buttons to an oxblood seal; the graph becomes a scholar's chart.
-Academia and its scene load only when you use it. Signed out, the app's address shows a landing page about Life OS;
-the sign-in form is at `/login`.
+Academia and its scene load only when you use it. Signed out, the app's address shows a landing page about Life OS,
+laid out as the study's rooms in colour (try the Today page, the journal-to-report demo, the report switches and the
+study picker); the sign-in form is at `/login`. Its six pictures are public-domain museum works (Rembrandt's scholar,
+Marot's library, a geometry engraving, an astrolabe, a manuscript leaf, a fern), credited on the page and in
+`frontend/public/landing/credits.json`.
 
 Settings → **Appearance** (saved to your account): ten accent colours, a background — plain, five soft gradients,
 six public-domain masterpieces (Hokusai, Monet, Van Gogh, Hiroshige, Seurat, Caillebotte; CC0 from the Art Institute

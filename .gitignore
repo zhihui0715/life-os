@@ -29,3 +29,6 @@ backups/
 
 # Diagram tool working files (rendered copies live in docs/diagrams)
 .archify/
+
+# design checks (screenshots and notes from the taste-skill inspector)
+.taste-skill/

@@ -1,6 +1,7 @@
-/* The landing page (features/landing): light academia whatever theme this browser last used, with EB Garamond for
-   headings. Loaded with the page's own chunk, so signed-in use never downloads it — and it carries the page's own
-   Tailwind utilities (index.css leaves the landing folder out of the app's stylesheet). */
+/* The landing page (features/landing): the five rooms of the Academia study as colour chapters, one flat field per
+   section, butted edge to edge. EB Garamond in two weights for the page; the interface fragments ([data-ui]) keep the
+   app's own sans. Loaded with the page's own chunk, so signed-in use never downloads it — and it carries the page's
+   own Tailwind utilities (index.css leaves the landing folder out of the app's stylesheet). */
 @import 'tailwindcss/utilities.css' source(none);
 @source '../features/landing';
 
@@ -12,63 +13,1298 @@
   src: url('../../node_modules/@fontsource-variable/eb-garamond/files/eb-garamond-latin-wght-normal.woff2') format('woff2-variations');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212;
 }
-@font-face {
-  font-family: 'EB Garamond Variable';
-  font-style: italic;
-  font-display: swap;
-  font-weight: 400 800;
-  src: url('../../node_modules/@fontsource-variable/eb-garamond/files/eb-garamond-latin-wght-italic.woff2') format('woff2-variations');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212;
-}
 
 .landing {
+  /* the rooms: each chapter's field, and the ink that reads on it */
+  --parchment: #f3ead6;
   --ink: #2a1f16;
-  --ink-soft: #5a4632;
-  --paper: #f6eedb;
-  --card: #fcf8ee;
-  --rule: #dccbaa;
-  --seal: #7a2a22;
-  --brass: #9a6f2a;
+  --paper: #f7f0de;
+  --library: #2b1b12;
+  --oxblood: #7a2a22;
+  --chalk: #1d2c24;
+  --navy: #142039;
+  --brass: #c9a25a;
+  --sage: #cbd2b2;
+
+  --margin: clamp(20px, 3.4vw, 48px);
+  --gutter: clamp(12px, 1.8vw, 24px);
+  /* five sizes, no more */
+  --s1: 14px;
+  --s2: 19px;
+  --s3: clamp(23px, 2.3vw, 32px);
+  --s4: clamp(42px, 5.2vw, 80px);
+  --s5: clamp(56px, 9.5vw, 148px);
+  --serif: 'EB Garamond Variable', 'EB Garamond', Garamond, Georgia, 'Songti SC', 'STSong', serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', Inter, system-ui, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  font-family: var(--serif);
+  font-size: var(--s2);
+  line-height: 1.5;
   color: var(--ink);
-  background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .33 0 0 0 0 .18 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    radial-gradient(at 15% 0%, #fbf5e6 0, transparent 50%),
-    radial-gradient(at 90% 30%, #efe1c2 0, transparent 45%),
-    var(--paper);
+  background: var(--parchment);
   color-scheme: light;
+  overflow-x: clip;
 }
-.landing .serif {
-  font-family: 'EB Garamond Variable', 'EB Garamond', Garamond, Georgia, 'Songti SC', 'STSong', serif;
-  font-feature-settings: 'liga', 'dlig', 'onum';
+.landing h1,
+.landing h2,
+.landing h3 {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  text-wrap: balance;
 }
-/* ruled notebook lines with a red margin, for the hero's notebook */
-.landing .ruled {
-  background:
-    linear-gradient(90deg, transparent 38px, rgb(181 65 58 / 0.4) 38px 39px, transparent 39px),
-    repeating-linear-gradient(180deg, transparent 0 35px, rgb(125 156 192 / 0.28) 35px 36px),
-    var(--card);
+.landing .tab-nums {
+  font-variant-numeric: tabular-nums lining-nums;
 }
-.landing .fleuron::before,
-.landing .fleuron::after {
+
+/* ---------- navigation ---------- */
+.l-nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 24px var(--margin) 0;
+  font-size: var(--s2);
+}
+.l-nav .mark {
+  font-weight: 700;
+  font-size: var(--s3);
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.l-nav .links {
+  margin-left: auto;
+  display: flex;
+  gap: 28px;
+}
+.l-nav .links a {
+  text-decoration: none;
+  transition: color 160ms;
+}
+.l-nav .links a:hover {
+  color: var(--oxblood);
+}
+.l-btn {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 24px;
+  background: var(--oxblood);
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: var(--s2);
+  font-weight: 600;
+  border-radius: 0;
+  transition:
+    transform 160ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    background-color 160ms;
+}
+.l-btn:hover {
+  background: #63211b;
+  transform: translateY(-2px);
+}
+.l-btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+.l-btn.on-dark {
+  background: var(--paper);
+  color: var(--oxblood);
+}
+.l-btn.on-dark:hover {
+  background: #fff;
+}
+.l-btn.small {
+  min-height: 40px;
+  padding: 0 18px;
+}
+.landing :focus-visible {
+  outline: 3px solid var(--brass);
+  outline-offset: 3px;
+}
+
+/* ---------- hero: the Today page on an oxblood stage with a notebook index tab ---------- */
+.l-hero {
+  position: relative;
+  min-height: max(100svh, 760px);
+  overflow: hidden;
+}
+.l-hero .copy {
+  padding: 0 var(--margin);
+  margin-top: clamp(64px, 11vh, 132px);
+  max-width: calc(50% + var(--margin));
+}
+.l-hero h1 {
+  font-size: var(--s4);
+  max-width: 16ch;
+}
+.l-hero .lead {
+  margin-top: 36px;
+  max-width: 38ch;
+  font-size: var(--s2);
+}
+.l-hero .actions {
+  margin-top: 32px;
+}
+.l-stage {
+  position: absolute;
+  left: calc(var(--margin) + (100% - 2 * var(--margin)) * 4 / 12);
+  right: 0;
+  top: 44%;
+  bottom: 0;
+  background: var(--oxblood);
+  /* an index tab, two columns wide, stands up from the stage's top-left corner */
+  clip-path: polygon(0 0, 22% 0, 22% 64px, 100% 64px, 100% 100%, 0 100%);
+}
+.l-stage .frag {
+  position: absolute;
+  left: 56px;
+  top: 120px;
+  width: 620px;
+}
+
+/* ---------- journal → report: input half, output half ---------- */
+.l-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.l-split > div {
+  position: relative;
+  min-height: 90svh;
+  padding: 0 var(--margin);
+}
+.l-split .dark {
+  background: var(--library);
+  color: var(--paper);
+}
+.l-split .light {
+  background: var(--paper);
+}
+.l-split .input {
+  margin-top: 22svh;
+  max-width: 34ch;
+}
+.l-split textarea {
+  width: 100%;
+  min-height: 9.5em;
+  resize: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--s3);
+  line-height: 1.35;
+  border: 0;
+  caret-color: var(--brass);
+  outline: none;
+}
+.l-split textarea:focus-visible {
+  outline: 3px solid var(--brass);
+  outline-offset: 8px;
+}
+.l-moods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+.l-moods button {
+  min-height: 44px;
+  padding: 0 16px;
+  background: rgb(247 240 222 / 0.1);
+  color: var(--paper);
+  font-size: var(--s2);
+  transition:
+    background-color 160ms,
+    transform 160ms;
+}
+.l-moods button:hover {
+  background: rgb(247 240 222 / 0.2);
+}
+.l-moods button:active {
+  transform: scale(0.96);
+}
+.l-moods button[aria-pressed='true'] {
+  background: var(--brass);
+  color: var(--ink);
+}
+.l-split .output {
+  margin-top: 22svh;
+  width: min(500px, 100%);
+}
+.l-split .half-title {
+  position: absolute;
+  bottom: 32px;
+  font-size: var(--s4);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+}
+.l-split .dark .half-title {
+  left: var(--margin);
+}
+.l-split .light .half-title {
+  right: var(--margin);
+  text-align: right;
+}
+
+/* ---------- reports: a pinned report beside the controls that shape it ---------- */
+.l-pinned {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gutter);
+  background: var(--parchment);
+}
+.l-pinned .p-title {
+  grid-column: 8 / 13;
+  grid-row: 1;
+  padding: 72px var(--margin) 0 0;
+  font-size: var(--s4);
+}
+.l-pinned .fixed {
+  grid-column: 1 / 7;
+  grid-row: 1 / span 2;
+  align-self: start;
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  background: var(--chalk);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+}
+.l-pinned .fixed > [data-ui] {
+  width: min(430px, 100%);
+}
+.l-pinned .reading {
+  grid-column: 8 / 13;
+  grid-row: 2;
+  padding: 0 var(--margin) 22vh 0;
+  max-width: calc(44ch + var(--margin));
+}
+.l-block {
+  margin-top: 42vh;
+}
+.l-block:first-of-type {
+  margin-top: 18vh;
+}
+.l-block h3 {
+  font-size: var(--s3);
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+}
+.l-block p {
+  margin-top: 10px;
+}
+.l-block .control {
+  margin-top: 20px;
+}
+.l-seg {
+  display: inline-flex;
+  background: rgb(42 31 22 / 0.08);
+  padding: 4px;
+}
+.l-seg button {
+  min-height: 44px;
+  min-width: 84px;
+  padding: 0 18px;
+  font-size: var(--s2);
+  transition: background-color 160ms;
+}
+.l-seg button[aria-checked='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+.l-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 44px;
+  cursor: pointer;
+  font-size: var(--s2);
+}
+.l-toggle .track {
+  position: relative;
+  width: 52px;
+  height: 30px;
+  background: rgb(42 31 22 / 0.18);
+  border-radius: 999px;
+  transition: background-color 200ms;
+}
+.l-toggle .track::after {
   content: '';
-  height: 1px;
-  flex: 1;
-  background: linear-gradient(90deg, transparent, var(--rule));
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--paper);
+  transition: transform 260ms cubic-bezier(0.3, 1.4, 0.5, 1);
 }
-.landing .fleuron::after {
-  background: linear-gradient(90deg, var(--rule), transparent);
+.l-toggle[aria-checked='true'] .track {
+  background: var(--oxblood);
 }
-@keyframes landing-float {
-  50% {
-    transform: translateY(-8px) rotate(var(--tilt, 0deg));
+.l-toggle[aria-checked='true'] .track::after {
+  transform: translateX(22px);
+}
+
+/* ---------- a day, then a week: one card, four fields ---------- */
+.l-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.l-strip > div {
+  position: relative;
+  min-height: 84svh;
+  padding: 28px;
+}
+.l-strip .card-slot {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(260px, calc(100% - 32px));
+  transition: transform 150ms ease-out;
+}
+.l-strip > div:hover .card-slot {
+  transform: translate(-50%, -6px);
+}
+.l-strip .clause {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  bottom: 28px;
+  font-size: var(--s3);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+}
+.l-strip h2 {
+  font-size: var(--s3);
+  font-weight: 800;
+}
+
+/* ---------- studies: the real scene behind a name you choose ---------- */
+.l-studies {
+  position: relative;
+  min-height: 88svh;
+  overflow: hidden;
+  color: var(--paper);
+  padding: 0 var(--margin);
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gutter);
+}
+.l-studies .s-text {
+  grid-column: 1 / 8;
+  display: flex;
+  flex-direction: column;
+}
+.l-studies .s-plate {
+  grid-column: 8 / 13;
+  align-self: center;
+  padding: 72px 0;
+}
+.l-studies .s-plate .frame {
+  background: var(--paper);
+  padding: 14px;
+  overflow: hidden;
+}
+.l-studies .s-plate .frame {
+  width: fit-content;
+  max-width: 100%;
+  margin-left: auto;
+}
+.l-studies .s-plate img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: min(62svh, 620px);
+}
+.l-studies .s-plate figcaption {
+  text-align: right;
+}
+.l-studies .s-plate figcaption {
+  margin-top: 12px;
+  font-size: var(--s1);
+}
+.l-studies.light {
+  color: var(--ink);
+}
+.l-studies canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.l-studies > :not(canvas) {
+  position: relative;
+}
+.l-studies .s-title {
+  margin-top: 96px;
+  font-size: var(--s3);
+  font-weight: 800;
+}
+.l-studies .name {
+  margin-top: 28px;
+  font-size: var(--s5);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.l-studies .about {
+  margin-top: 28px;
+  max-width: 36ch;
+  font-size: var(--s3);
+  line-height: 1.25;
+}
+.l-studies .choices {
+  margin-top: auto;
+  padding: 48px 0 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.l-studies .choices button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 6px 14px 6px 6px;
+  font-size: var(--s2);
+  background: rgb(247 240 222 / 0.16);
+  color: inherit;
+  transition:
+    background-color 160ms,
+    transform 160ms;
+}
+.l-studies.light .choices button {
+  background: rgb(42 31 22 / 0.1);
+}
+.l-studies .choices img {
+  width: 40px;
+  height: 50px;
+  object-fit: cover;
+}
+.l-studies .choices button:hover {
+  transform: translateY(-2px);
+}
+.l-studies .choices button[aria-pressed='true'] {
+  background: var(--paper);
+  color: var(--ink);
+}
+.l-studies.light .choices button[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ---------- rooms: interface tiles with label strips ---------- */
+.l-rooms {
+  padding: clamp(96px, 14vh, 160px) var(--margin);
+  background: var(--parchment);
+}
+.l-rooms h2 {
+  font-size: var(--s4);
+  margin-bottom: 40px;
+}
+.l-rooms .tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px 12px;
+}
+.l-tile .pic {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+.l-tile .strip {
+  min-height: 92px;
+  padding: 12px;
+  font-size: var(--s1);
+  line-height: 1.35;
+  display: grid;
+  gap: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.l-tile .strip .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+.l-tile .strip .name {
+  font-size: var(--s2);
+  font-weight: 600;
+}
+
+/* ---------- the band of rooms, running off both edges ---------- */
+.l-band {
+  height: 34vh;
+  min-height: 200px;
+  background: var(--brass);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.l-band .track {
+  display: flex;
+  flex-shrink: 0;
+  font-size: 8vw;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  animation: l-run 40s linear infinite;
+}
+.l-band .track span {
+  display: inline-flex;
+  align-items: center;
+}
+.l-band .track span::after {
+  content: '';
+  width: 0.22em;
+  height: 0.22em;
+  margin: 0 0.4em;
+  border-radius: 50%;
+  background: var(--oxblood);
+}
+@keyframes l-run {
+  to {
+    transform: translateX(-100%);
   }
 }
-.landing .float {
-  transform: rotate(var(--tilt, 0deg));
-  animation: landing-float 6s ease-in-out infinite;
+.l-band-note {
+  padding: 28px var(--margin) clamp(96px, 14vh, 160px);
+  max-width: calc(60ch + var(--margin));
+}
+
+/* ---------- the action tile, cropped from a longer row ---------- */
+.l-cta {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: 12px;
+  padding-bottom: clamp(96px, 14vh, 160px);
+}
+.l-cta > * {
+  height: 380px;
+}
+.l-cta .flank-l {
+  grid-column: 1 / 3;
+  position: relative;
+  overflow: hidden;
+}
+.l-cta .flank-l img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 30% 70%;
+}
+.l-cta .tile {
+  grid-column: 3 / 11;
+  background: var(--oxblood);
+  color: var(--paper);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.l-cta .tile h2 {
+  font-size: var(--s4);
+}
+.l-cta .tile p {
+  margin: 18px 0 28px;
+  max-width: 46ch;
+}
+.l-cta .flank-r {
+  grid-column: 11 / 13;
+  background: var(--brass);
+}
+
+/* ---------- footer: the name built from blocks ---------- */
+.l-footer {
+  background: var(--library);
+  color: var(--paper);
+  padding: 72px var(--margin) 32px;
+}
+.l-blocks {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 34svh;
+  min-height: 200px;
+}
+.l-blocks span {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  font-weight: 700;
+  font-size: min(15vw, 26svh);
+  line-height: 0.78;
+  overflow: hidden;
+}
+.l-blocks small {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: var(--s1);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+.l-footer .cols {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px var(--gutter);
+  font-size: var(--s2);
+}
+.l-footer .cols h2 {
+  font-size: var(--s2);
+  font-weight: 700;
+  letter-spacing: 0;
+  margin-bottom: 10px;
+}
+.l-footer .cols li + li {
+  margin-top: 6px;
+}
+.l-footer .cols a,
+.l-footer .cols button {
+  text-decoration: none;
+  text-align: left;
+  transition: color 160ms;
+}
+.l-footer .cols a:hover,
+.l-footer .cols button:hover {
+  color: var(--brass);
+}
+.l-footer .credits {
+  margin-top: 40px;
+  max-width: 110ch;
+  font-size: var(--s1);
+  opacity: 0.85;
+}
+.l-footer .credits a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.l-footer .last {
+  margin-top: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: var(--s2);
+}
+
+/* ---------- interface fragments: the app's own look ---------- */
+.landing [data-ui] {
+  font-family: var(--sans);
+  font-size: var(--s1);
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+  color: #1c1c1e;
+  background: #fffdf8;
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px rgb(80 55 25 / 0.12);
+}
+.landing [data-ui] .ui-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.landing [data-ui] .ui-sub {
+  color: #5f513f;
+}
+.landing [data-ui] .ui-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #efe5d0;
+  color: #4f3e2e;
+  font-weight: 600;
+}
+
+/* ---------- motion ---------- */
+.l-shutter {
+  animation: l-shutter 1.1s cubic-bezier(0.65, 0, 0.2, 1) both;
+}
+.l-shutter .frag {
+  animation: l-settle 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes l-shutter {
+  from {
+    clip-path: polygon(0 100%, 22% 100%, 22% 100%, 100% 100%, 100% 100%, 0 100%);
+  }
+  to {
+    clip-path: polygon(0 0, 22% 0, 22% 64px, 100% 64px, 100% 100%, 0 100%);
+  }
+}
+.l-shutter-img {
+  animation: l-plate 1.1s cubic-bezier(0.65, 0, 0.2, 1) both;
+}
+@keyframes l-plate {
+  from {
+    clip-path: inset(100% 0 0 0);
+    transform: scale(1.12);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+@keyframes l-settle {
+  from {
+    transform: scale(1.06);
+  }
+}
+.landing.anim [data-rise] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 700ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--i, 0) * 80ms);
+}
+.landing.anim [data-rise].in {
+  opacity: 1;
+  transform: none;
 }
 @media (prefers-reduced-motion: reduce) {
-  .landing .float {
+  .l-shutter,
+  .l-shutter .frag,
+  .l-shutter-img,
+  .l-band .track {
     animation: none;
+  }
+  .landing.anim [data-rise] {
+    transform: none;
+    transition: opacity 300ms;
+  }
+  .landing * {
+    transition-duration: 0ms !important;
+  }
+}
+
+/* ---------- tablet and phone: each section its own composition ---------- */
+@media (max-width: 1080px) {
+  .l-block {
+    margin-top: 22vh;
+  }
+  .l-block:first-of-type {
+    margin-top: 12vh;
+  }
+  .l-stage .frag {
+    left: 40px;
+    width: min(560px, calc(100% - 56px));
+  }
+  .l-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .l-rooms .tiles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .landing {
+    --s2: 17px;
+    --s3: 24px;
+    --s4: clamp(36px, 10.5vw, 46px);
+    --s5: 17vw;
+  }
+  .l-nav .links a {
+    display: none;
+  }
+  .l-hero {
+    min-height: 0;
+  }
+  .l-hero .copy {
+    max-width: none;
+    margin-top: 56px;
+  }
+  .l-hero .lead {
+    margin-top: 24px;
+  }
+  .l-stage {
+    position: relative;
+    left: auto;
+    top: auto;
+    margin-top: 48px;
+    height: 600px;
+    clip-path: polygon(0 0, 72px 0, 72px 48px, 100% 48px, 100% 100%, 0 100%);
+  }
+  .l-shutter {
+    animation-name: l-shutter-phone;
+  }
+  @keyframes l-shutter-phone {
+    from {
+      clip-path: polygon(0 100%, 72px 100%, 72px 100%, 100% 100%, 100% 100%, 0 100%);
+    }
+    to {
+      clip-path: polygon(0 0, 72px 0, 72px 48px, 100% 48px, 100% 100%, 0 100%);
+    }
+  }
+  .l-stage .frag {
+    left: 16px;
+    top: 72px;
+    width: calc(100% - 32px);
+  }
+  .l-split {
+    grid-template-columns: 1fr;
+  }
+  .l-split > div {
+    min-height: 62svh;
+    padding-bottom: 96px;
+  }
+  .l-split .input,
+  .l-split .output {
+    margin-top: 48px;
+  }
+  .l-split textarea {
+    font-size: var(--s2);
+  }
+  .l-split .light {
+    padding-top: 72px;
+  }
+  .l-split .light .half-title {
+    top: 20px;
+    bottom: auto;
+    left: var(--margin);
+    right: auto;
+    text-align: left;
+  }
+  .l-pinned {
+    display: block;
+  }
+  .l-pinned .fixed {
+    position: relative;
+    height: auto;
+    padding: 40px 16px;
+  }
+  .l-pinned .p-title {
+    padding: 72px var(--margin) 32px;
+  }
+  .l-pinned .reading {
+    padding: 0 var(--margin) 96px;
+    max-width: none;
+  }
+  .l-block,
+  .l-block:first-of-type {
+    margin-top: 72px;
+  }
+
+  .l-seg {
+    display: flex;
+  }
+  .l-seg button {
+    flex: 1;
+    min-width: 0;
+  }
+  .l-strip {
+    grid-template-columns: 1fr;
+  }
+  .l-strip > div {
+    min-height: 0;
+    padding: 56px var(--margin) 72px;
+    display: flex;
+    flex-direction: column;
+  }
+  .l-strip .clause {
+    position: static;
+    order: -1;
+  }
+  .l-strip h2 {
+    order: -2;
+  }
+  .l-strip .card-slot {
+    position: static;
+    transform: none;
+    margin-top: 32px;
+  }
+  .l-strip > div:hover .card-slot {
+    transform: translateY(-6px);
+  }
+  .l-strip h2 {
+    margin-bottom: 12px;
+  }
+  .l-studies {
+    display: flex;
+    flex-direction: column;
+  }
+  .l-studies .s-title {
+    margin-top: 64px;
+  }
+  .l-studies .about {
+    font-size: var(--s2);
+  }
+  .l-studies .choices {
+    padding: 32px 0 0;
+  }
+  .l-studies .s-plate {
+    padding: 32px 0 48px;
+  }
+  .l-studies .s-plate .frame {
+    margin-left: 0;
+  }
+  .l-studies .s-plate img {
+    max-height: 56svh;
+  }
+  .l-studies .s-plate figcaption {
+    text-align: left;
+  }
+  /* on a phone the labels turn sideways, like titles on book spines */
+  .l-blocks small {
+    top: 8px;
+    left: 50%;
+    writing-mode: vertical-rl;
+    transform: translateX(-50%);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .l-rooms .tiles {
+    gap: 20px 8px;
+  }
+  .l-tile .pic {
+    padding: 10px;
+  }
+  .l-tile .strip .row.place {
+    display: none;
+  }
+  .l-tile .strip .row.values {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .l-band {
+    height: 22vh;
+    min-height: 140px;
+  }
+  .l-band .track {
+    font-size: var(--s5);
+  }
+  .l-cta {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .l-cta .tile {
+    grid-column: 1 / 3;
+    grid-row: 1;
+    height: auto;
+    min-height: 300px;
+    padding: 32px 24px;
+  }
+
+  .l-cta .flank-l,
+  .l-cta .flank-r {
+    grid-column: auto;
+    grid-row: 2;
+    height: 120px;
+  }
+  .l-blocks {
+    height: 22svh;
+    min-height: 140px;
+  }
+  .l-footer .cols {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* the language menu on the dark footer reads in paper, its list in ink */
+.l-footer .l-lang select,
+.l-footer .l-lang svg {
+  color: var(--paper);
+  background-color: transparent;
+}
+.l-footer .l-lang option {
+  color: #1c1c1e;
+}
+
+/* ======================================================================================================
+   Motion. Each chapter moves its own way: the hero's title rises out of its line and its Today page fills
+   in row by row; colour fields open from a card to full bleed as they scroll in; the day's four fields wipe
+   down one after another; room tiles come alive; the name in the footer is stacked block by block. Only
+   transform, opacity and clip-path move. Scroll-linked parts use CSS scroll timelines where the browser has
+   them, and simply rest in place where it has not. Under reduced motion everything is shown at rest.
+   ====================================================================================================== */
+
+/* the reading ribbon: an oxblood bookmark across the top that fills as you read */
+.l-ribbon {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 3px;
+  z-index: 40;
+  background: var(--oxblood);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* hero: the title rises out of its own baseline, then the Today page lists its day */
+  .l-hero .mask {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
+  }
+  .l-hero .mask > span {
+    display: block;
+    animation: l-line-up 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+  }
+  .l-hero .lead,
+  .l-hero .actions {
+    animation: l-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .l-hero .lead {
+    animation-delay: 0.45s;
+  }
+  .l-hero .actions {
+    animation-delay: 0.6s;
+  }
+  .l-today-row {
+    animation: l-row-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(0.75s + var(--i) * 90ms);
+  }
+  .l-stage .tilt {
+    transition: transform 400ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  /* a ticked task: the line is drawn through it */
+  .l-strike {
+    background: linear-gradient(currentColor, currentColor) 0 55% / 0 1.5px no-repeat; /* taste-skill-ignore: a drawn strike line, not a background */
+    transition: background-size 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .l-strike.done {
+    background-size: 100% 1.5px;
+  }
+  .l-check {
+    transition: transform 220ms cubic-bezier(0.3, 1.5, 0.5, 1);
+  }
+  .l-check[aria-checked='true'] {
+    transform: scale(1.12);
+  }
+
+  /* reports: bars grow from the left */
+  .l-bar {
+    transform-origin: 0 50%;
+    transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* a day, then a week: each field wipes down in turn, then its card's chips arrive one by one */
+  .landing.anim .l-strip > div {
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 900ms cubic-bezier(0.65, 0, 0.2, 1);
+    transition-delay: calc(var(--f) * 140ms);
+  }
+  .landing.anim .l-strip.in > div {
+    clip-path: inset(0 0 0 0);
+  }
+  .landing.anim .l-strip .ui-chip {
+    opacity: 0;
+    transform: translateY(6px) scale(0.92);
+    transition:
+      opacity 360ms ease-out,
+      transform 420ms cubic-bezier(0.3, 1.4, 0.5, 1);
+    transition-delay: calc(var(--f) * 140ms + 600ms + var(--c) * 110ms);
+  }
+  .landing.anim .l-strip.in .ui-chip {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* studies: the scene and its name change places softly */
+  .l-studies canvas {
+    animation: l-scene-in 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .l-swap {
+    animation: l-swap-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* rooms: tiles settle into the grid, and each room's screen does its one thing */
+  .landing.anim .l-tile {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+    transition:
+      opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 800ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--i) * 90ms);
+  }
+  .landing.anim .l-tile.in {
+    opacity: 1;
+    transform: none;
+  }
+  .l-tile .pic [data-ui] {
+    transition: transform 400ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .l-tile:hover .pic [data-ui] {
+    transform: translateY(-4px) rotate(-0.6deg);
+  }
+  .landing.anim .l-tile .grow {
+    transform: scaleY(0);
+    transform-origin: 50% 100%;
+    transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(400ms + var(--k, 0) * 120ms);
+  }
+  .landing.anim .l-tile .widen {
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    transition: transform 1100ms cubic-bezier(0.16, 1, 0.3, 1) 450ms;
+  }
+  .landing.anim .l-tile .pop {
+    opacity: 0;
+    transform: scale(0.6);
+    transition:
+      opacity 300ms ease-out,
+      transform 420ms cubic-bezier(0.3, 1.5, 0.5, 1);
+    transition-delay: calc(400ms + var(--k, 0) * 90ms);
+  }
+  .landing.anim .l-tile .draw {
+    stroke-dasharray: 140;
+    stroke-dashoffset: 140;
+    transition: stroke-dashoffset 1200ms cubic-bezier(0.65, 0, 0.2, 1) 450ms;
+  }
+  .landing.anim .l-tile .wind {
+    stroke-dashoffset: 170;
+    transition: stroke-dashoffset 1600ms cubic-bezier(0.16, 1, 0.3, 1) 400ms;
+  }
+  .landing.anim .l-tile.in .grow,
+  .landing.anim .l-tile.in .widen,
+  .landing.anim .l-tile.in .pop {
+    opacity: 1;
+    transform: none;
+  }
+  .landing.anim .l-tile.in .draw {
+    stroke-dashoffset: 0;
+  }
+  .landing.anim .l-tile.in .wind {
+    stroke-dashoffset: 60;
+  }
+
+  /* the action tile: its flanks slide in from the edges they were cropped by */
+  .landing.anim .l-cta .flank-l,
+  .landing.anim .l-cta .flank-r {
+    opacity: 0;
+    transition:
+      transform 1000ms cubic-bezier(0.16, 1, 0.3, 1) 150ms,
+      opacity 600ms ease-out 150ms;
+  }
+  .landing.anim .l-cta .flank-l {
+    transform: translateX(-40%);
+  }
+  .landing.anim .l-cta .flank-r {
+    transform: translateX(40%);
+  }
+  .landing.anim .l-cta.in .flank-l,
+  .landing.anim .l-cta.in .flank-r {
+    transform: none;
+    opacity: 1;
+  }
+
+  /* the footer's name is stacked block by block */
+  .landing.anim .l-blocks span {
+    transform: scaleY(0);
+    transform-origin: 50% 100%;
+    transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--k) * 90ms);
+  }
+  .landing.anim .l-blocks.in span {
+    transform: none;
+  }
+
+  /* scroll-linked, where the browser can: chapters open from a card to full bleed, pictures drift, the
+     hero recedes, the ribbon fills */
+  @supports (animation-timeline: view()) {
+    .l-ribbon {
+      animation: l-ribbon linear both;
+      animation-timeline: scroll(root);
+    }
+    .l-open {
+      animation: l-open linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
+    .l-drift {
+      animation: l-drift linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+    .l-hero .copy {
+      animation: l-recede linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 80%;
+    }
+  }
+}
+
+@keyframes l-line-up {
+  from {
+    transform: translateY(105%);
+  }
+}
+@keyframes l-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+@keyframes l-row-in {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+}
+@keyframes l-scene-in {
+  from {
+    opacity: 0.35;
+    transform: scale(1.04);
+  }
+}
+@keyframes l-swap-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.25em);
+  }
+}
+@keyframes l-ribbon {
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes l-open {
+  from {
+    clip-path: inset(7% 4% 0 4% round 28px);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 0);
+  }
+}
+@keyframes l-drift {
+  from {
+    transform: translateY(6%);
+  }
+  to {
+    transform: translateY(-6%);
+  }
+}
+@keyframes l-recede {
+  to {
+    transform: translateY(-12%);
+    opacity: 0.2;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .l-ribbon {
+    display: none;
   }
 }
