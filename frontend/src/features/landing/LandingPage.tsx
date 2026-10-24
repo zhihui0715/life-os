@@ -117,7 +117,7 @@ export default function LandingPage() {
         <Reports />
         <ADay />
 
-        <section id="studies" className={`l-studies l-open ${DARK_SCENES.has(study) ? '' : 'light'}`} aria-labelledby="studies-title">
+        <section id="studies" className={`l-studies l-sheet l-open ${DARK_SCENES.has(study) ? '' : 'light'}`} aria-labelledby="studies-title">
           <SceneCanvas key={study} scene={study} />
           <div className="s-text">
             <h2 id="studies-title" className="s-title" data-rise>
@@ -158,7 +158,7 @@ export default function LandingPage() {
           <h2 id="band-title" className="sr-only">
             {t('rooms.title')}
           </h2>
-          <div className="l-band l-open" aria-hidden>
+          <div className="l-band" aria-hidden>
             {[0, 1].map((copy) => (
               <div key={copy} className="track">
                 {(t('band.names', { returnObjects: true }) as string[]).map((n) => (
@@ -195,7 +195,7 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="l-footer">
+      <footer className="l-footer l-sheet">
         {/* The name, built from blocks in the study's colours, each labelled with what it is */}
         <div className="l-blocks" data-play>
           {BLOCKS.map((b, i) =>
@@ -528,7 +528,7 @@ function JournalToReport() {
     }
   }, [t])
   return (
-    <section id="day-page" className="l-split l-open" aria-labelledby="journal-title">
+    <section id="day-page" className="l-split l-sheet l-open" aria-labelledby="journal-title">
       <h2 id="journal-title" className="sr-only">
         {t('journal.left')} {t('journal.right')}
       </h2>
@@ -628,7 +628,7 @@ function Reports() {
   ]
   const most = Math.max(...f.time)
   return (
-    <section id="reports" className="l-pinned" aria-labelledby="reports-title">
+    <section id="reports" className="l-pinned l-sheet" aria-labelledby="reports-title">
       <h2 id="reports-title" className="p-title" data-rise>
         {t('reports.title')}
       </h2>
@@ -746,7 +746,7 @@ function ADay() {
     { bg: 'var(--sage)', fg: 'var(--ink)', clause: t('day.s4') },
   ]
   return (
-    <section id="day" className="l-strip" aria-labelledby="day-title" data-play>
+    <section id="day" className="l-strip l-sheet" aria-labelledby="day-title" data-play>
       {fields.map((f, i) => (
         <div key={i} style={{ background: f.bg, color: f.fg, '--f': i } as CSSProperties}>
           {i === 0 && <h2 id="day-title">{t('day.title')}</h2>}
@@ -794,7 +794,7 @@ function DayCard({ stage }: { stage: number }) {
 function Rooms() {
   const { t } = useTranslation('landing')
   return (
-    <section id="rooms" className="l-rooms" aria-labelledby="rooms-title">
+    <section id="rooms" className="l-rooms l-sheet" aria-labelledby="rooms-title">
       <h2 id="rooms-title" data-rise>
         {t('rooms.title')}
       </h2>
