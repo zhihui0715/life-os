@@ -5,7 +5,6 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
-import enAi from '../locales/en/ai.json'
 import enCalendar from '../locales/en/calendar.json'
 import enCommon from '../locales/en/common.json'
 import enInsights from '../locales/en/insights.json'
@@ -17,7 +16,6 @@ import enGoals from '../locales/en/goals.json'
 import enGraph from '../locales/en/graph.json'
 import enSettings from '../locales/en/settings.json'
 import enTasks from '../locales/en/tasks.json'
-import zhAi from '../locales/zh-CN/ai.json'
 import zhCalendar from '../locales/zh-CN/calendar.json'
 import zhCommon from '../locales/zh-CN/common.json'
 import zhInsights from '../locales/zh-CN/insights.json'
@@ -34,8 +32,8 @@ export const LOCALES = ['en', 'zh-CN'] as const
 export type Locale = (typeof LOCALES)[number]
 
 export const resources = {
-  en: { common: enCommon, tasks: enTasks, goals: enGoals, calendar: enCalendar, habits: enHabits, journal: enJournal, focus: enFocus, insights: enInsights, settings: enSettings, planning: enPlanning, graph: enGraph, ai: enAi },
-  'zh-CN': { common: zhCommon, tasks: zhTasks, goals: zhGoals, calendar: zhCalendar, habits: zhHabits, journal: zhJournal, focus: zhFocus, insights: zhInsights, settings: zhSettings, planning: zhPlanning, graph: zhGraph, ai: zhAi },
+  en: { common: enCommon, tasks: enTasks, goals: enGoals, calendar: enCalendar, habits: enHabits, journal: enJournal, focus: enFocus, insights: enInsights, settings: enSettings, planning: enPlanning, graph: enGraph },
+  'zh-CN': { common: zhCommon, tasks: zhTasks, goals: zhGoals, calendar: zhCalendar, habits: zhHabits, journal: zhJournal, focus: zhFocus, insights: zhInsights, settings: zhSettings, planning: zhPlanning, graph: zhGraph },
 } as const
 
 const STORAGE_KEY = 'lifeos.locale'
@@ -54,7 +52,7 @@ i18n.use(initReactI18next).init({
   resources,
   lng: detectLocale(),
   fallbackLng: 'en',
-  ns: ['common', 'tasks', 'goals', 'calendar', 'habits', 'journal', 'focus', 'insights', 'settings', 'planning', 'graph', 'ai'],
+  ns: ['common', 'tasks', 'goals', 'calendar', 'habits', 'journal', 'focus', 'insights', 'settings', 'planning', 'graph'],
   defaultNS: 'common',
   interpolation: { escapeValue: false }, // React already escapes output
 })

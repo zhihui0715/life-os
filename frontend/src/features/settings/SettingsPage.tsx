@@ -16,7 +16,6 @@ import type { Me, UserSettings } from '../../lib/types'
 import { ME_KEY, useAuth, useMe } from '../auth/AuthProvider'
 import { BackupCard } from './BackupCard'
 import { AppearanceCard } from './AppearanceCard'
-import { LocalAiCard } from './LocalAiCard'
 import { ReminderCard } from './ReminderCard'
 import { ScoreSettingsCard } from './ScoreSettingsCard'
 import { WorkingHoursCard } from './WorkingHoursCard'
@@ -103,7 +102,6 @@ export function SettingsPage() {
       <AppearanceCard />
       <SoundCard />
       <ReminderCard />
-      <LocalAiCard />
       <WorkingHoursCard />
       <ScoreSettingsCard />
       <BackupCard />

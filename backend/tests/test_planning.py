@@ -25,8 +25,8 @@ def setup_hours(api, hours):
     ok(api.patch("/api/v1/settings", {"timezone": "Asia/Kuala_Lumpur", "working_hours": {d: hours for d in DAYS}}))
 
 
-def test_old_paid_ai_endpoints_are_gone(api):
-    """The paid, cloud AI assistant was removed; the free local one (test_local_ai.py) uses different endpoints."""
+def test_ai_endpoints_are_gone(api):
+    assert api.get("/api/v1/ai/status").status_code == 404
     assert api.post("/api/v1/ai/daily-plan", {}).status_code == 404
     assert api.post("/api/v1/ai/weekly-review", {}).status_code == 404
     assert "ai_enabled" not in ok(api.get("/api/v1/settings"))

@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, CalendarArrowUp, Check, PartyPopper, Pencil, Sparkles, Trash2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CalendarArrowUp, Check, PartyPopper, Pencil, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -14,7 +14,6 @@ import { addDays, formatDay, formatMinutes, todayInZone } from '../../lib/dates'
 import { errorMessage } from '../../lib/errors'
 import { confetti } from '../../lib/confetti'
 import { play } from '../../lib/sound'
-import { useAiReady, useReviewDraft } from '../ai/api'
 import { useMe } from '../auth/AuthProvider'
 import { useTaskAction, useUpdateTask } from '../tasks/api'
 import { useSaveReview, useWeek, type WeekSummary } from './api'
@@ -61,8 +60,6 @@ function Review({ data }: { data: WeekSummary }) {
   const [priorities, setPriorities] = useState<string[]>(() => [0, 1, 2].map((i) => r?.priorities[i] ?? ''))
   const range = t('week.range', { start: formatDay(data.week.start, lang), end: formatDay(data.week.end, lang) })
 
-  const aiReady = useAiReady()
-  const draft = useReviewDraft()
   const persist = (extra: { completed?: boolean } = {}, onDone?: () => void) =>
     save.mutate(
       { weekStart: data.week.start, ...text, priorities: priorities.filter((p) => p.trim()), ...extra },
@@ -131,32 +128,6 @@ function Review({ data }: { data: WeekSummary }) {
       <div key={step} className="page-enter flex flex-col gap-6">
         {STEPS[step] === 'look' && <LookBack data={data} />}
         {STEPS[step] === 'tidy' && <TidyUp data={data} />}
-        {STEPS[step] === 'reflect' && aiReady && (
-          <div>
-            <Button
-              size="sm"
-              disabled={draft.isPending}
-              onClick={() =>
-                draft.mutate(data.week.offset === 0 ? 'this' : 'last', {
-                  onSuccess: (d) => {
-                    play('success')
-                    // fill only what's still empty: never overwrite your own words
-                    setText((cur) => ({
-                      went_well: cur.went_well || d.went_well,
-                      to_improve: cur.to_improve || d.to_improve,
-                      lesson: cur.lesson || d.lesson,
-                    }))
-                  },
-                  onError: (e) => toast(errorMessage(t, e), 'error'),
-                })
-              }
-            >
-              <Sparkles size={14} className={draft.isPending ? 'animate-spin' : 'text-[var(--tint-journal)]'} aria-hidden />
-              {draft.isPending ? t('ai:thinking') : t('ai:review.button')}
-            </Button>
-            <p className="text-subtle mt-1.5 text-[11px]">{t('ai:review.note')}</p>
-          </div>
-        )}
         {STEPS[step] === 'reflect' && (
           <GroupSection title={t('week.reflectTitle')}>
             <div className="flex flex-col gap-4 p-4">

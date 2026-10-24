@@ -13,7 +13,6 @@ import { useToast } from '../../components/ui/Toast'
 import { utcIsoToWallTime, wallTimeToUtcIso } from '../../lib/dates'
 import { errorMessage, fieldError } from '../../lib/errors'
 import type { Category, Task } from '../../lib/types'
-import { BreakdownPanel } from '../ai/BreakdownPanel'
 import { useMe } from '../auth/AuthProvider'
 import { useGoal, useGoals } from '../goals/api'
 import { useDeleteTask, useTaskAction, useUpdateTask } from './api'
@@ -264,7 +263,6 @@ export function TaskDrawer({ task, categories, onClose, onOpenTask }: Props) {
         {!isSubtask && (
           <section className="mt-6">
             <h3 className="mb-2 text-sm font-semibold">{t('subtasks.title')}</h3>
-            <BreakdownPanel taskId={task.id} />
             <Card className="overflow-hidden">
               <TaskList filters={{ parent_id: task.id }} categories={categories} onOpen={(sub) => onOpenTask?.(sub)} compact />
               <div className="border-border border-t p-2">

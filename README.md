@@ -125,19 +125,6 @@ four due-date hubs (Overdue, Today, This week, Later) pull work together by time
 glow red and pulse. Drag, pinch or scroll to zoom, tap a dot to light up its neighbours, and open it from the card.
 The same tasks are also available as a list under the graph.
 
-## Free local AI (optional)
-
-Two helpers use [Ollama](https://ollama.com), a free open-source AI that runs **on your own computer** — no account,
-no API key, no cost, and nothing is sent online:
-
-- **Break it down** (in a task's Subtasks): suggested next steps you tick to add as subtasks.
-- **Draft with AI** (Weekly review → Reflect): a first draft from the week's numbers and task titles.
-
-Set up once: install Ollama from ollama.com/download, run `ollama pull qwen2.5:3b` (about 2 GB), and keep Ollama
-running. Settings → Local AI shows whether it's connected; the buttons only appear when it is. Only task titles and
-counts go to the model, never notes or journal text. `OLLAMA_URL` / `OLLAMA_MODEL` in `.env` change the defaults.
-On a laptop without a strong graphics card an answer can take a minute.
-
 ## Planning and reminders
 
 Everything here works from your own data by fixed rules (`backend/app/modules/planning/service.py`); nothing is sent
