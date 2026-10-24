@@ -8,7 +8,8 @@
     "label": "主题",
     "system": "跟随系统",
     "light": "浅色",
-    "dark": "深色"
+    "dark": "深色",
+    "cosmos": "宇宙（太空）"
   },
   "timezone": {
     "label": "时区",
@@ -96,7 +97,8 @@
       "plain": "纯色",
       "gradient": "渐变",
       "art": "名画",
-      "paper": "纸张"
+      "paper": "纸张",
+      "space": "太空场景"
     },
     "accents": {
       "blue": "蓝色",
@@ -125,7 +127,19 @@
       "rainy-day": "巴黎街道，雨天",
       "dots": "点阵",
       "grid": "方格",
-      "linen": "亚麻"
+      "linen": "亚麻",
+      "nebula": "星云",
+      "saturn": "土星",
+      "aurora": "极光",
+      "deep-field": "深空",
+      "eclipse": "日食"
+    },
+    "cosmos": {
+      "title": "宇宙",
+      "body": "磨砂玻璃卡片背后是一片流动的星空，强调色微微发光。",
+      "on": "宇宙主题已开启，在下面挑一片星空。",
+      "try": "试试宇宙",
+      "turnOff": "关闭"
     }
   }
 }

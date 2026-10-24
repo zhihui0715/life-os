@@ -11,6 +11,11 @@ export const URGENCY_VAR: Record<Urgency, string> = {
 export const KIND_VAR: Record<string, string> = { goal: '--tint-goals', milestone: '--tint-goals', tag: '--tint-focus', habit: '--tint-habits' }
 export const LINK_DISTANCE: Record<GraphLink['kind'], number> = { subtask: 26, part_of: 55, serves: 55, tagged: 75, due: 95 }
 
+/** Ring radii of the orbits layout: the sooner something is due, the closer it circles "now"; goals ride the edge. */
+export const ORBIT: Record<Urgency | 'goal', number> = { overdue: 110, today: 175, week: 240, later: 305, none: 370, goal: 450 }
+export const orbitRadius = (n: GraphNode) =>
+  n.kind === 'task' ? ORBIT[n.urgency ?? 'none'] : n.kind === 'goal' ? ORBIT.goal : n.kind === 'milestone' ? ORBIT.goal - 30 : ORBIT.none
+
 export function radius(n: GraphNode) {
   switch (n.kind) {
     case 'goal':

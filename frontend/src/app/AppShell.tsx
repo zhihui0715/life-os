@@ -1,5 +1,5 @@
 import { ChevronRight, MoreHorizontal, PanelLeftClose, PanelLeftOpen, Plus } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet, useLocation } from 'react-router'
 
@@ -9,6 +9,7 @@ import { cn } from '../components/ui/cn'
 import { Dialog } from '../components/ui/Dialog'
 import { FocusWidget } from '../features/focus/FocusWidget'
 import { usePomodoroEngine } from '../features/focus/usePomodoroEngine'
+import { lazyWithReload } from '../lib/lazyPage'
 import { startReminders } from '../lib/reminders'
 import { play } from '../lib/sound'
 import { useMe } from '../features/auth/AuthProvider'
@@ -18,6 +19,15 @@ import { OfflineBanner, UpdatePrompt } from './OfflineBanner'
 import { NAV_ITEMS } from './nav'
 
 const STORAGE_KEY = 'lifeos.sidebarCollapsed'
+
+// The Cosmos sky is its own chunk: only people using that theme download it
+const SpaceSky = lazyWithReload(() => import('../components/cosmos/SpaceSky'))
+const subscribeLook = (notify: () => void) => {
+  const mo = new MutationObserver(notify)
+  mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-look'] })
+  return () => mo.disconnect()
+}
+const isCosmos = () => document.documentElement.dataset.look === 'cosmos'
 
 function readCollapsed() {
   try {
@@ -37,6 +47,7 @@ export function AppShell() {
   const [sheet, setSheet] = useState<Sheet>(null)
   useReminderLoop()
   const me = useMe()
+  const cosmos = useSyncExternalStore(subscribeLook, isCosmos)
 
   const toggleCollapsed = () => {
     play('tap')
@@ -64,6 +75,11 @@ export function AppShell() {
 
   return (
     <div className="min-h-dvh md:flex">
+      {cosmos && (
+        <Suspense fallback={null}>
+          <SpaceSky />
+        </Suspense>
+      )}
       {/* Sidebar (tablet: icons; desktop: icons + labels, collapsible), styled like a macOS source list */}
       <aside
         className={cn(

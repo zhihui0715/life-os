@@ -1,8 +1,11 @@
-import { forceCenter, forceCollide, forceLink, forceManyBody, forceSimulation, forceX, forceY, type Simulation, type SimulationLinkDatum, type SimulationNodeDatum } from 'd3-force'
+import { forceCenter, forceCollide, forceLink, forceManyBody, forceRadial, forceSimulation, forceX, forceY, type Simulation, type SimulationLinkDatum, type SimulationNodeDatum } from 'd3-force'
 import { useEffect, useRef } from 'react'
 
+import { createSky, drawGlow as glowOn, readSkyColours } from '../../lib/cosmos/sky'
+import { activeScene, type Scene } from '../../lib/theme'
 import type { GraphLink, GraphNode, Urgency } from './api'
-import { KIND_VAR, LINK_DISTANCE, radius, URGENCY_VAR } from './style'
+import type { Layout } from './filter'
+import { KIND_VAR, LINK_DISTANCE, ORBIT, orbitRadius, radius, URGENCY_VAR } from './style'
 
 export interface SimNode extends GraphNode, SimulationNodeDatum {}
 type SimLink = SimulationLinkDatum<SimNode> & { kind: GraphLink['kind'] }
@@ -13,6 +16,9 @@ interface Props {
   selected: string | null
   dimmed: (n: SimNode) => boolean
   onSelect: (n: SimNode | null) => void
+  layout: Layout
+  /** names for the rings of the orbits layout, and for the sun at their centre */
+  ringLabels: Record<Urgency | 'now', string>
   /** gets the canvas's zoom controls once mounted */
   controls: React.MutableRefObject<{ zoom: (factor: number) => void; fit: () => void } | null>
 }
@@ -21,13 +27,15 @@ interface Props {
  * Draws the graph on a canvas and runs the physics (d3-force). Drag empty space to pan, drag a node to move it,
  * pinch or scroll to zoom, tap a node to focus it and its neighbours. Drawn as deep space: goals are ringed planets,
  * due-date hubs are suns with their tasks in orbit, tasks are stars in their urgency colour, and overdue ones flare.
+ * In the orbits layout, tasks circle a central "now" on rings by urgency (the nearer, the sooner) and slowly revolve,
+ * inner rings faster, with goals out on the edge.
  */
-export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, controls }: Props) {
+export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, layout, ringLabels, controls }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const view = useRef({ x: 0, y: 0, k: 1 })
   const sim = useRef<Simulation<SimNode, SimLink> | null>(null)
-  const props = useRef({ selected, dimmed, onSelect })
-  props.current = { selected, dimmed, onSelect }
+  const props = useRef({ selected, dimmed, onSelect, ringLabels })
+  props.current = { selected, dimmed, onSelect, ringLabels }
 
   useEffect(() => {
     const canvas = canvasRef.current!
@@ -35,6 +43,10 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, controls
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
     let w = 0
     let h = 0
+    // the sky: in Cosmos the scene you picked, elsewhere a nebula
+    const root = document.documentElement
+    const scene = (): Scene => (root.dataset.look === 'cosmos' ? activeScene(root.dataset.bg ?? '') : 'nebula')
+    const sky = createSky(scene(), readSkyColours())
     const resize = () => {
       const r = canvas.getBoundingClientRect()
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
@@ -43,6 +55,7 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, controls
       canvas.width = w * dpr
       canvas.height = h * dpr
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      sky.resize(w, h)
     }
     resize()
     const ro = new ResizeObserver(resize)
@@ -56,8 +69,11 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, controls
       colours = Object.fromEntries(['--p1', '--warning-fill', '--urgency-week', '--accent', '--text-subtle', '--tint-goals', '--tint-focus', '--tint-habits'].map((v) => [v, get(v)]))
     }
     readColours()
-    const mo = new MutationObserver(readColours)
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-accent'] })
+    const mo = new MutationObserver(() => {
+      readColours()
+      sky.set(scene(), readSkyColours())
+    })
+    mo.observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-accent', 'data-bg', 'data-look'] })
 
     const byId = new Map(nodes.map((n) => [n.id, n]))
     const simLinks: SimLink[] = links.filter((l) => byId.has(l.source) && byId.has(l.target)).map((l) => ({ ...l }))
@@ -67,13 +83,13 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, controls
       ;(neighbours.get(l.target) ?? neighbours.set(l.target, new Set()).get(l.target)!).add(l.source)
     }
 
+    const orbits = layout === 'orbits'
     const simulation = forceSimulation<SimNode, SimLink>(nodes)
-      .force('link', forceLink<SimNode, SimLink>(simLinks).id((d) => d.id).distance((l) => LINK_DISTANCE[l.kind]).strength(0.6))
-      .force('charge', forceManyBody<SimNode>().strength((d) => (d.kind === 'hub' ? -380 : d.kind === 'goal' ? -260 : -90)))
+      .force('link', forceLink<SimNode, SimLink>(simLinks).id((d) => d.id).distance((l) => (orbits ? 30 : LINK_DISTANCE[l.kind])).strength(orbits ? 0.02 : 0.6))
+      .force('charge', forceManyBody<SimNode>().strength((d) => (orbits ? -40 : d.kind === 'hub' ? -380 : d.kind === 'goal' ? -260 : -90)))
       .force('collide', forceCollide<SimNode>((d) => radius(d) + 3))
-      .force('center', forceCenter(0, 0))
-      .force('x', forceX(0).strength(0.04))
-      .force('y', forceY(0).strength(0.06))
+    if (orbits) simulation.force('radial', forceRadial<SimNode>(orbitRadius, 0, 0).strength(0.9))
+    else simulation.force('center', forceCenter(0, 0)).force('x', forceX(0).strength(0.04)).force('y', forceY(0).strength(0.06))
     sim.current = simulation
     if (reduce) {
       simulation.stop()
@@ -98,8 +114,9 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, controls
 
     const fit = () => {
       if (!nodes.length) return
-      const xs = nodes.map((n) => n.x ?? 0)
-      const ys = nodes.map((n) => n.y ?? 0)
+      const edge = orbits ? Math.max(ORBIT.goal, ...nodes.map((n) => Math.hypot(n.x ?? 0, n.y ?? 0))) + 40 : 0
+      const xs = orbits ? [-edge, edge] : nodes.map((n) => n.x ?? 0)
+      const ys = orbits ? [-edge, edge] : nodes.map((n) => n.y ?? 0)
       const bw = Math.max(...xs) - Math.min(...xs) + 80
       const bh = Math.max(...ys) - Math.min(...ys) + 80
       const k = Math.min(2.2, Math.max(0.25, Math.min(w / bw, h / bh)))
@@ -115,126 +132,9 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, controls
     controls.current = { zoom: (f) => zoomAt(f), fit }
     let fitted = false
 
-    // ----- the sky: a fixed starfield in three parallax layers and a few slow nebula clouds, all in screen space
-    const TILE = 1400
-    let seed = 7
-    const rand = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646
-    const stars = Array.from({ length: 260 }, () => ({
-      x: rand() * TILE,
-      y: rand() * TILE,
-      r: 0.3 + rand() ** 3 * 1.4,
-      depth: [0.04, 0.1, 0.2][Math.floor(rand() * 3)],
-      phase: rand() * Math.PI * 2,
-      warm: rand() < 0.18,
-    }))
-    const nebulae = [
-      { v: '--accent', x: -0.28, y: -0.22, s: 0.75, speed: 0.00005 },
-      { v: '--tint-goals', x: 0.32, y: 0.18, s: 0.9, speed: -0.00004 },
-      { v: '--tint-focus', x: 0.05, y: 0.42, s: 0.6, speed: 0.00006 },
-    ]
-    let shooting: { x: number; y: number; vx: number; vy: number; born: number } | null = null
-    let nextShot = 4000
-
-    // soft round glow sprites, one per colour, so a glow costs a drawImage instead of a shadowBlur
-    const sprites = new Map<string, HTMLCanvasElement>()
-    const glow = (colour: string) => {
-      let c = sprites.get(colour)
-      if (!c) {
-        c = document.createElement('canvas')
-        c.width = c.height = 128
-        const g = c.getContext('2d')!
-        g.fillStyle = colour
-        g.fillRect(0, 0, 128, 128)
-        const mask = g.createRadialGradient(64, 64, 0, 64, 64, 64)
-        mask.addColorStop(0, 'rgba(255,255,255,1)')
-        mask.addColorStop(0.22, 'rgba(255,255,255,0.55)')
-        mask.addColorStop(0.55, 'rgba(255,255,255,0.12)')
-        mask.addColorStop(1, 'rgba(255,255,255,0)')
-        g.globalCompositeOperation = 'destination-in'
-        g.fillStyle = mask
-        g.fillRect(0, 0, 128, 128)
-        sprites.set(colour, c)
-      }
-      return c
-    }
-    const drawGlow = (colour: string, x: number, y: number, r: number, alpha: number) => {
-      ctx.globalAlpha = alpha
-      ctx.drawImage(glow(colour), x - r, y - r, r * 2, r * 2)
-    }
+    const drawGlow = (colour: string, x: number, y: number, r: number, alpha: number) => glowOn(ctx, colour, x, y, r, alpha)
     const nodeColour = (n: SimNode) =>
       n.kind === 'task' ? colours[URGENCY_VAR[n.urgency ?? 'none']] : n.kind === 'hub' ? colours[URGENCY_VAR[(n.ref as Urgency) ?? 'none']] : colours[KIND_VAR[n.kind]]
-
-    const drawSky = (time: number) => {
-      const v = view.current
-      const bg = ctx.createLinearGradient(0, 0, w * 0.4, h)
-      bg.addColorStop(0, '#04050d')
-      bg.addColorStop(0.55, '#080b1f')
-      bg.addColorStop(1, '#0d0a24')
-      ctx.globalAlpha = 1
-      ctx.globalCompositeOperation = 'source-over'
-      ctx.fillStyle = bg
-      ctx.fillRect(0, 0, w, h)
-
-      ctx.globalCompositeOperation = 'lighter'
-      const big = Math.max(w, h)
-      for (const n of nebulae) {
-        const a = time * n.speed
-        const x = w / 2 + (n.x * Math.cos(a) - n.y * Math.sin(a)) * w + v.x * 0.03
-        const y = h / 2 + (n.x * Math.sin(a) + n.y * Math.cos(a)) * h + v.y * 0.03
-        drawGlow(colours[n.v], x, y, big * n.s, 0.16)
-      }
-      for (const s of stars) {
-        const x = (((s.x + v.x * s.depth) % TILE) + TILE) % TILE
-        const y = (((s.y + v.y * s.depth) % TILE) + TILE) % TILE
-        const tw = reduce ? 0.8 : 0.55 + 0.45 * Math.sin(time * 0.0015 + s.phase)
-        ctx.globalAlpha = tw * (0.35 + s.depth * 3)
-        ctx.fillStyle = s.warm ? '#ffe2c4' : '#dfe8ff'
-        for (let ox = x; ox < w; ox += TILE)
-          for (let oy = y; oy < h; oy += TILE) {
-            ctx.beginPath()
-            ctx.arc(ox, oy, s.r, 0, Math.PI * 2)
-            ctx.fill()
-          }
-      }
-
-      // now and then a shooting star crosses the sky
-      if (!reduce) {
-        if (!shooting && time > nextShot) {
-          shooting = { x: Math.random() * w, y: Math.random() * h * 0.4, vx: 0.5 + Math.random() * 0.4, vy: 0.18 + Math.random() * 0.2, born: time }
-          nextShot = time + 7000 + Math.random() * 9000
-        }
-        if (shooting) {
-          const age = time - shooting.born
-          const life = 1100
-          if (age > life) shooting = null
-          else {
-            const hx = shooting.x + shooting.vx * age
-            const hy = shooting.y + shooting.vy * age
-            const ex = hx - shooting.vx * 160
-            const ey = hy - shooting.vy * 160
-            const tail = ctx.createLinearGradient(hx, hy, ex, ey)
-            tail.addColorStop(0, 'rgba(255,255,255,0.9)')
-            tail.addColorStop(1, 'rgba(255,255,255,0)')
-            ctx.globalAlpha = Math.sin((age / life) * Math.PI)
-            ctx.strokeStyle = tail
-            ctx.lineWidth = 1.4
-            ctx.beginPath()
-            ctx.moveTo(hx, hy)
-            ctx.lineTo(ex, ey)
-            ctx.stroke()
-          }
-        }
-      }
-
-      // a vignette pulls the eye to the middle
-      ctx.globalCompositeOperation = 'source-over'
-      const vig = ctx.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.3, w / 2, h / 2, big * 0.75)
-      vig.addColorStop(0, 'rgba(0,0,0,0)')
-      vig.addColorStop(1, 'rgba(0,0,0,0.55)')
-      ctx.globalAlpha = 1
-      ctx.fillStyle = vig
-      ctx.fillRect(0, 0, w, h)
-    }
 
     // a lit sphere: base colour, a highlight up-left and a shadowed limb down-right
     const sphere = (colour: string, x: number, y: number, r: number) => {
@@ -277,18 +177,69 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, controls
 
     // ----- drawing
     let frame = 0
+    let last = 0
     const draw = (time: number) => {
-      const { selected: sel, dimmed: isDim } = props.current
+      const { selected: sel, dimmed: isDim, ringLabels: rings } = props.current
+      // orbits revolve, inner rings faster, like planets (Kepler's third law, roughly)
+      if (orbits && !reduce && last) {
+        const dt = Math.min(time - last, 100)
+        for (const n of nodes) {
+          if (n.fx != null) continue
+          const x = n.x ?? 0
+          const y = n.y ?? 0
+          const a = 0.00012 * (ORBIT.overdue / Math.max(Math.hypot(x, y), ORBIT.overdue)) ** 1.5 * dt
+          n.x = x * Math.cos(a) - y * Math.sin(a)
+          n.y = x * Math.sin(a) + y * Math.cos(a)
+        }
+      }
+      last = time
+      // a ring is lit unless the urgency filter is showing other rings
+      const lit = (u: Urgency) => !isDim({ id: `ring:${u}`, kind: 'hub', ref: u, label: '' })
       const focus = sel ? new Set([sel, ...(neighbours.get(sel) ?? [])]) : null
       const v = view.current
       if (!fitted && (reduce || simulation.alpha() < 0.3)) {
         fit()
         fitted = true
       }
-      drawSky(time)
+      sky.draw(ctx, time, v.x, v.y, reduce)
       ctx.save()
       ctx.translate(w / 2 + v.x, h / 2 + v.y)
       ctx.scale(v.k, v.k)
+
+      if (orbits) {
+        // the rings, each in its urgency colour and named at the top, round the sun of "now"
+        for (const u of ['overdue', 'today', 'week', 'later', 'none'] as const) {
+          const r = ORBIT[u]
+          ctx.globalAlpha = lit(u) ? 0.3 : 0.07
+          ctx.strokeStyle = colours[URGENCY_VAR[u]]
+          ctx.lineWidth = 1.2 / v.k
+          if (u === 'none') ctx.setLineDash([3 / v.k, 6 / v.k])
+          ctx.beginPath()
+          ctx.arc(0, 0, r, 0, Math.PI * 2)
+          ctx.stroke()
+          ctx.setLineDash([])
+          ctx.globalAlpha = lit(u) ? 0.8 : 0.25
+          ctx.fillStyle = colours[URGENCY_VAR[u]]
+          ctx.font = `650 ${10 / Math.max(v.k, 0.6)}px system-ui, -apple-system, sans-serif`
+          ctx.textAlign = 'center'
+          ctx.textBaseline = 'bottom'
+          ctx.fillText(rings[u].toUpperCase(), 0, -r - 4)
+        }
+        ctx.globalAlpha = 0.08
+        ctx.strokeStyle = '#ffffff'
+        ctx.beginPath()
+        ctx.arc(0, 0, ORBIT.goal, 0, Math.PI * 2)
+        ctx.stroke()
+        ctx.globalCompositeOperation = 'lighter'
+        drawGlow(colours['--warning-fill'], 0, 0, 70 * (reduce ? 1 : 1 + 0.06 * Math.sin(time * 0.0015)), 0.5)
+        drawGlow('#fff4d6', 0, 0, 30, 0.95)
+        ctx.globalCompositeOperation = 'source-over'
+        ctx.globalAlpha = 0.9
+        ctx.fillStyle = 'rgba(244,246,255,0.96)'
+        ctx.font = `650 ${12 / Math.max(v.k, 0.6)}px system-ui, -apple-system, sans-serif`
+        ctx.textBaseline = 'top'
+        ctx.fillText(rings.now, 0, 26)
+      }
 
       // orbits: faint turning circles round each due-date sun, where its tasks settle
       for (const n of nodes) {
@@ -561,7 +512,7 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, controls
       canvas.removeEventListener('wheel', wheel)
       controls.current = null
     }
-  }, [nodes, links, controls])
+  }, [nodes, links, layout, controls])
 
   return <canvas ref={canvasRef} className="block h-full w-full touch-none select-none" aria-hidden />
 }

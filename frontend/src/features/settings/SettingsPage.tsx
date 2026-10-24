@@ -66,7 +66,7 @@ export function SettingsPage() {
           <Field label={t('theme.label')}>
             {(a) => (
               <Select {...a} value={s.theme} onChange={(e) => save.mutate({ theme: e.target.value as UserSettings['theme'] })}>
-                {(['system', 'light', 'dark'] as const).map((v) => (
+                {(['system', 'light', 'dark', 'cosmos'] as const).map((v) => (
                   <option key={v} value={v}>
                     {t(`theme.${v}`)}
                   </option>
