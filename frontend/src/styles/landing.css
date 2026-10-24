@@ -34,7 +34,8 @@
   --s3: clamp(23px, 2.3vw, 32px);
   --s4: clamp(42px, 5.2vw, 80px);
   --s5: clamp(56px, 9.5vw, 148px);
-  --serif: 'EB Garamond Variable', 'EB Garamond', Garamond, Georgia, 'Songti SC', 'STSong', serif;
+  /* Chinese has no glyphs in EB Garamond: it falls through to a Song/Ming serif, never to a sans */
+  --serif: 'EB Garamond Variable', 'EB Garamond', Garamond, Georgia, 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', 'Noto Serif CJK SC', SimSun, serif;
   --sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', Inter, system-ui, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 
   font-family: var(--serif);
@@ -1307,4 +1308,250 @@
   .l-ribbon {
     display: none;
   }
+}
+
+/* ======================================================================================================
+   Flow. The chapters are rounded sheets that slide a little over the one before, shaded along their top
+   edge, like pages in a notebook rather than square blocks laid side by side. Panels inside them are
+   rounded and given room to breathe; buttons are pills; the band of rooms runs as a rounded ribbon.
+   ====================================================================================================== */
+.landing {
+  --round: clamp(28px, 3.4vw, 52px);
+  --round-sm: clamp(18px, 2vw, 28px);
+  --sheet-shadow: 0 -22px 44px -28px rgb(30 18 8 / 0.5); /* taste-skill-ignore: the sheets' stacked edge, asked for */
+}
+
+/* pills */
+.l-btn,
+.l-seg,
+.l-seg button,
+.l-moods button,
+.l-studies .choices button {
+  border-radius: 999px;
+}
+.l-studies .choices img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+/* the hero's stage: a rounded corner where the notebook tab was */
+.l-stage {
+  clip-path: none;
+  border-top-left-radius: var(--round);
+}
+
+/* sheets: each chapter rounds its top and rests on the one before */
+.l-sheet {
+  position: relative;
+  margin-top: calc(-1 * var(--round));
+  border-radius: var(--round) var(--round) 0 0;
+  box-shadow: var(--sheet-shadow); /* taste-skill-ignore: the sheets' stacked edge, asked for */
+}
+.l-split.l-sheet,
+.l-studies.l-sheet {
+  overflow: clip;
+}
+
+/* every chapter leaves room at its foot for the next sheet to rest on */
+.l-studies.l-sheet {
+  padding-bottom: var(--round);
+}
+.l-pinned.l-sheet {
+  padding-bottom: var(--round);
+}
+
+/* journal → report: the two halves meet on a soft curve instead of a straight seam */
+.l-split .half-title {
+  bottom: calc(32px + var(--round));
+}
+.l-split .dark {
+  border-radius: 0 var(--round) 0 0;
+}
+.l-split .light {
+  margin-left: calc(-1 * var(--round));
+  padding-left: calc(var(--margin) + var(--round));
+}
+.l-split .dark {
+  position: relative;
+  z-index: 1;
+}
+
+/* reports: the pinned report is a rounded panel floating on the page, not half the screen */
+.l-pinned.l-sheet {
+  background: var(--parchment);
+}
+.l-pinned .fixed {
+  top: 20px;
+  height: calc(100svh - 40px);
+  margin: 20px 0 20px 20px;
+  border-radius: var(--round);
+  --open-r: var(--round);
+}
+
+/* a day, then a week: four rounded panels on paper, stepping down like a staircase */
+.l-strip.l-sheet {
+  background: var(--paper);
+  gap: 14px;
+  padding: calc(var(--round) + 20px) 20px calc(var(--round) + 32px);
+}
+.l-strip > div {
+  border-radius: var(--round-sm);
+  min-height: 70svh;
+}
+.l-strip > div:nth-child(2) {
+  margin-top: 28px;
+}
+.l-strip > div:nth-child(3) {
+  margin-top: 56px;
+}
+.l-strip > div:nth-child(4) {
+  margin-top: 84px;
+}
+
+/* rooms: rounded tiles, the label strip part of the same card */
+.l-rooms.l-sheet {
+  padding-top: calc(var(--round) + clamp(72px, 10vh, 120px));
+}
+.l-tile {
+  border-radius: var(--round-sm);
+  overflow: hidden;
+  transition: transform 400ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* the band runs as a rounded ribbon, inset from the page edges */
+.l-band {
+  margin: 24px var(--margin) 0;
+  border-radius: var(--round);
+}
+
+/* the action tile and its flanks */
+.l-cta {
+  padding-top: 24px;
+}
+.l-cta .tile,
+.l-cta .flank-l,
+.l-cta .flank-r {
+  border-radius: var(--round);
+  overflow: hidden;
+}
+.l-cta .flank-l {
+  border-radius: 0 var(--round) var(--round) 0;
+}
+.l-cta .flank-r {
+  border-radius: var(--round) 0 0 var(--round);
+}
+
+/* footer: a last sheet, and the name built from blocks with rounded tops, like book spines */
+.l-footer.l-sheet {
+  margin-top: calc(-1 * var(--round));
+}
+.l-blocks span {
+  border-radius: 18px 18px 6px 6px;
+}
+
+@media (max-width: 760px) {
+  .landing {
+    --round: 28px;
+    --round-sm: 22px;
+  }
+  .l-split .light {
+    margin-left: 0;
+    margin-top: calc(-1 * var(--round));
+    padding-left: var(--margin);
+    padding-top: calc(72px + var(--round));
+  }
+  .l-split .dark {
+    border-radius: 0 0 var(--round) var(--round);
+  }
+  .l-split .light .half-title {
+    top: calc(20px + var(--round));
+  }
+  .l-pinned .fixed {
+    margin: 12px;
+    height: auto;
+  }
+  .l-stage {
+    border-radius: var(--round) var(--round) 0 0;
+  }
+  .l-strip.l-sheet {
+    padding: calc(var(--round) + 12px) 12px calc(var(--round) + 20px);
+    gap: 12px;
+  }
+  .l-strip > div:nth-child(n) {
+    margin-top: 0;
+    min-height: 0;
+  }
+  .l-band {
+    margin-top: 12px;
+  }
+  .l-cta .tile {
+    border-radius: var(--round);
+  }
+  .l-cta .flank-l,
+  .l-cta .flank-r {
+    border-radius: var(--round-sm);
+  }
+}
+
+/* the openings land on the rounded shapes */
+@keyframes l-open {
+  from {
+    clip-path: inset(7% 4% 0 4% round var(--round));
+  }
+  to {
+    clip-path: inset(0 0 0 0 round var(--open-r, var(--round) var(--round) 0 0));
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .landing.anim .l-strip > div {
+    clip-path: inset(0 0 100% 0 round var(--round-sm));
+  }
+  .landing.anim .l-strip.in > div {
+    clip-path: inset(0 0 0 0 round var(--round-sm));
+  }
+  .l-tile:hover {
+    transform: translateY(-4px);
+  }
+}
+@keyframes l-shutter {
+  from {
+    clip-path: inset(100% 0 0 0 round var(--round) 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round var(--round) 0 0 0);
+  }
+}
+@keyframes l-shutter-phone {
+  from {
+    clip-path: inset(100% 0 0 0 round var(--round) var(--round) 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round var(--round) var(--round) 0 0);
+  }
+}
+
+/* Chinese: Han characters need open tracking and a little more leading than Latin display type */
+.landing:lang(zh-CN) :is(h1, h2, h3, .half-title, .name, .clause, .l-band .track) {
+  letter-spacing: 0;
+  line-height: 1.18;
+}
+.landing:lang(zh-CN) .l-studies .name {
+  line-height: 1.05;
+}
+.landing:lang(zh-CN) .l-blocks small {
+  letter-spacing: 0.04em;
+}
+/* Chinese headings break only at punctuation, so a phrase is never split across lines */
+.landing:lang(zh-CN) :is(h1, h2, h3, .half-title, .clause, .about) {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+/* the journal page holds a full line of Chinese, not six characters */
+.landing:lang(zh-CN) .l-split .input {
+  max-width: min(100%, 30em);
+}
+.landing:lang(zh-CN) .l-split textarea {
+  font-size: var(--s2);
+  line-height: 1.6;
 }
