@@ -1,5 +1,5 @@
 import { BookOpen, CalendarPlus, CheckSquare, Flame, Plus, Timer, type LucideIcon } from 'lucide-react'
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
@@ -8,10 +8,11 @@ import { todayInZone } from '../lib/dates'
 import { play } from '../lib/sound'
 import { useMe } from '../features/auth/AuthProvider'
 import { NewTaskSheet } from '../features/tasks/NewTaskSheet'
+import { lazyWithReload } from '../lib/lazyPage'
 
 // The event and habit forms load only when you ask for them
-const EventDialog = lazy(() => import('../features/calendar/EventDialog').then((m) => ({ default: m.EventDialog })))
-const HabitFormDialog = lazy(() => import('../features/habits/HabitFormDialog').then((m) => ({ default: m.HabitFormDialog })))
+const EventDialog = lazyWithReload(() => import('../features/calendar/EventDialog').then((m) => ({ default: m.EventDialog })))
+const HabitFormDialog = lazyWithReload(() => import('../features/habits/HabitFormDialog').then((m) => ({ default: m.HabitFormDialog })))
 
 const LONG_PRESS_MS = 450
 export type Sheet = 'task' | 'event' | 'habit' | null

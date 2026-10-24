@@ -1,6 +1,6 @@
 import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { lazy, Suspense, useEffect, type ReactNode } from 'react'
+import { Suspense, useEffect, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router'
 
@@ -15,20 +15,21 @@ import { ApiError } from '../lib/api'
 import { errorMessage } from '../lib/errors'
 import { CACHE_MAX_AGE, keepOffline, persister, startOutboxSync } from '../lib/offline'
 import { AppShell } from './AppShell'
+import { lazyWithReload } from '../lib/lazyPage'
 
 // The calendar library is large; load it only when the Calendar page is opened.
-const CalendarPage = lazy(() => import('../features/calendar/CalendarPage'))
-const InsightsPage = lazy(() => import('../features/insights/InsightsPage').then((m) => ({ default: m.InsightsPage })))
+const CalendarPage = lazyWithReload(() => import('../features/calendar/CalendarPage'))
+const InsightsPage = lazyWithReload(() => import('../features/insights/InsightsPage').then((m) => ({ default: m.InsightsPage })))
 // Pages opened less often load on demand, keeping the first download small (performance budget: scripts/check-bundle.mjs).
 // The service worker still pre-caches them, so they open offline too.
-const GraphPage = lazy(() => import('../features/graph/GraphPage').then((m) => ({ default: m.GraphPage })))
-const PlanPage = lazy(() => import('../features/planning/PlanPage').then((m) => ({ default: m.PlanPage })))
-const FocusPage = lazy(() => import('../features/focus/FocusPage').then((m) => ({ default: m.FocusPage })))
-const GoalDetailPage = lazy(() => import('../features/goals/GoalDetailPage').then((m) => ({ default: m.GoalDetailPage })))
-const GoalsPage = lazy(() => import('../features/goals/GoalsPage').then((m) => ({ default: m.GoalsPage })))
-const HabitDetailPage = lazy(() => import('../features/habits/HabitDetailPage').then((m) => ({ default: m.HabitDetailPage })))
-const JournalPage = lazy(() => import('../features/journal/JournalPage').then((m) => ({ default: m.JournalPage })))
-const SettingsPage = lazy(() => import('../features/settings/SettingsPage').then((m) => ({ default: m.SettingsPage })))
+const GraphPage = lazyWithReload(() => import('../features/graph/GraphPage').then((m) => ({ default: m.GraphPage })))
+const PlanPage = lazyWithReload(() => import('../features/planning/PlanPage').then((m) => ({ default: m.PlanPage })))
+const FocusPage = lazyWithReload(() => import('../features/focus/FocusPage').then((m) => ({ default: m.FocusPage })))
+const GoalDetailPage = lazyWithReload(() => import('../features/goals/GoalDetailPage').then((m) => ({ default: m.GoalDetailPage })))
+const GoalsPage = lazyWithReload(() => import('../features/goals/GoalsPage').then((m) => ({ default: m.GoalsPage })))
+const HabitDetailPage = lazyWithReload(() => import('../features/habits/HabitDetailPage').then((m) => ({ default: m.HabitDetailPage })))
+const JournalPage = lazyWithReload(() => import('../features/journal/JournalPage').then((m) => ({ default: m.JournalPage })))
+const SettingsPage = lazyWithReload(() => import('../features/settings/SettingsPage').then((m) => ({ default: m.SettingsPage })))
 
 function lazyPage(element: ReactNode) {
   return <Suspense fallback={<ListSkeleton rows={6} />}>{element}</Suspense>
