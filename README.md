@@ -90,14 +90,6 @@ Nothing is replaced until you confirm. A restore replaces the account's data wit
 which days), focus time, habits, goal progress, where the time went and how the journal felt. Step back through older
 periods and download any of them as a PDF; Settings → Backup has one-tap PDFs of today, this week and this month.
 
-**By email** (optional): switch on daily, weekly or monthly reports in Settings and they arrive as a PDF — yesterday's
-each morning, last week's at the start of a new week, last month's on the 1st. The server needs an SMTP account in
-`.env` (see `SMTP_*` in `.env.example`) and the sender run every hour:
-
-```bash
-flask --app backend/wsgi.py send-reports        # cron: 0 * * * *  — or a Windows Task Scheduler hourly task
-```
-
 Each report is sent once, from 07:00 in your own time zone (`--hour` changes that). *Send me last week's now* in
 Settings checks the setup.
 

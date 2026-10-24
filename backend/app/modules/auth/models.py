@@ -89,9 +89,6 @@ class UserSettings(db.Model):
     weekly_learning_target_min: Mapped[int | None] = mapped_column(Integer)  # NULL = no target set
     # Home sections in order: [{"key": "tasks", "visible": true}, ...]. NULL = DEFAULT_DASHBOARD.
     dashboard_layout: Mapped[list | None] = mapped_column(JSONB)
-    # Reports by email: {"day": bool, "week": bool, "month": bool}, and the last period start sent for each
-    report_emails: Mapped[dict | None] = mapped_column(JSONB)
-    report_emails_sent: Mapped[dict | None] = mapped_column(JSONB)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=utcnow, onupdate=utcnow
     )

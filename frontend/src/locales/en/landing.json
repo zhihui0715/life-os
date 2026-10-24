@@ -61,9 +61,6 @@
       "week": "Week",
       "month": "Month"
     },
-    "emailTitle": "Have it arrive.",
-    "emailBody": "Switch on email and the report lands at seven in the morning, its PDF attached.",
-    "emailToggle": "Email it to me",
     "timeTitle": "See where the time went.",
     "timeBody": "Minutes by category, from the time you log and the focus sessions you finish.",
     "timeToggle": "Show time by category",
@@ -85,7 +82,6 @@
     "habits": "Habits",
     "mood": "Mood",
     "before": "before: {{n}}",
-    "sent": "Sent to you · 07:00",
     "categories": {
       "writing": "Writing",
       "reading": "Reading",

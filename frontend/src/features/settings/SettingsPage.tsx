@@ -14,7 +14,6 @@ import { LOCALES } from '../../lib/i18n'
 import { onSoundChange, setSoundEnabled, soundEnabled } from '../../lib/sound'
 import type { Me, UserSettings } from '../../lib/types'
 import { ME_KEY, useAuth, useMe } from '../auth/AuthProvider'
-import { ReportEmailCard } from '../reports/ReportEmailCard'
 import { BackupCard } from './BackupCard'
 import { AppearanceCard } from './AppearanceCard'
 import { PasswordForm } from './PasswordForm'
@@ -107,9 +106,6 @@ export function SettingsPage() {
       <WorkingHoursCard />
       <ScoreSettingsCard />
       <BackupCard />
-      <div className="mb-4">
-        <ReportEmailCard />
-      </div>
 
       <Card className="p-5">
         <h2 className="mb-1 text-[17px] font-semibold tracking-tight">{t('sections.account')}</h2>

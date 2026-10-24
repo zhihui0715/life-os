@@ -71,53 +71,6 @@ def register_cli(app) -> None:
         create_user(email, password, "E2E User", "en")
         click.echo(f"Reset {name}; created {email}")
 
-    @app.cli.command("send-reports")
-    @click.option("--hour", default=7, show_default=True, help="Local hour from which each day's reports go out")
-    def send_reports_cmd(hour):
-        """Emails the reports people asked for (Settings → Backup & reports): yesterday's daily report, last week's on
-        the first day of a new week, last month's on the 1st. Run it every hour (cron, a systemd timer or the Windows
-        Task Scheduler); each report goes once, from `--hour` o'clock in the person's own time zone. Needs SMTP_* set."""
-        from datetime import datetime
-
-        from sqlalchemy import select
-        from sqlalchemy.orm.attributes import flag_modified
-
-        from app.common.mail import mail_configured
-        from app.common.timeutil import user_zone
-        from app.extensions import db
-        from app.modules.auth.models import User, UserSettings
-        from app.modules.reports import service
-        from app.modules.reports.routes import send_report
-
-        if not mail_configured():
-            raise click.ClickException("Email isn't set up: set SMTP_HOST and SMTP_FROM (see app/common/mail.py).")
-        sent = failed = 0
-        for user in db.session.scalars(select(User).join(UserSettings).where(UserSettings.report_emails.isnot(None))):
-            s = user.settings
-            if datetime.now(user_zone(user)).hour < hour:
-                continue
-            done = dict(s.report_emails_sent or {})
-            for kind in service.KINDS:
-                if not (s.report_emails or {}).get(kind):
-                    continue
-                start = service.last_complete(user, kind).start.isoformat()
-                if done.get(kind) == start:
-                    continue  # already sent this one
-                try:
-                    send_report(user, kind, service.last_complete(user, kind).start)
-                except Exception as e:  # noqa: BLE001 — one failure shouldn't stop the others
-                    failed += 1
-                    click.echo(f"Failed {kind} report for {user.email}: {e}", err=True)
-                    continue
-                done[kind] = start
-                sent += 1
-            s.report_emails_sent = done
-            flag_modified(s, "report_emails_sent")
-            db.session.commit()
-        click.echo(f"Sent {sent} report(s); {failed} failed.")
-        if failed:
-            raise SystemExit(1)
-
     @app.cli.command("verify-restore")
     @click.option("--source", "source_url", required=True, help="Database the backup was taken from")
     @click.option("--target", "target_url", required=True, help="Database the backup was restored into")

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { api } from '../../lib/api'
 
@@ -35,14 +35,6 @@ export interface Report {
 
 export function useReport(kind: ReportKind, date: string) {
   return useQuery({ queryKey: ['reports', kind, date], queryFn: () => api<Report>(`/reports/${kind}?date=${date}`) })
-}
-
-export function useEmailStatus() {
-  return useQuery({ queryKey: ['reports', 'email'], queryFn: () => api<{ configured: boolean; to: string }>('/reports/email') })
-}
-
-export function useSendTestEmail() {
-  return useMutation({ mutationFn: () => api<{ sent_to: string }>('/reports/email/test', { method: 'POST' }) })
 }
 
 export const pdfUrl = (kind: ReportKind, date: string) => `/api/v1/reports/${kind}.pdf?date=${date}`

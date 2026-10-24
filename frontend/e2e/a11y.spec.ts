@@ -31,6 +31,15 @@ for (const theme of ['light', 'dark', 'academia', 'academia-light'] as const) {
       if (theme in ACADEMIA) {
         // Academia for this page only: the account the page loads says so (the shared test user keeps "system")
         const background = ACADEMIA[theme as keyof typeof ACADEMIA]
+        // The signed-in state can carry the offline copy of the account, fresh for a minute after sign-in; drop it so
+        // the page always asks the server (and gets the answer below) however soon after sign-in this test runs
+        await page.addInitScript(() => {
+          const key = 'lifeos.offline-cache.v1'
+          const cache = JSON.parse(localStorage.getItem(key) ?? 'null')
+          if (!cache?.clientState) return
+          cache.clientState.queries = cache.clientState.queries.filter((q: { queryKey: unknown[] }) => q.queryKey[0] !== 'me')
+          localStorage.setItem(key, JSON.stringify(cache))
+        })
         await page.route('**/api/v1/auth/me', async (route) => {
           const response = await route.fetch()
           const me = await response.json()

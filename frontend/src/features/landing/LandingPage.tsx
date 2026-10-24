@@ -1,4 +1,4 @@
-import { BookOpen, Check, Flame, Mail, Timer } from 'lucide-react'
+import { BookOpen, Check, Flame, Timer } from 'lucide-react'
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -615,7 +615,6 @@ const FIGURES: Record<Span, { done: [number, number]; focus: [number, number]; h
 function Reports() {
   const { t } = useTranslation('landing')
   const [span, setSpan] = useState<Span>('week')
-  const [email, setEmail] = useState(false)
   const [time, setTime] = useState(true)
   const [compare, setCompare] = useState(true)
   const f = FIGURES[span]
@@ -638,11 +637,6 @@ function Reports() {
             <p className="ui-title">{t(`reports.kinds.${span}`)}</p>
             <p className="ui-sub">{t(`reports.ranges.${span}`)}</p>
           </div>
-          {email && (
-            <p className="ui-chip mt-3 bg-[#7a2a22]! text-[#fff]!">
-              <Mail size={13} aria-hidden /> {t('reports.sent')}
-            </p>
-          )}
           <dl className="mt-4 grid grid-cols-2 gap-3">
             {rows.map(([k, v, render, before]) => (
               <div key={k} className="rounded-[10px] bg-[#f5eddb] p-3">
@@ -689,9 +683,6 @@ function Reports() {
               </button>
             ))}
           </div>
-        </Block>
-        <Block title={t('reports.emailTitle')} body={t('reports.emailBody')}>
-          <Toggle on={email} onChange={setEmail} label={t('reports.emailToggle')} />
         </Block>
         <Block title={t('reports.timeTitle')} body={t('reports.timeBody')}>
           <Toggle on={time} onChange={setTime} label={t('reports.timeToggle')} />
