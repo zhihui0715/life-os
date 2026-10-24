@@ -13,7 +13,6 @@ import { errorMessage } from '../../lib/errors'
 import { play } from '../../lib/sound'
 import { MinutesBars } from '../insights/charts'
 import { pdfUrl, useReport, type Report, type ReportKind } from './api'
-import { ReportEmailCard } from './ReportEmailCard'
 
 const KINDS: ReportKind[] = ['day', 'week', 'month']
 
@@ -29,7 +28,7 @@ function shift(day: string, kind: ReportKind, by: number) {
 /**
  * Reports: a day, a week or a month at a glance, compared with the period before — what got done, focus time,
  * habits, goals, where the time went and how the journal felt. Step back and forth through periods, download any of
- * them as a PDF, and choose which ones arrive by email.
+ * them as a PDF.
  */
 export function ReportsPage() {
   const { t, i18n } = useTranslation('reports')
@@ -82,10 +81,6 @@ export function ReportsPage() {
       ) : r ? (
         <ReportBody r={r} />
       ) : null}
-
-      <div className="mt-6">
-        <ReportEmailCard />
-      </div>
     </>
   )
 }

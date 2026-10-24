@@ -1,7 +1,5 @@
 from datetime import date
 
-import pytest
-
 
 def _today(api):
     return api.get("/api/v1/reports/day").get_json()["period"]["start"]
@@ -40,43 +38,3 @@ def test_report_pdf(api):
 def test_report_rejects_unknown_kind_and_bad_date(api):
     assert api.get("/api/v1/reports/year").status_code == 404
     assert api.get("/api/v1/reports/day?date=yesterday").status_code == 422
-
-
-def test_email_needs_an_smtp_account(api):
-    assert api.get("/api/v1/reports/email").get_json()["configured"] is False
-    assert api.post("/api/v1/reports/email/test").status_code == 409
-
-
-def test_report_email_preferences(api):
-    s = api.patch("/api/v1/settings", {"report_emails": {"week": True}}).get_json()
-    assert s["report_emails"] == {"day": False, "week": True, "month": False}
-    s = api.patch("/api/v1/settings", {"report_emails": {"day": True}}).get_json()
-    assert s["report_emails"] == {"day": True, "week": True, "month": False}  # merged, not replaced
-    assert api.patch("/api/v1/settings", {"report_emails": {"year": True}}).status_code == 422
-    assert api.patch("/api/v1/settings", {"report_emails": {"day": "yes"}}).status_code == 422
-
-
-@pytest.fixture
-def mailbox(app, monkeypatch):
-    sent = []
-    monkeypatch.setitem(app.config, "SMTP_HOST", "smtp.test")
-    monkeypatch.setitem(app.config, "SMTP_FROM", "Life OS <reports@lifeos.test>")
-    monkeypatch.setattr("app.modules.reports.routes.send_mail", lambda to, subject, text, html, files: sent.append((to, subject, files)))
-    return sent
-
-
-def test_send_reports_sends_each_report_once(app, api, mailbox):
-    api.patch("/api/v1/settings", {"report_emails": {"week": True, "month": True}})
-    runner = app.test_cli_runner()
-    first = runner.invoke(args=["send-reports", "--hour", "0"])
-    assert first.exit_code == 0, first.output
-    assert sorted(subject.split(" · ")[0] for _, subject, _ in mailbox) == ["Monthly report", "Weekly report"]
-    assert all(files[0][2] == "application/pdf" and files[0][1].startswith(b"%PDF") for _, _, files in mailbox)
-    again = runner.invoke(args=["send-reports", "--hour", "0"])
-    assert again.exit_code == 0 and len(mailbox) == 2  # nothing new to send
-
-
-def test_test_email_goes_to_the_account(api, mailbox):
-    res = api.post("/api/v1/reports/email/test")
-    assert res.status_code == 200
-    assert mailbox[0][0] == res.get_json()["sent_to"]

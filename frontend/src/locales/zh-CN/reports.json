@@ -33,17 +33,6 @@
   "uncategorised": "其他",
   "journalTitle": "日记",
   "events_other": "{{count}} 个日历事件",
-  "email": {
-    "title": "邮件接收报告",
-    "help": "把报告以 PDF 发到你的邮箱：每天早上发昨天的，新的一周开始时发上周的，每月 1 日发上个月的。",
-    "to": "发送到 {{to}}",
-    "notConfigured": "此服务器还没有设置邮件账户。服务器管理员需要设置 SMTP_HOST 和 SMTP_FROM，并每小时运行一次 \"flask send-reports\"。",
-    "day": "每日报告",
-    "week": "每周报告",
-    "month": "每月报告",
-    "test": "现在把上周的发给我",
-    "testSent": "已发送到 {{to}}"
-  },
   "openReports": "打开报告",
   "journalLine_other": "{{count}} 篇 · 心情 {{mood}} · 精力 {{energy}}"
 }

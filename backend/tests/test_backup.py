@@ -245,7 +245,8 @@ def test_backup_from_the_ai_era_still_restores(api):
     b["data"]["ai_runs"] = [{"id": "5b0e4c1e-0000-4000-8000-000000000001", "kind": "daily_plan", "status": "ok"}]
     b["checksums"]["ai_runs"] = service._checksum(b["data"]["ai_runs"])
     for row in b["data"]["user_settings"]:
-        row.update(ai_enabled=True, ai_monthly_token_budget=300000)
+        row.update(ai_enabled=True, ai_monthly_token_budget=300000,
+                   report_emails={"week": True}, report_emails_sent={"week": "2026-10-12"})  # reports by email, removed
     _with_checksum(b, "user_settings")
     p = ok(preview(api, b))
     assert "ai_runs" not in p["tables"]

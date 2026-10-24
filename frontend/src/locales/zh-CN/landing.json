@@ -61,9 +61,6 @@
       "week": "周",
       "month": "月"
     },
-    "emailTitle": "让它自己送来。",
-    "emailBody": "打开邮件发送，报告会在早上七点送到，并附上 PDF。",
-    "emailToggle": "通过邮件发给我",
     "timeTitle": "看清时间去了哪里。",
     "timeBody": "按分类统计的分钟数，来自你记录的时间和完成的专注时段。",
     "timeToggle": "显示按分类的时间",
@@ -85,7 +82,6 @@
     "habits": "习惯",
     "mood": "心情",
     "before": "上期：{{n}}",
-    "sent": "已发送给你 · 07:00",
     "categories": {
       "writing": "写作",
       "reading": "阅读",

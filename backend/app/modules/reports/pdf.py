@@ -99,23 +99,3 @@ def build_pdf(user, r: dict) -> bytes:
     doc.build(story, onFirstPage=page, onLaterPages=page)
     return buf.getvalue()
 
-
-def email_text(user, r: dict) -> tuple[str, str, str]:
-    """Subject, plain text and HTML for the email that carries the PDF."""
-    lang = user.settings.locale if user.settings.locale in TEXT else "en"
-    t = TEXT[lang]
-    start, end = date.fromisoformat(r["period"]["start"]), date.fromisoformat(r["period"]["end"])
-    title = f"{t['title'][r['kind']]} · {label(r['kind'], start, end)}"
-    lines = [
-        f"{t['done']}: {r['tasks']['done']} ({t['before'].format(n=r['tasks']['done_before'])})",
-        f"{t['focus']}: {t['minutes'].format(n=r['focus']['minutes'])}",
-        f"{t['habits']}: {'—' if r['habits']['rate'] is None else str(round(r['habits']['rate'])) + '%'}",
-    ]
-    text = f"{title}\n\n" + "\n".join(lines) + "\n\nLife OS"
-    html = (
-        f'<div style="font-family:Georgia,serif;color:#2a1f16;background:#f6eedb;padding:24px">'
-        f'<h1 style="font-size:24px;margin:0 0 12px">{title}</h1>'
-        + "".join(f'<p style="margin:4px 0;font-family:Arial,sans-serif;font-size:14px">{line}</p>' for line in lines)
-        + '<p style="margin-top:16px;font-size:12px;color:#67533e">Life OS</p></div>'
-    )
-    return title, text, html

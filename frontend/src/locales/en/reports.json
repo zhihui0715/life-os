@@ -34,17 +34,6 @@
   "journalTitle": "Journal",
   "events_one": "{{count}} calendar event",
   "events_other": "{{count}} calendar events",
-  "email": {
-    "title": "Reports by email",
-    "help": "Get your reports as a PDF in your inbox: yesterday's each morning, last week's at the start of a new week, last month's on the 1st.",
-    "to": "Sent to {{to}}",
-    "notConfigured": "This server has no email account set up yet. Whoever runs it needs to set SMTP_HOST and SMTP_FROM, and schedule \"flask send-reports\" every hour.",
-    "day": "Daily report",
-    "week": "Weekly report",
-    "month": "Monthly report",
-    "test": "Send me last week's now",
-    "testSent": "Sent to {{to}}"
-  },
   "openReports": "Open reports",
   "journalLine_one": "{{count}} entry · mood {{mood}} · energy {{energy}}",
   "journalLine_other": "{{count}} entries · mood {{mood}} · energy {{energy}}"

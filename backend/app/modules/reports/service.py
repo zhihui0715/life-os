@@ -40,12 +40,6 @@ def previous(user, kind: str, p: metrics.Period) -> metrics.Period:
     return period(user, kind, p.start - timedelta(days=1))
 
 
-def last_complete(user, kind: str) -> metrics.Period:
-    """The most recent period of `kind` that has fully ended: yesterday, last week, last month."""
-    today = user_today(user)
-    return previous(user, kind, period(user, kind, today))
-
-
 def _bounds(user, p: metrics.Period) -> tuple[datetime, datetime]:
     zone = user_zone(user)
     return datetime.combine(p.start, time.min, zone), datetime.combine(p.end + timedelta(days=1), time.min, zone)

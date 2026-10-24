@@ -50,7 +50,7 @@ TABLES = (
 # Sections and fields of features that were removed. Files that still have them restore fine: they are checked
 # against their checksums like everything else, then left out.
 RETIRED_TABLES = {"ai_runs"}
-RETIRED_COLUMNS = {"user_settings": {"ai_enabled", "ai_monthly_token_budget"}}
+RETIRED_COLUMNS = {"user_settings": {"ai_enabled", "ai_monthly_token_budget", "report_emails", "report_emails_sent"}}
 # Tables without user_id belong to the user through their parent row: table → (parent table, link column).
 CHILD_TABLES = {
     "task_tags": ("tasks", "task_id"),
