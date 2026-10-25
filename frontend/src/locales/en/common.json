@@ -88,7 +88,9 @@
     "signIn": "Sign in",
     "signingIn": "Signing in…",
     "showPassword": "Show password",
-    "hidePassword": "Hide password"
+    "hidePassword": "Hide password",
+    "noAccount": "New here?",
+    "createAccount": "Create an account"
   },
   "language": {
     "label": "Language",

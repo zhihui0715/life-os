@@ -11,8 +11,8 @@ from flask import g, request, session
 from app.common.errors import ApiError
 from app.modules.auth.service import find_session
 
-PUBLIC_ENDPOINTS = {"auth.login", "health.health"}
-CSRF_EXEMPT_ENDPOINTS = {"auth.login"}  # no session exists yet; SameSite + JSON-only also protect it
+PUBLIC_ENDPOINTS = {"auth.login", "auth.signup", "health.health"}
+CSRF_EXEMPT_ENDPOINTS = {"auth.login", "auth.signup"}  # no session exists yet; SameSite + JSON-only also protect it
 SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
 
 

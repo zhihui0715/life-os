@@ -56,7 +56,7 @@ const PIC_FIELDS = ['var(--oxblood)', 'var(--sage)', 'var(--navy)', 'var(--brass
  * What visitors see before signing in. The five rooms of the Academia study become the page's colour chapters: each
  * section is one flat field, butted edge to edge. The pictures are fragments of the app itself; the live parts are
  * real (tick a task, write tonight's page and read tomorrow's report, shape a report, switch the study). Shown at the
- * app's address when nobody is signed in (App.tsx); "Sign in" goes to /login.
+ * app's address when nobody is signed in (App.tsx); "Sign in" goes to /login, "Create account" to /signup.
  */
 export default function LandingPage() {
   const { t } = useTranslation('landing')
@@ -66,6 +66,10 @@ export default function LandingPage() {
   const signIn = () => {
     play('tap')
     navigate('/login')
+  }
+  const signUp = () => {
+    play('tap')
+    navigate('/signup')
   }
   const goStudy = (s: Scene) => {
     play('tap')
@@ -101,7 +105,7 @@ export default function LandingPage() {
           </h1>
           <p className="lead">{t('hero.body')}</p>
           <div className="actions">
-            <button type="button" className="l-btn" onClick={signIn}>
+            <button type="button" className="l-btn" onClick={signUp}>
               <BookOpen size={18} aria-hidden />
               {t('hero.cta')}
             </button>
@@ -185,7 +189,7 @@ export default function LandingPage() {
               {t('cta.body')}
             </p>
             <div data-rise style={{ '--i': 2 } as CSSProperties}>
-              <button type="button" className="l-btn on-dark" onClick={signIn}>
+              <button type="button" className="l-btn on-dark" onClick={signUp}>
                 <BookOpen size={18} aria-hidden />
                 {t('cta.button')}
               </button>

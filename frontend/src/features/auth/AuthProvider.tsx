@@ -11,7 +11,8 @@ interface AuthValue {
   me: Me | null | undefined // undefined = still checking (or the check failed: see meError)
   meError: unknown
   retryMe: () => void
-  login: ReturnType<typeof useLoginMutation>
+  login: ReturnType<typeof useSignInMutation<LoginBody>>
+  signup: ReturnType<typeof useSignInMutation<SignupBody>>
   logout: () => Promise<void>
 }
 
@@ -27,10 +28,14 @@ async function fetchMe(): Promise<Me | null> {
   }
 }
 
-function useLoginMutation() {
+type LoginBody = { email: string; password: string }
+type SignupBody = LoginBody & { display_name: string; locale: string; timezone: string }
+
+/** Signing in and signing up both end with a session for the account they return. */
+function useSignInMutation<B>(path: string) {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (body: { email: string; password: string }) => api<Me>('/auth/login', { method: 'POST', body }),
+    mutationFn: (body: B) => api<Me>(path, { method: 'POST', body }),
     onSuccess: (me) => {
       // Signing in (maybe as someone else): drop any data cached for the previous session before showing pages.
       qc.removeQueries({ predicate: (q) => q.queryKey[0] !== ME_KEY[0] })
@@ -43,7 +48,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const qc = useQueryClient()
   // Restored from this browser when offline; re-checked with the server after a minute.
   const { data: me, error: meError, refetch } = useQuery({ queryKey: ME_KEY, queryFn: fetchMe, staleTime: 60_000, retry: 1 })
-  const login = useLoginMutation()
+  const login = useSignInMutation<LoginBody>('/auth/login')
+  const signup = useSignInMutation<SignupBody>('/auth/signup')
 
   // Apply the account's language, theme and CSRF token whenever they load or change.
   useEffect(() => {
@@ -68,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  return <AuthContext.Provider value={{ me, meError, retryMe: () => void refetch(), login, logout }}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{ me, meError, retryMe: () => void refetch(), login, signup, logout }}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {

@@ -24,6 +24,7 @@ const InsightsPage = lazyWithReload(() => import('../features/insights/InsightsP
 const GraphPage = lazyWithReload(() => import('../features/graph/GraphPage').then((m) => ({ default: m.GraphPage })))
 const LandingPage = lazyWithReload(() => import('../features/landing/LandingPage'))
 const LoginPage = lazyWithReload(() => import('../features/auth/LoginPage').then((m) => ({ default: m.LoginPage })))
+const SignupPage = lazyWithReload(() => import('../features/auth/SignupPage').then((m) => ({ default: m.SignupPage })))
 const ReportsPage = lazyWithReload(() => import('../features/reports/ReportsPage').then((m) => ({ default: m.ReportsPage })))
 const PlanPage = lazyWithReload(() => import('../features/planning/PlanPage').then((m) => ({ default: m.PlanPage })))
 const FocusPage = lazyWithReload(() => import('../features/focus/FocusPage').then((m) => ({ default: m.FocusPage })))
@@ -80,9 +81,12 @@ function AuthGate() {
       </div>
     )
   }
-  // Signed out: the landing page at the front door, the sign-in form anywhere else (/login, or a deep link)
-  if (me === null)
-    return <Suspense fallback={null}>{location.pathname === '/' ? <LandingPage /> : <LoginPage />}</Suspense>
+  // Signed out: the landing page at the front door, sign-up at /signup, the sign-in form anywhere else
+  // (/login, or a deep link)
+  if (me === null) {
+    const page = { '/': <LandingPage />, '/signup': <SignupPage /> }[location.pathname] ?? <LoginPage />
+    return <Suspense fallback={null}>{page}</Suspense>
+  }
   return <AppShell />
 }
 
