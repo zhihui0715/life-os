@@ -90,15 +90,7 @@
     "showPassword": "Show password",
     "hidePassword": "Hide password",
     "noAccount": "New here?",
-    "createAccount": "Create an account",
-    "signupTitle": "Create your account",
-    "signupSubtitle": "Your own private workspace, free.",
-    "name": "Your name",
-    "passwordHint": "At least {{min}} characters.",
-    "confirmPassword": "Confirm password",
-    "signUp": "Create account",
-    "signingUp": "Creating account…",
-    "haveAccount": "Already have an account?"
+    "createAccount": "Create an account"
   },
   "language": {
     "label": "Language",
@@ -125,8 +117,7 @@
     "payload_too_large": "The file is too large.",
     "idempotency_key_reused": "This change conflicted with another one.",
     "unknown": "Something went wrong.",
-    "wrong_password": "Your current password is incorrect.",
-    "email_taken": "An account with this email already exists."
+    "wrong_password": "Your current password is incorrect."
   },
   "validation": {
     "missing": "This field is required.",
@@ -140,8 +131,7 @@
     "invalid": "This value is not valid.",
     "wrong_password": "This password is incorrect.",
     "password_too_short": "Use at least {{min}} characters.",
-    "password_mismatch": "The passwords don't match.",
-    "email_taken": "This email is already registered. Try signing in."
+    "password_mismatch": "The passwords don't match."
   },
   "offline": {
     "title": "You're offline",

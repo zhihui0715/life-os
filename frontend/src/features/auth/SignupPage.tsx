@@ -10,7 +10,14 @@ import { Field, Input, PasswordInput } from '../../components/ui/Field'
 import { Card } from '../../components/ui/states'
 import { ApiError } from '../../lib/api'
 import { errorMessage } from '../../lib/errors'
+import i18next from '../../lib/i18n'
+import en from '../../locales/en/signup.json'
+import zh from '../../locales/zh-CN/signup.json'
 import { useAuth } from './AuthProvider'
+
+// The page's words travel with the page (not in the app's first download)
+i18next.addResourceBundle('en', 'signup', en, true, true)
+i18next.addResourceBundle('zh-CN', 'signup', zh, true, true)
 
 const MIN = 10 // backend/app/modules/auth/service.py MIN_PASSWORD_LENGTH
 
@@ -37,6 +44,7 @@ export function SignupPage() {
   const serverFields = signup.error instanceof ApiError ? signup.error.fields : undefined
   const err = (field: keyof FormValues) => {
     const type = formState.errors[field]?.message ?? serverFields?.[field]?.[0]?.type
+    if (type === 'email_taken') return t('signup:emailTaken')
     return type
       ? t(`validation.${type}`, {
           min: MIN,
@@ -63,19 +71,19 @@ export function SignupPage() {
         <span className="font-display text-[22px] font-bold tracking-tight">{t('appName')}</span>
       </div>
       <Card className="page-enter w-full max-w-sm p-6 sm:p-7">
-        <h1 className="font-display text-[28px] leading-tight font-bold tracking-tight">{t('auth.signupTitle')}</h1>
-        <p className="text-subtle mt-1 mb-6">{t('auth.signupSubtitle')}</p>
+        <h1 className="font-display text-[28px] leading-tight font-bold tracking-tight">{t('signup:title')}</h1>
+        <p className="text-subtle mt-1 mb-6">{t('signup:subtitle')}</p>
         <form noValidate className="flex flex-col gap-4" onSubmit={handleSubmit(submit)}>
-          <Field label={t('auth.name')} error={err('display_name')}>
+          <Field label={t('signup:name')} error={err('display_name')}>
             {(a) => <Input {...a} autoComplete="name" autoFocus {...register('display_name')} />}
           </Field>
           <Field label={t('auth.email')} error={err('email')}>
             {(a) => <Input {...a} type="email" autoComplete="email" {...register('email')} />}
           </Field>
-          <Field label={t('auth.password')} error={err('password')} help={t('auth.passwordHint', { min: MIN })}>
+          <Field label={t('auth.password')} error={err('password')} help={t('signup:passwordHint', { min: MIN })}>
             {(a) => <PasswordInput {...a} autoComplete="new-password" {...register('password')} />}
           </Field>
-          <Field label={t('auth.confirmPassword')} error={err('confirm')}>
+          <Field label={t('signup:confirmPassword')} error={err('confirm')}>
             {(a) => <PasswordInput {...a} autoComplete="new-password" {...register('confirm')} />}
           </Field>
           {otherError && (
@@ -84,11 +92,11 @@ export function SignupPage() {
             </p>
           )}
           <Button type="submit" variant="primary" disabled={signup.isPending} className="w-full justify-center">
-            {signup.isPending ? t('auth.signingUp') : t('auth.signUp')}
+            {signup.isPending ? t('signup:signingUp') : t('signup:signUp')}
           </Button>
         </form>
         <p className="text-subtle mt-5 text-center">
-          {t('auth.haveAccount')}{' '}
+          {t('signup:haveAccount')}{' '}
           <Link to="/login" className="text-accent font-semibold">
             {t('auth.signIn')}
           </Link>

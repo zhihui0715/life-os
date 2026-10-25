@@ -1,0 +1,11 @@
+{
+  "title": "创建你的账户",
+  "subtitle": "属于你自己的私人工作区，免费。",
+  "name": "你的名字",
+  "passwordHint": "至少 {{min}} 个字符。",
+  "confirmPassword": "确认密码",
+  "signUp": "创建账户",
+  "signingUp": "正在创建账户…",
+  "haveAccount": "已经有账户？",
+  "emailTaken": "该邮箱已注册，请直接登录。"
+}
