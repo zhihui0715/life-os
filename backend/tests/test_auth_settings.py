@@ -157,3 +157,54 @@ def test_change_password_keeps_this_device_and_signs_out_others(app, api, user):
     assert other.get("/api/v1/auth/me").status_code == 401  # the other one is signed out
     assert ApiClient(app.test_client()).login(user.email).status_code == 401  # old password no longer works
     assert ApiClient(app.test_client()).login(user.email, "a-brand-new-password").status_code == 200
+
+
+def _signup(anon, **overrides):
+    body = {"email": "new@example.test", "password": TEST_PASSWORD, "display_name": "New Person", **overrides}
+    res = anon.client.post("/api/v1/auth/signup", json=body)
+    if res.status_code == 201:
+        anon.csrf = res.get_json()["csrf_token"]
+    return res
+
+
+def test_signup_creates_account_and_signs_in(anon):
+    res = _signup(anon, email=" New@Example.TEST ", locale="zh-CN", timezone="Europe/London")
+    assert res.status_code == 201
+    body = res.get_json()
+    assert body["user"]["email"] == "new@example.test"
+    assert body["user"]["display_name"] == "New Person"
+    assert body["settings"]["locale"] == "zh-CN"
+    assert body["settings"]["timezone"] == "Europe/London"
+    assert anon.get("/api/v1/auth/me").status_code == 200
+    names = {c["name"] for c in anon.get("/api/v1/categories").get_json()["items"]}
+    assert "阅读" in names  # default categories in the chosen language
+
+
+def test_signup_unknown_timezone_falls_back_to_default(anon):
+    res = _signup(anon, timezone="Mars/Olympus")
+    assert res.get_json()["settings"]["timezone"] == "Asia/Kuala_Lumpur"
+
+
+def test_signup_rejects_taken_email(anon, user):
+    res = _signup(anon, email="ME@example.test")
+    assert res.status_code == 409
+    assert res.get_json()["error"]["fields"]["email"][0]["type"] == "email_taken"
+
+
+def test_signup_rejects_short_password_and_bad_email(anon):
+    short = _signup(anon, password="short")
+    assert short.status_code == 422
+    assert short.get_json()["error"]["fields"]["password"][0]["type"] == "password_too_short"
+    assert _signup(anon, email="not-an-email").get_json()["error"]["fields"]["email"][0]["type"] == "email"
+    assert _signup(anon, display_name="   ").status_code == 422
+
+
+def test_signup_cannot_set_other_fields(anon):
+    assert _signup(anon, is_active=False).status_code == 422
+
+
+def test_new_account_sees_none_of_another_users_data(api, app):
+    api.post("/api/v1/tasks", {"title": "Mine only"})
+    other = ApiClient(app.test_client())
+    assert _signup(other).status_code == 201
+    assert other.get("/api/v1/tasks").get_json()["items"] == []

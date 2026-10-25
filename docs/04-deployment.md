@@ -36,8 +36,9 @@ Phone / laptop ──HTTPS──▶  Host's proxy (TLS)  ──▶  Container: g
 2. Create a web service from this GitHub repository using the `Dockerfile`; set the variables in §2.
    Health check path: `/api/v1/health`.
 3. Deploy. The first start creates all tables.
-4. Create your account in the host's shell/console:
-   `flask --app wsgi create-user` (asks for email, name and a password, at least 10 characters).
+4. Create your account: open the address and choose *Create account* (anyone can sign up; per address it allows
+   5 tries a minute and 5 new accounts a day, and 100 new accounts a day for the whole site). Or, in the host's
+   shell/console, `flask --app wsgi create-user` (asks for email, name and a password, at least 10 characters).
 5. Open the HTTPS address, sign in, then on your phone:
    **Android (Chrome):** menu → *Install app*. **iPhone (Safari):** Share → *Add to Home Screen*.
    Check: the app opens full-screen; turn on airplane mode → it still opens and shows today; tick a task; turn

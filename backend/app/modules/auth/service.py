@@ -1,6 +1,7 @@
 import hashlib
 import secrets
 from datetime import timedelta
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from argon2 import PasswordHasher
 from argon2.exceptions import InvalidHashError, VerificationError
@@ -10,7 +11,7 @@ from sqlalchemy import delete, select
 from app.common.errors import ApiError
 from app.common.models import utcnow
 from app.extensions import db
-from app.modules.auth.models import LOCALES, AuthSession, User, UserSettings
+from app.modules.auth.models import DEFAULT_TIMEZONE, LOCALES, AuthSession, User, UserSettings
 from app.modules.categories.service import seed_default_categories
 
 _hasher = PasswordHasher()  # Argon2id with library-recommended parameters
@@ -24,7 +25,7 @@ def normalise_email(email: str) -> str:
     return email.strip().lower()
 
 
-def create_user(email: str, password: str, display_name: str, locale: str = "en") -> User:
+def create_user(email: str, password: str, display_name: str, locale: str = "en", timezone: str = DEFAULT_TIMEZONE) -> User:
     email = normalise_email(email)
     if "@" not in email:
         raise ValueError("Invalid email address.")
@@ -36,12 +37,32 @@ def create_user(email: str, password: str, display_name: str, locale: str = "en"
         raise ValueError("A user with this email already exists.")
 
     user = User(email=email, password_hash=_hasher.hash(password), display_name=display_name.strip())
-    user.settings = UserSettings(locale=locale)
+    user.settings = UserSettings(locale=locale, timezone=timezone)
     db.session.add(user)
     db.session.flush()  # assigns user.id inside this transaction
     seed_default_categories(user.id, locale)
     db.session.commit()
     return user
+
+
+def sign_up(email: str, password: str, display_name: str, locale: str, timezone: str | None) -> User:
+    """Create your own account from the sign-up page. Same rules as create_user, reported as field errors."""
+    email = normalise_email(email)
+    if "@" not in email:
+        raise ApiError(422, "validation_error", "Invalid email address.",
+                       fields={"email": [{"type": "email", "message": "Invalid email"}]})
+    if len(password) < MIN_PASSWORD_LENGTH:
+        raise ApiError(422, "validation_error", "Password is too short.",
+                       fields={"password": [{"type": "password_too_short", "message": f"At least {MIN_PASSWORD_LENGTH} characters"}]})
+    if db.session.scalar(select(User).where(User.email == email)):
+        raise ApiError(409, "email_taken", "An account with this email already exists.",
+                       fields={"email": [{"type": "email_taken", "message": "Already registered"}]})
+    # The browser's timezone; one this server doesn't know just falls back to the default.
+    try:
+        ZoneInfo(timezone or "")
+    except (ZoneInfoNotFoundError, ValueError):
+        timezone = DEFAULT_TIMEZONE
+    return create_user(email, password, display_name, locale, timezone)
 
 
 def _hash_token(token: str) -> str:

@@ -28,7 +28,7 @@ cd backend
 python -m venv .venv
 .venv/Scripts/python -m pip install -e ".[dev]"
 .venv/Scripts/flask db upgrade          # create tables
-.venv/Scripts/flask create-user         # your account (asks for email, name, password)
+.venv/Scripts/flask create-user         # your account (or use "Create account" at /signup)
 
 # 4. Frontend
 cd ../frontend
