@@ -22,5 +22,43 @@
     "go": "Let's go",
     "moved_one": "Moved {{count}} task to Someday",
     "moved_other": "Moved {{count}} tasks to Someday"
+  },
+  "seal": {
+    "title": "Today's seal",
+    "titleDone": "Today is sealed",
+    "quests": "Today's quests",
+    "progress": "{{count}} of {{total}} quests done. Finish all three to stamp the seal.",
+    "doneBody": "All three done. This day counts.",
+    "task": "Finish one task",
+    "habit": "Do one habit",
+    "journal": "Write in your journal",
+    "focus_one": "Focus for {{count}} minute",
+    "focus_other": "Focus for {{count}} minutes",
+    "questDone": "(done)",
+    "questOpen": "(not yet)",
+    "week": "The last 7 days",
+    "daySealed": "sealed",
+    "dayOpen": "not sealed",
+    "streak_one": "{{count}} day sealed",
+    "streak_other": "{{count}} days sealed",
+    "stamped": "Sealed! Today counts."
+  },
+  "closeBook": {
+    "title": "Close the book",
+    "summary_one": "Today: {{count}} task done, {{minutes}} min of focus.",
+    "summary_other": "Today: {{count}} tasks done, {{minutes}} min of focus.",
+    "summaryLoading": "Looking back at today…",
+    "sealed": "Today's seal is stamped.",
+    "leftTitle": "What's left",
+    "left_one": "{{count}} task is still open for today.",
+    "left_other": "{{count}} tasks are still open for today.",
+    "move": "Move to tomorrow",
+    "moved_one": "Moved {{count}} task to tomorrow. Tomorrow starts with a plan.",
+    "moved_other": "Moved {{count}} tasks to tomorrow. Tomorrow starts with a plan.",
+    "nothingLeft": "Nothing left open. A clean page.",
+    "lineLabel": "One line about today (optional)",
+    "linePlaceholder": "What went well, or what you learned",
+    "finish": "Close the book",
+    "goodnight": "Book closed. Rest well, see you tomorrow."
   }
 }

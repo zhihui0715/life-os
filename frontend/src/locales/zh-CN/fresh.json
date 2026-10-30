@@ -20,5 +20,38 @@
     "keep": "保持原样",
     "go": "开始吧",
     "moved_other": "已把 {{count}} 个任务移到「以后再说」"
+  },
+  "seal": {
+    "title": "今天的印章",
+    "titleDone": "今天已盖章",
+    "quests": "今天的任务",
+    "progress": "已完成 {{count}}/{{total}} 项。全部完成就能盖章。",
+    "doneBody": "三项都完成了，今天算数。",
+    "task": "完成一个任务",
+    "habit": "做一个习惯",
+    "journal": "写一点日记",
+    "focus_other": "专注 {{count}} 分钟",
+    "questDone": "（已完成）",
+    "questOpen": "（未完成）",
+    "week": "最近 7 天",
+    "daySealed": "已盖章",
+    "dayOpen": "未盖章",
+    "streak_other": "连续 {{count}} 天盖章",
+    "stamped": "盖章成功！今天算数。"
+  },
+  "closeBook": {
+    "title": "合上今天",
+    "summary_other": "今天：完成 {{count}} 个任务，专注 {{minutes}} 分钟。",
+    "summaryLoading": "正在回顾今天……",
+    "sealed": "今天的印章已盖上。",
+    "leftTitle": "还剩什么",
+    "left_other": "今天还有 {{count}} 个任务没完成。",
+    "move": "移到明天",
+    "moved_other": "已把 {{count}} 个任务移到明天。明天一开始就有计划。",
+    "nothingLeft": "没有未完成的任务，干干净净。",
+    "lineLabel": "给今天写一句话（可选）",
+    "linePlaceholder": "今天做得好的事，或学到的东西",
+    "finish": "合上今天",
+    "goodnight": "今天已合上。好好休息，明天见。"
   }
 }

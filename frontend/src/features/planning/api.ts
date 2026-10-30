@@ -98,3 +98,27 @@ export function useSaveReview() {
     onSuccess: () => qc.invalidateQueries({ queryKey: PLAN_KEY }),
   })
 }
+
+export interface SealDay {
+  date: string
+  tasks_done: number
+  habits_done: number
+  focus_minutes: number
+  done: { task: boolean; habit: boolean; focus: boolean }
+  sealed: boolean
+}
+
+export interface Seals {
+  /** "journal" when there are no active habits: writing in the journal is the middle quest instead */
+  habit_quest: 'habit' | 'journal'
+  focus_minutes_target: number
+  streak: number
+  days: SealDay[]
+}
+
+export const SEALS_KEY = [...PLAN_KEY, 'seals'] as const
+
+/** The daily seal for the last `days` days (today last), worked out by the server from what you've logged. */
+export function useSeals(days = 7) {
+  return useQuery({ queryKey: [...SEALS_KEY, days], queryFn: () => api<Seals>(`/planning/seals?days=${days}`), refetchOnWindowFocus: true })
+}
