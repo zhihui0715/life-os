@@ -293,11 +293,6 @@
 .stagger > *:nth-child(8) { --i: 7; }
 .stagger > *:nth-child(n + 9) { --i: 8; }
 
-/* A row that appears in a list after the first paint (a new task, a check-in) */
-.row-enter {
-  animation: rise 380ms var(--ease-out) backwards;
-}
-
 .animate-pop {
   animation: pop 420ms var(--ease-spring) both;
 }
@@ -365,7 +360,6 @@ dialog[data-closing]::backdrop {
 @media (prefers-reduced-motion: reduce) {
   .page-enter,
   .stagger > *,
-  .row-enter,
   .animate-pop,
   .animate-draw,
   .animate-burst,

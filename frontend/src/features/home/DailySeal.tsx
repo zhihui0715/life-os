@@ -28,7 +28,8 @@ function useRefreshAfterChanges() {
   )
 }
 
-export function WaxSeal({ sealed, size = 44, className }: { sealed: boolean; size?: number; className?: string }) {
+/** `stamp`: play the pressing animation when it's sealed (the big seal; the small ones in a row stay still). */
+export function WaxSeal({ sealed, size = 44, stamp = false }: { sealed: boolean; size?: number; stamp?: boolean }) {
   // A wavy rim: 14 bumps around the disc, like pressed wax.
   const bumps = 14
   const rim = Array.from({ length: bumps * 2 }, (_, i) => {
@@ -37,7 +38,7 @@ export function WaxSeal({ sealed, size = 44, className }: { sealed: boolean; siz
     return `${50 + r * Math.cos(a)},${50 + r * Math.sin(a)}`
   }).join(' ')
   return (
-    <svg viewBox="0 0 100 100" width={size} height={size} aria-hidden className={cn(sealed && 'animate-pop', className)}>
+    <svg viewBox="0 0 100 100" width={size} height={size} aria-hidden className={sealed && stamp ? 'animate-pop' : undefined}>
       {sealed ? (
         <>
           <polygon points={rim} fill="var(--seal-wax)" />
@@ -88,7 +89,7 @@ export function DailySealCard() {
   return (
     <Card className="mb-4 p-4">
       <div className="mb-3 flex items-center gap-3">
-        <WaxSeal key={String(today.sealed)} sealed={today.sealed} />
+        <WaxSeal key={String(today.sealed)} sealed={today.sealed} stamp />
         <div className="min-w-0 flex-1">
           <h2 className="text-[17px] font-semibold">{t(today.sealed ? 'seal.titleDone' : 'seal.title')}</h2>
           <p className="text-subtle text-sm">{today.sealed ? t('seal.doneBody') : t('seal.progress', { count, total: 3 })}</p>
@@ -122,7 +123,7 @@ export function DailySealCard() {
       <ol className="flex justify-between gap-1" aria-label={t('seal.week')}>
         {week.map((d: SealDay) => (
           <li key={d.date} className="flex flex-col items-center gap-0.5" title={d.date}>
-            <WaxSeal sealed={d.sealed} size={22} className="!animate-none" />
+            <WaxSeal sealed={d.sealed} size={22} />
             <span className="text-subtle text-[11px]">{weekday.format(new Date(`${d.date}T00:00:00Z`))}</span>
             <span className="sr-only">{d.sealed ? t('seal.daySealed') : t('seal.dayOpen')}</span>
           </li>
