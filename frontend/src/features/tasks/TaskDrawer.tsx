@@ -14,6 +14,7 @@ import { utcIsoToWallTime, wallTimeToUtcIso } from '../../lib/dates'
 import { errorMessage, fieldError } from '../../lib/errors'
 import type { Category, Task } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
+import { TwoMinuteButton } from '../focus/TwoMinutes'
 import { useGoal, useGoals } from '../goals/api'
 import { useDeleteTask, useTaskAction, useUpdateTask } from './api'
 import { QuickAddInput } from './QuickAddInput'
@@ -155,6 +156,7 @@ export function TaskDrawer({ task, categories, onClose, onOpenTask }: Props) {
                 {t('common:actions.archive')}
               </Button>
             )}
+            {!done && !task.archived_at && <TwoMinuteButton taskId={task.id} variant="ghost" size="md" onStarted={onClose} />}
             {!done && (
               <Button variant="ghost" className="text-danger hover:bg-danger-soft" onClick={() => setConfirmDelete(true)}>
                 <Trash2 size={16} aria-hidden />

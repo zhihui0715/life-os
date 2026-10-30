@@ -103,5 +103,10 @@
     "skip": "Skip break",
     "next": "Start next tomato",
     "finish": "I'm done for now"
+  },
+  "twoMinutes": {
+    "start": "Just 2 minutes",
+    "help": "Start a 2-minute focus on this task. Keep going if you like.",
+    "over": "2 minutes done. You started! Keep going, or stop: both count."
   }
 }

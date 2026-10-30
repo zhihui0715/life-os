@@ -4,7 +4,9 @@ Rules (also shown in the app):
 - A day only counts if the habit was scheduled that day (from its start date, using the schedule in force then).
 - done      → extends the streak.
 - skipped   → an intentional rest: it neither extends nor breaks the streak, and is left out of consistency.
-- missed    → a scheduled day in the past with no check-in: breaks the streak.
+- missed    → a scheduled day in the past with no check-in: breaks the streak, unless a rest day covers it.
+- Rest days (day-based habits): every 7 done days in a row earn one, up to 2 saved. A missed day uses one up instead
+  of breaking the streak (it doesn't extend it either). When a streak does break, saved rest days are lost.
 - Today is never "missed" — the day isn't over. If you've already checked in, it counts.
 - Check-ins on unscheduled days are kept as extras: they don't extend or break the streak.
 - "x times per week" habits count in weeks: a week is met when done-count ≥ target. The current week can't break the
@@ -17,6 +19,8 @@ from datetime import date, timedelta
 
 CONSISTENCY_DAYS = 30
 CONSISTENCY_WEEKS = 4
+REST_DAY_EVERY = 7  # done days in a row that earn one rest day
+MAX_REST_DAYS = 2
 
 
 @dataclass(frozen=True)
@@ -36,6 +40,7 @@ class Stats:
     eligible: int  # how many days/weeks consistency is based on
     done_this_week: int
     target_this_week: int | None
+    rest_days: int = 0  # saved rest days, ready to cover a missed day
 
 
 def schedule_on(schedules: list[Schedule], day: date) -> Schedule | None:
@@ -61,9 +66,10 @@ def week_start(day: date, first_weekday: int) -> date:
     return day - timedelta(days=offset)
 
 
-def _day_stats(schedules, logs, start: date, today: date) -> tuple[int, int, float | None, int]:
+def _day_stats(schedules, logs, start: date, today: date) -> tuple[int, int, float | None, int, int]:
     # Walk every scheduled day from the start, oldest first.
     current = best = 0
+    run = rest = 0  # done days in a row since the last miss; saved rest days
     day = start
     while day <= today:
         if is_scheduled(schedules, day):
@@ -71,10 +77,16 @@ def _day_stats(schedules, logs, start: date, today: date) -> tuple[int, int, flo
             if state == "done":
                 current += 1
                 best = max(best, current)
+                run += 1
+                if run % REST_DAY_EVERY == 0:
+                    rest = min(rest + 1, MAX_REST_DAYS)
             elif state == "skipped" or day == today:
                 pass  # rest day, or today still in progress
+            elif rest:
+                rest -= 1  # missed, but a saved rest day covers it
+                run = 0
             else:
-                current = 0  # missed
+                current = run = 0  # missed
         day += timedelta(days=1)
 
     window_start = max(start, today - timedelta(days=CONSISTENCY_DAYS - 1))
@@ -89,7 +101,7 @@ def _day_stats(schedules, logs, start: date, today: date) -> tuple[int, int, flo
             elif state is None and day < today:
                 eligible += 1  # missed
         day += timedelta(days=1)
-    return current, best, (done / eligible if eligible else None), eligible
+    return current, best, (done / eligible if eligible else None), eligible, rest
 
 
 def _week_stats(schedules, logs, start: date, today: date, first_weekday: int):
@@ -130,7 +142,7 @@ def compute(schedules: list[Schedule], logs: dict[date, str], start: date, today
     if s_now.schedule_type == "x_per_week":
         current, best, consistency, eligible, done_now, target_now = _week_stats(schedules, logs, start, today, first_weekday)
         return Stats("weeks", current, best, consistency, eligible, done_now, target_now)
-    current, best, consistency, eligible = _day_stats(schedules, logs, start, today)
+    current, best, consistency, eligible, rest = _day_stats(schedules, logs, start, today)
     scheduled_this_week = sum(1 for i in range(7) if is_scheduled(schedules, this_week + timedelta(days=i))
                               and this_week + timedelta(days=i) >= start)
-    return Stats("days", current, best, consistency, eligible, done_week, scheduled_this_week)
+    return Stats("days", current, best, consistency, eligible, done_week, scheduled_this_week, rest)

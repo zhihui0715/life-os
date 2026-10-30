@@ -87,6 +87,13 @@ export function StreakBadge({ habit }: { habit: Habit }) {
     <span className={cn('inline-flex items-center gap-1 text-xs font-medium', s.current_streak > 0 ? 'text-warning' : 'text-subtle')}>
       <Flame key={s.current_streak} size={13} aria-hidden className={s.current_streak > 0 ? 'animate-flame' : undefined} />
       {t(`stats.streak_${s.unit}`, { count: s.current_streak })}
+      {s.rest_days > 0 && (
+        <span className="text-subtle inline-flex items-center gap-0.5" title={t('stats.restHelp')}>
+          <span aria-hidden>·</span>
+          <Moon size={12} aria-hidden />
+          {t('stats.restDays', { count: s.rest_days })}
+        </span>
+      )}
     </span>
   )
 }

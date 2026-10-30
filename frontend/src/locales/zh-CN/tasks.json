@@ -8,7 +8,7 @@
     "today": "今天",
     "upcoming": "即将到期",
     "overdue": "已逾期",
-    "unscheduled": "无日期",
+    "unscheduled": "以后再说",
     "completed": "已完成",
     "archived": "已归档"
   },
@@ -34,8 +34,8 @@
       "body": "一切尽在掌握。"
     },
     "unscheduled": {
-      "title": "所有任务都有日期",
-      "body": "没有到期日或截止时间的任务会显示在这里。"
+      "title": "没有「以后再说」的任务",
+      "body": "没有日期的任务会在这里等你准备好。"
     },
     "completed": {
       "title": "还没有已完成的任务",

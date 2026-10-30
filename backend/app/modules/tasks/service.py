@@ -141,6 +141,24 @@ def _view_filters(view: str, user, now: datetime):
     raise ValueError(view)
 
 
+def move_overdue_to_someday(user) -> int:
+    """The "fresh start" after time away: every overdue task loses its missed date (due date, and a deadline that
+    has already passed) and lands in Someday, so coming back doesn't open on a wall of red. Nothing is deleted."""
+    now = utcnow()
+    filters = _view_filters("overdue", user, now)
+    tasks = db.session.scalars(select(Task).where(Task.user_id == user.id, *filters)).all()
+    today = user_today(user, now)
+    for t in tasks:
+        if t.due_date is not None and t.due_date < today:
+            t.due_date = None
+        if t.deadline is not None and t.deadline < now:
+            t.deadline = None
+        if t.status == "inbox":
+            t.status = "todo"
+    db.session.commit()
+    return len(tasks)
+
+
 def _view_order(view: str):
     if view == "completed":
         return [Task.completed_at.desc()]

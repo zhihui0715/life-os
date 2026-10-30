@@ -137,6 +137,21 @@ def test_views_use_users_local_day(api):
     assert all(t["is_overdue"] for t in items)
 
 
+def test_fresh_start_moves_overdue_tasks_to_someday(api):
+    today = kl_today()
+    create(api, title="late", status="todo", due_date=(today - timedelta(days=5)).isoformat())
+    create(api, title="late inbox", due_date=(today - timedelta(days=2)).isoformat())
+    past_deadline = (datetime.now(timezone.utc) - timedelta(hours=1)).isoformat()
+    create(api, title="missed deadline", status="todo", deadline=past_deadline)
+    create(api, title="today", status="todo", due_date=today.isoformat())
+
+    res = api.post("/api/v1/tasks/someday", {})
+    assert res.status_code == 200 and res.get_json() == {"moved": 3}
+    assert view(api, "overdue") == []
+    assert set(view(api, "unscheduled")) == {"late", "late inbox", "missed deadline"}
+    assert view(api, "today") == ["today"]
+
+
 def test_local_day_boundary_in_malaysia():
     """23:30 in Kuala Lumpur is 15:30 UTC the same date; 00:30 KL is still the previous day in UTC."""
     user = SimpleNamespace(settings=SimpleNamespace(timezone="Asia/Kuala_Lumpur"))
