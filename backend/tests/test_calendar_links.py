@@ -1,5 +1,6 @@
 """Calendar links with Google: the private feed out, a Google calendar's events in (calendar/links.py)."""
 
+import urllib.error
 from datetime import timedelta
 
 import pytest
@@ -48,7 +49,7 @@ END:VCALENDAR
 
 
 def test_the_feed_is_off_until_asked_for_and_needs_no_sign_in(api, anon):
-    assert api.get("/api/v1/calendar/links").get_json() == {"feed_url": None, "google": "off"}
+    assert api.get("/api/v1/calendar/links").get_json() == {"feed_url": None, "google": "off", "google_problem": None}
     d = day(2)
     api.post("/api/v1/calendar/events", {"title": "Dentist", "starts_at": at(d, 9), "ends_at": at(d, 10)})
     api.post("/api/v1/tasks", {"title": "Send report", "status": "todo", "due_date": d.isoformat()})
@@ -105,12 +106,31 @@ def test_google_events_show_on_the_calendar_and_count_as_busy(api, monkeypatch):
     assert api.get(f"/api/v1/calendar/occurrences?{rng(d, d + timedelta(days=1))}").get_json()["external"] == []
 
 
-def test_a_google_calendar_that_cant_be_read_just_shows_nothing(api, monkeypatch):
-    def broken(url):
-        raise OSError("network down")
+PUBLIC_URL = "https://calendar.google.com/calendar/ical/me%40gmail.com/public/basic.ics"
 
-    monkeypatch.setattr(links, "_download", broken)
-    assert api.put("/api/v1/calendar/links/google", {"url": GOOGLE_URL}).get_json()["google"] == "error"
+
+def http_error(code):
+    def fail(url):
+        raise urllib.error.HTTPError(url, code, "error", {}, None)
+    return fail
+
+
+@pytest.mark.parametrize(("url", "download", "problem"), [
+    (PUBLIC_URL, http_error(404), "public_not_shared"),  # the usual mistake: the public address of a private calendar
+    (GOOGLE_URL, http_error(404), "not_found"),
+    (GOOGLE_URL, http_error(403), "denied"),
+    (GOOGLE_URL, http_error(503), "google_busy"),
+    (GOOGLE_URL, http_error(302), "unreachable"),  # a redirect is never followed
+    (GOOGLE_URL, lambda url: (_ for _ in ()).throw(TimeoutError()), "timeout"),
+    (GOOGLE_URL, lambda url: (_ for _ in ()).throw(urllib.error.URLError(TimeoutError())), "timeout"),
+    (GOOGLE_URL, lambda url: (_ for _ in ()).throw(OSError("network down")), "unreachable"),
+    (GOOGLE_URL, lambda url: (_ for _ in ()).throw(links._TooLarge()), "too_large"),
+    (GOOGLE_URL, lambda url: b"<html>Sign in</html>", "not_calendar"),
+])
+def test_a_google_calendar_that_cant_be_read_says_why_and_shows_nothing(api, monkeypatch, url, download, problem):
+    monkeypatch.setattr(links, "_download", download)
+    res = api.put("/api/v1/calendar/links/google", {"url": url}).get_json()
+    assert (res["google"], res["google_problem"]) == ("error", problem)
     d = day(1)
     assert api.get(f"/api/v1/calendar/occurrences?{rng(d, d + timedelta(days=1))}").get_json()["external"] == []
 

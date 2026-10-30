@@ -34,9 +34,11 @@ class GoogleLink(InputModel):
 
 def _links(user) -> dict:
     token = user.settings.calendar_feed_token
+    google, problem = links.google_status(user)
     return {
         "feed_url": url_for("calendar.feed", token=token, _external=True) if token else None,
-        "google": links.google_status(user),
+        "google": google,
+        "google_problem": problem,  # why it couldn't be read (calendar/links.py _problem), or null
     }
 
 

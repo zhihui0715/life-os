@@ -42,7 +42,11 @@ export interface CalendarLinks {
   feed_url: string | null
   /** off: no Google calendar linked; error: linked, but it couldn't be read just now */
   google: 'off' | 'ok' | 'error'
+  /** Why a linked Google calendar couldn't be read (with google: 'error') */
+  google_problem: GoogleProblem | null
 }
+
+export type GoogleProblem = 'public_not_shared' | 'not_found' | 'denied' | 'google_busy' | 'timeout' | 'unreachable' | 'too_large' | 'not_calendar'
 
 const CAL = ['calendar']
 const qs = (r: Range) => `start=${encodeURIComponent(r.start)}&end=${encodeURIComponent(r.end)}`

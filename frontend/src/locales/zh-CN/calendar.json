@@ -137,7 +137,7 @@
     "inTitle": "在 Life OS 里查看 Google 日历",
     "inBody": "你的 Google 日程会显示在 Life OS 日历上，「计划今天」也会把它们当作忙碌时间。",
     "inStep1": "在 Google 日历中打开「设置」，在「我的日历的设置」下选择你的日历。",
-    "inStep2": "找到「iCal 格式的私密地址」并复制。",
+    "inStep2": "找到「iCal 格式的私密地址」（不是「公开地址」）并复制，地址里有 private-。",
     "inStep3": "粘贴到下面。",
     "inLabel": "iCal 格式的私密地址",
     "link": "关联",
@@ -146,6 +146,16 @@
     "inOk": "已关联：你的 Google 日程会显示在日历上。",
     "inError": "已关联，但暂时读取不到 Google 日历，稍后会再试。",
     "unlink": "取消关联 Google 日历",
-    "event": "来自 Google 日历"
+    "event": "来自 Google 日历",
+    "problem": {
+      "public_not_shared": "这是你日历的「公开地址」，但你的日历没有公开，所以 Google 不会分享它。请先取消关联，然后改为复制「iCal 格式的私密地址」（里面有 private-）。",
+      "not_found": "Google 不认得这个地址。可能复制不完整，或者私密地址已在 Google 里重置。请取消关联后重新复制。",
+      "denied": "Google 拒绝分享这个日历。请取消关联，重新复制「iCal 格式的私密地址」。",
+      "google_busy": "Google 暂时出了点问题，Life OS 几分钟后会再试。",
+      "timeout": "Google 回应太慢，Life OS 几分钟后会再试。",
+      "unreachable": "暂时连不上 Google，Life OS 几分钟后会再试。",
+      "too_large": "这个日历太大了（超过 5 MB），无法读取。",
+      "not_calendar": "Google 有回应，但返回的不是日历。请确认你复制的是 iCal 地址，而不是网页地址。"
+    }
   }
 }
