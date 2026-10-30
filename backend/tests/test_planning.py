@@ -142,3 +142,48 @@ def test_pdf_report_is_a_real_pdf_and_handles_chinese(api):
     assert res.mimetype == "application/pdf"
     assert res.data.startswith(b"%PDF") and len(res.data) > 2000
     assert "life-os-report-" in res.headers["Content-Disposition"]
+
+
+def seal_today(api):
+    return ok(api.get("/api/v1/planning/seals?days=3"))
+
+
+def test_daily_seal_needs_a_task_a_habit_and_15_focus_minutes(api):
+    d = today()
+    empty = seal_today(api)
+    assert empty["habit_quest"] == "journal"  # no habits yet: the middle quest is the journal
+    assert [x["sealed"] for x in empty["days"]] == [False, False, False] and empty["streak"] == 0
+
+    habit = ok(api.post("/api/v1/habits", {"name": "Walk", "start_date": d.isoformat()}))
+    task = ok(api.post("/api/v1/tasks", {"title": "Pay rent", "status": "todo"}))
+    ok(api.post(f"/api/v1/tasks/{task['id']}/complete"))
+    ok(api.put(f"/api/v1/habits/{habit['id']}/logs/{d.isoformat()}", {"state": "done"}))
+    s = seal_today(api)
+    assert s["habit_quest"] == "habit"
+    assert s["days"][-1]["done"] == {"task": True, "habit": True, "focus": False}
+
+    focus = ok(api.post("/api/v1/focus-sessions", {"planned_minutes": 25}))
+    ok(api.post(f"/api/v1/focus-sessions/{focus['id']}/stop", {}))
+    ok(api.patch(f"/api/v1/focus-sessions/{focus['id']}", {"actual_minutes": 15}))
+    s = seal_today(api)
+    assert s["days"][-1]["sealed"] and s["days"][-1]["focus_minutes"] == 15
+    assert s["streak"] == 1
+
+    # Un-ticking the only task un-seals the day: seals always agree with the history.
+    ok(api.post(f"/api/v1/tasks/{task['id']}/reopen"))
+    assert not seal_today(api)["days"][-1]["sealed"]
+
+
+def test_close_the_book_moves_todays_open_tasks_to_tomorrow(api):
+    d = today()
+    ok(api.post("/api/v1/tasks", {"title": "today", "status": "todo", "due_date": d.isoformat()}))
+    ok(api.post("/api/v1/tasks", {"title": "late", "status": "todo", "due_date": (d - timedelta(days=2)).isoformat()}))
+    ok(api.post("/api/v1/tasks", {"title": "later", "status": "todo", "due_date": (d + timedelta(days=3)).isoformat()}))
+    done = ok(api.post("/api/v1/tasks", {"title": "done", "status": "todo", "due_date": d.isoformat()}))
+    ok(api.post(f"/api/v1/tasks/{done['id']}/complete"))
+
+    assert ok(api.post("/api/v1/tasks/tomorrow", {})) == {"moved": 2}
+    tomorrow = (d + timedelta(days=1)).isoformat()
+    items = ok(api.get("/api/v1/tasks?view=all&limit=50"))["items"]
+    due = {t["title"]: t["due_date"] for t in items}
+    assert due == {"today": tomorrow, "late": tomorrow, "later": (d + timedelta(days=3)).isoformat(), "done": d.isoformat()}

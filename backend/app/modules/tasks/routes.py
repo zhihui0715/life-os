@@ -40,6 +40,11 @@ def move_overdue_to_someday():
     return {"moved": service.move_overdue_to_someday(current_user())}
 
 
+@bp.post("/tomorrow")
+def move_today_to_tomorrow():
+    return {"moved": service.move_today_to_tomorrow(current_user())}
+
+
 @bp.get("/<task_id>")
 def get_task(task_id):
     return _out(_get(task_id))

@@ -38,6 +38,8 @@
 
   /* Tints for the sections of the app (iOS system colours) */
   --tint-home: #ff9f0a;
+  --seal-wax: #b3261e; /* the daily seal: pressed red wax */
+  --seal-emboss: #f6d8c8;
   --tint-tasks: #0a84ff;
   --tint-calendar: #ff3b30;
   --tint-goals: #5856d6;
@@ -108,6 +110,8 @@
   --p4: #98989f;
 
   --tint-home: #ff9f0a;
+  --seal-wax: #c8463b;
+  --seal-emboss: #ffe2d4;
   --tint-tasks: #0a84ff;
   --tint-calendar: #ff453a;
   --tint-goals: #5e5ce6;

@@ -1,5 +1,5 @@
-"""Planning: Plan my day (/day, /day/schedule) and the weekly review (/week, /reviews). Read-only except saving a
-review; the calendar blocks a plan proposes are created by the app through the normal calendar endpoint."""
+"""Planning: Plan my day (/day, /day/schedule), the daily seal (/seals) and the weekly review (/week, /reviews).
+Read-only except saving a review; the calendar blocks a plan proposes are created by the app through the normal calendar endpoint."""
 
 import uuid
 from datetime import date, timedelta
@@ -12,7 +12,7 @@ from app.common.auth import current_user
 from app.common.errors import ApiError, not_found
 from app.common.timeutil import user_today
 from app.common.validation import InputModel, QueryModel, parse_body, parse_query
-from app.modules.planning import service
+from app.modules.planning import seals, service
 
 bp = Blueprint("planning", __name__, url_prefix="/api/v1/planning")
 
@@ -52,6 +52,10 @@ class ReviewUpsert(InputModel):
         return items
 
 
+class SealsQuery(QueryModel):
+    days: int = Field(default=7, ge=1, le=seals.MAX_DAYS)  # how many days back, today included
+
+
 class ReviewsQuery(QueryModel):
     limit: int = Field(default=12, ge=1, le=104)
 
@@ -71,6 +75,11 @@ def schedule():
     user = current_user()
     data = parse_body(ScheduleRequest)
     return service.schedule(user, _day(user, data.day), data.task_ids)
+
+
+@bp.get("/seals")
+def daily_seals():
+    return seals.daily_seals(current_user(), parse_query(SealsQuery).days)
 
 
 @bp.get("/week")

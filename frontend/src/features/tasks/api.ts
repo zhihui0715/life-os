@@ -144,3 +144,12 @@ export function useMoveToSomeday() {
       Promise.all([qc.invalidateQueries({ queryKey: TASKS }), qc.invalidateQueries({ queryKey: ['goals'] }), qc.invalidateQueries({ queryKey: ['planning'] })]),
   })
 }
+
+/** Close the book: open tasks due today or earlier move to tomorrow (hard deadlines stay as they are). */
+export function useMoveToTomorrow() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => api<{ moved: number }>('/tasks/tomorrow', { method: 'POST' }),
+    onSuccess: () => Promise.all([qc.invalidateQueries({ queryKey: TASKS }), qc.invalidateQueries({ queryKey: ['planning'] })]),
+  })
+}

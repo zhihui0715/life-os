@@ -111,6 +111,7 @@
   },
   "home": {
     "plan": "Plan my day",
-    "review": "Weekly review"
+    "review": "Weekly review",
+    "close": "Close the book"
   }
 }

@@ -1,4 +1,4 @@
-import { CalendarCheck, NotebookPen, SlidersHorizontal, Sun } from 'lucide-react'
+import { BookMarked, CalendarCheck, NotebookPen, SlidersHorizontal, Sun } from 'lucide-react'
 import { Suspense, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -30,6 +30,8 @@ function greetingKey(timeZone: string) {
 const TaskDrawer = lazyWithReload(() => import('../tasks/TaskDrawer').then((m) => ({ default: m.TaskDrawer })))
 const OneThingCard = lazyWithReload(() => import('./FreshStart').then((m) => ({ default: m.OneThingCard })))
 const WelcomeBack = lazyWithReload(() => import('./FreshStart').then((m) => ({ default: m.WelcomeBack })))
+const DailySealCard = lazyWithReload(() => import('./DailySeal').then((m) => ({ default: m.DailySealCard })))
+const CloseTheBook = lazyWithReload(() => import('./CloseTheBook').then((m) => ({ default: m.CloseTheBook })))
 
 /** Sections that need the full width on large screens. */
 const WIDE: DashboardSectionKey[] = ['tasks']
@@ -45,6 +47,8 @@ export function HomePage() {
   const categories = useCategories().data ?? []
   const [open, setOpen] = useState<Task | null>(null)
   const [customizing, setCustomizing] = useState(false)
+  const [closing, setClosing] = useState(false)
+  const evening = greetingKey(tz) === 'evening'
 
   const dateLine = new Intl.DateTimeFormat(i18n.language, { timeZone: tz, weekday: 'long', month: 'long', day: 'numeric' }).format(new Date())
 
@@ -77,13 +81,28 @@ export function HomePage() {
       <Suspense fallback={<Skeleton className="mb-4 h-36 rounded-2xl" />}>
         <OneThingCard />
       </Suspense>
+      <Suspense fallback={<Skeleton className="mb-4 h-44 rounded-2xl" />}>
+        <DailySealCard />
+      </Suspense>
       <div className="mb-3">
         <QuickAddInput view="today" />
       </div>
       {/* Daily and weekly rituals, one tap away */}
-      <div className="mb-6 flex gap-2">
+      <div className="mb-6 flex flex-wrap gap-2">
         <Shortcut to="/plan" icon={CalendarCheck} label={t('planning:home.plan')} tint="var(--tint-plan)" />
         <Shortcut to="/plan?tab=week" icon={NotebookPen} label={t('planning:home.review')} tint="var(--tint-journal)" />
+        {/* The end-of-day ritual; stands out in the evening, when it's time */}
+        <button
+          type="button"
+          onClick={() => setClosing(true)}
+          className={cn(
+            'pressable bg-surface shadow-card flex h-11 flex-1 items-center justify-center gap-2 rounded-2xl px-3 text-[14px] font-semibold whitespace-nowrap sm:flex-none sm:px-4 dark:shadow-none',
+            evening && 'ring-2 ring-[var(--seal-wax)]',
+          )}
+        >
+          <BookMarked size={17} style={{ color: 'var(--seal-wax)' }} aria-hidden />
+          {t('planning:home.close')}
+        </button>
       </div>
 
       <div className="stagger grid items-start gap-x-5 gap-y-6 lg:grid-cols-2">
@@ -101,6 +120,11 @@ export function HomePage() {
       <Suspense fallback={null}>
         <WelcomeBack />
       </Suspense>
+      {closing && (
+        <Suspense fallback={null}>
+          <CloseTheBook open={closing} onClose={() => setClosing(false)} />
+        </Suspense>
+      )}
     </>
   )
 }

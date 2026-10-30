@@ -159,6 +159,20 @@ def move_overdue_to_someday(user) -> int:
     return len(tasks)
 
 
+def move_today_to_tomorrow(user) -> int:
+    """"Close the book": open tasks due today or earlier (by due date) move to tomorrow. Hard deadlines are left
+    as they are: a deadline is a fact, not a plan."""
+    today = user_today(user)
+    tasks = db.session.scalars(
+        select(Task).where(Task.user_id == user.id, Task.status != "done", Task.archived_at.is_(None),
+                           Task.due_date <= today)
+    ).all()
+    for t in tasks:
+        t.due_date = today + timedelta(days=1)
+    db.session.commit()
+    return len(tasks)
+
+
 def _view_order(view: str):
     if view == "completed":
         return [Task.completed_at.desc()]
