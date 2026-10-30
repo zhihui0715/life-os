@@ -137,7 +137,7 @@
     "inTitle": "See Google Calendar in Life OS",
     "inBody": "Your Google events show on the Life OS calendar, and Plan my day treats them as busy time.",
     "inStep1": "In Google Calendar, open Settings, then pick your calendar under \"Settings for my calendars\".",
-    "inStep2": "Scroll to \"Secret address in iCal format\" and copy it.",
+    "inStep2": "Scroll to \"Secret address in iCal format\" (not the public address) and copy it. It contains \"private-\".",
     "inStep3": "Paste it below.",
     "inLabel": "Secret address in iCal format",
     "link": "Link",
@@ -146,6 +146,16 @@
     "inOk": "Linked: your Google events show on the calendar.",
     "inError": "Linked, but Google's calendar couldn't be read just now. It will try again soon.",
     "unlink": "Unlink Google Calendar",
-    "event": "From Google Calendar"
+    "event": "From Google Calendar",
+    "problem": {
+      "public_not_shared": "This is your calendar's public address, but the calendar isn't public, so Google won't share it. Unlink, then copy \"Secret address in iCal format\" instead (it contains \"private-\").",
+      "not_found": "Google doesn't recognise this address. It may be cut short, or the secret address was reset in Google. Unlink and copy it again.",
+      "denied": "Google refused to share this calendar. Unlink and copy \"Secret address in iCal format\" again.",
+      "google_busy": "Google is having trouble right now. Life OS will try again in a few minutes.",
+      "timeout": "Google took too long to answer. Life OS will try again in a few minutes.",
+      "unreachable": "Google couldn't be reached. Life OS will try again in a few minutes.",
+      "too_large": "This calendar is too big to read (over 5 MB).",
+      "not_calendar": "Google answered, but not with a calendar. Check that you copied the iCal address, not the page address."
+    }
   }
 }

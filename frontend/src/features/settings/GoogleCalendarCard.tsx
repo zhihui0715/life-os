@@ -42,7 +42,7 @@ export function GoogleCalendarCard() {
       {
         onSuccess: (r) => {
           setUrl('')
-          toast(t(r.google === 'ok' ? 'google.linked' : 'google.linkedError'), r.google === 'ok' ? undefined : 'error')
+          toast(r.google === 'ok' ? t('google.linked') : t('google.linkedError'), r.google === 'ok' ? undefined : 'error')
         },
         onError: (err) => (fieldError(t, err, 'url') ? undefined : fail(err)),
       },
@@ -94,9 +94,13 @@ export function GoogleCalendarCard() {
         <h3 className="mb-1 text-[15px] font-semibold">{t('google.inTitle')}</h3>
         {links?.google && links.google !== 'off' ? (
           <>
-            <p className={links.google === 'ok' ? 'text-success mb-3 text-sm' : 'text-danger mb-3 text-sm'}>
+            <p className={links.google === 'ok' ? 'text-success mb-1 text-sm' : 'text-danger mb-1 text-sm font-medium'}>
               {t(links.google === 'ok' ? 'google.inOk' : 'google.inError')}
             </p>
+            {links.google === 'error' && links.google_problem && (
+              <p className="text-muted mb-1 text-sm">{t(`google.problem.${links.google_problem}`)}</p>
+            )}
+            <div className="mb-3" />
             <Button size="sm" variant="ghost" className="text-danger" disabled={link.isPending} onClick={() => link.mutate({ kind: 'google', url: null }, { onError: fail })}>
               <Unlink size={15} aria-hidden />
               {t('google.unlink')}

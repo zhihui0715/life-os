@@ -64,7 +64,7 @@ export function CloseTheBook({ open, onClose }: { open: boolean; onClose: () => 
     >
       <div className="flex flex-col gap-5">
         <section className="flex items-center gap-3">
-          <WaxSeal sealed={!!seal?.sealed} size={40} className="!animate-none" />
+          <WaxSeal sealed={!!seal?.sealed} size={40} />
           <p className="text-[15px]">
             {seal
               ? t('closeBook.summary', { count: seal.tasks_done, minutes: seal.focus_minutes })
@@ -96,7 +96,7 @@ export function CloseTheBook({ open, onClose }: { open: boolean; onClose: () => 
 
         <Field label={t('closeBook.lineLabel')}>
           {(props) => (
-            <Textarea {...props} rows={2} className="min-h-16" maxLength={500} value={line} onChange={(e) => setLine(e.target.value)} placeholder={t('closeBook.linePlaceholder')} />
+            <Textarea {...props} rows={2} maxLength={500} value={line} onChange={(e) => setLine(e.target.value)} placeholder={t('closeBook.linePlaceholder')} />
           )}
         </Field>
       </div>

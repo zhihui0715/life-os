@@ -11,6 +11,7 @@ Both URLs are secrets: anyone with one can read that calendar. They're never log
 import logging
 import secrets
 import time as clock
+import urllib.error
 import urllib.request
 from datetime import datetime, timedelta
 from urllib.parse import urlsplit
@@ -35,7 +36,7 @@ MAX_BYTES = 5 * 1024 * 1024
 TIMEOUT_SECONDS = 10
 GOOGLE_HOST = "calendar.google.com"
 
-# user id → (url, fetched at (monotonic), parsed calendar or None when the fetch failed)
+# user id → (url, fetched at (monotonic), parsed calendar or None when the read failed, why it failed or None)
 _cache: dict = {}
 
 
@@ -109,6 +110,10 @@ def check_google_url(url: str) -> str:
     return url
 
 
+class _TooLarge(Exception):
+    pass
+
+
 class _NoRedirects(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *args, **kwargs):
         return None  # a redirect could point anywhere; treat it as a failure
@@ -119,7 +124,7 @@ def _download(url: str) -> bytes:
     with opener.open(urllib.request.Request(url, headers={"User-Agent": "LifeOS"}), timeout=TIMEOUT_SECONDS) as res:
         body = res.read(MAX_BYTES + 1)
     if len(body) > MAX_BYTES:
-        raise ValueError("calendar too large")
+        raise _TooLarge()
     return body
 
 
@@ -129,29 +134,64 @@ def set_google_url(user, url: str | None) -> None:
     db.session.commit()
 
 
+# Why a linked Google calendar couldn't be read, in words the app can explain (Settings shows each one):
+# public_not_shared  a "public address" of a calendar that isn't public (copy the secret address instead)
+# not_found          Google doesn't know the address: mistyped, or the secret address was reset in Google
+# denied             Google refused it
+# google_busy        Google answered with an error or "too many requests"; it will try again
+# timeout            Google took too long to answer
+# unreachable        Google couldn't be reached at all, or it sent the request elsewhere (not followed)
+# too_large          bigger than MAX_BYTES
+# not_calendar       Google answered, but not with a calendar file
+def _problem(e: Exception, url: str) -> str:
+    if isinstance(e, urllib.error.HTTPError):
+        if e.code == 404:
+            return "public_not_shared" if "/public/" in urlsplit(url).path else "not_found"
+        if e.code in (401, 403):
+            return "denied"
+        if e.code == 429 or e.code >= 500:
+            return "google_busy"
+        return "unreachable"  # including a redirect, which is never followed
+    if isinstance(e, TimeoutError) or (isinstance(e, urllib.error.URLError) and isinstance(e.reason, TimeoutError)):
+        return "timeout"
+    if isinstance(e, _TooLarge):
+        return "too_large"
+    return "unreachable"
+
+
+def _read(url: str) -> tuple[Calendar | None, str | None]:
+    try:
+        body = _download(url)
+    except Exception as e:  # noqa: BLE001 — any network problem just means "no Google events right now"
+        return None, _problem(e, url)
+    try:
+        return Calendar.from_ical(body), None
+    except Exception:  # noqa: BLE001
+        return None, "not_calendar"
+
+
 def _google_calendar(user):
-    """The parsed Google calendar, from the cache when fresh. None when not linked or it can't be read."""
+    """(parsed Google calendar or None, why it couldn't be read or None), from the cache when fresh."""
     url = user.settings.google_ics_url
     if not url:
-        return None
+        return None, None
     hit = _cache.get(user.id)
     now = clock.monotonic()
     if hit and hit[0] == url and now - hit[1] < (CACHE_SECONDS if hit[2] is not None else ERROR_CACHE_SECONDS):
-        return hit[2]
-    try:
-        cal = Calendar.from_ical(_download(url))
-    except Exception as e:  # noqa: BLE001 — any network or parse problem just means "no Google events right now"
-        log.warning("google calendar fetch failed for user %s: %s", user.id, type(e).__name__)  # never the URL
-        cal = None
-    _cache[user.id] = (url, now, cal)
-    return cal
+        return hit[2], hit[3]
+    cal, problem = _read(url)
+    if problem:
+        log.warning("google calendar read failed for user %s: %s", user.id, problem)  # never the URL
+    _cache[user.id] = (url, now, cal, problem)
+    return cal, problem
 
 
-def google_status(user) -> str:
-    """off | ok | error (linked, but the last read failed)."""
+def google_status(user) -> tuple[str, str | None]:
+    """(off | ok | error, and for error: why — see _problem)."""
     if not user.settings.google_ics_url:
-        return "off"
-    return "ok" if _google_calendar(user) is not None else "error"
+        return "off", None
+    cal, problem = _google_calendar(user)
+    return ("ok", None) if cal is not None else ("error", problem)
 
 
 def _as_datetime(v, zone) -> tuple[datetime, bool]:
@@ -161,7 +201,7 @@ def _as_datetime(v, zone) -> tuple[datetime, bool]:
 
 
 def google_events(user, start: datetime, end: datetime) -> list[dict]:
-    cal = _google_calendar(user)
+    cal = _google_calendar(user)[0]
     if cal is None:
         return []
     zone = user_zone(user)
