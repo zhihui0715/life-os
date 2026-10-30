@@ -16,7 +16,8 @@
     "collapse": "Collapse sidebar",
     "expand": "Expand sidebar",
     "graph": "Graph",
-    "reports": "Reports"
+    "reports": "Reports",
+    "achievements": "Achievements"
   },
   "actions": {
     "save": "Save",

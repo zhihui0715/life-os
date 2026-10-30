@@ -25,6 +25,7 @@ const GraphPage = lazyWithReload(() => import('../features/graph/GraphPage').the
 const LandingPage = lazyWithReload(() => import('../features/landing/LandingPage'))
 const LoginPage = lazyWithReload(() => import('../features/auth/LoginPage').then((m) => ({ default: m.LoginPage })))
 const SignupPage = lazyWithReload(() => import('../features/auth/SignupPage').then((m) => ({ default: m.SignupPage })))
+const AchievementsPage = lazyWithReload(() => import('../features/achievements/AchievementsPage').then((m) => ({ default: m.AchievementsPage })))
 const ReportsPage = lazyWithReload(() => import('../features/reports/ReportsPage').then((m) => ({ default: m.ReportsPage })))
 const PlanPage = lazyWithReload(() => import('../features/planning/PlanPage').then((m) => ({ default: m.PlanPage })))
 const FocusPage = lazyWithReload(() => import('../features/focus/FocusPage').then((m) => ({ default: m.FocusPage })))
@@ -134,6 +135,7 @@ const router = createBrowserRouter([
           { path: 'plan', element: lazyPage(<PlanPage />) },
           { path: 'graph', element: lazyPage(<GraphPage />) },
           { path: 'reports', element: lazyPage(<ReportsPage />) },
+          { path: 'achievements', element: lazyPage(<AchievementsPage />) },
           { path: 'assistant', element: <Navigate to="/plan" replace /> }, // old bookmark
           { path: 'settings', element: lazyPage(<SettingsPage />) },
           { path: '*', element: <Navigate to="/" replace /> },

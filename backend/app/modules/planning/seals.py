@@ -33,10 +33,10 @@ def _habit_quest(user) -> str:
     return "habit" if active else "journal"
 
 
-def daily_seals(user, days: int) -> dict:
+def seal_days(user, start: date, today: date) -> list[dict]:
+    """One row per day from `start` to `today`: the three quests and whether the day is sealed."""
     zone = user_zone(user)
-    today = user_today(user)
-    start = today - timedelta(days=days - 1)
+    days = (today - start).days + 1
     lo = datetime.combine(start, time.min, zone)
     hi = datetime.combine(today + timedelta(days=1), time.min, zone)
     local = lambda dt: dt.astimezone(zone).date()  # noqa: E731
@@ -89,6 +89,12 @@ def daily_seals(user, days: int) -> dict:
             "done": done,
             "sealed": all(done.values()),
         })
+    return out
+
+
+def daily_seals(user, days: int) -> dict:
+    today = user_today(user)
+    out = seal_days(user, today - timedelta(days=days - 1), today)
 
     # Sealed days in a row up to today; today doesn't break it while it's still open.
     streak = 0
@@ -97,4 +103,4 @@ def daily_seals(user, days: int) -> dict:
             streak += 1
         elif day["date"] != today.isoformat():
             break
-    return {"habit_quest": second, "focus_minutes_target": FOCUS_MINUTES, "streak": streak, "days": out}
+    return {"habit_quest": _habit_quest(user), "focus_minutes_target": FOCUS_MINUTES, "streak": streak, "days": out}

@@ -1,0 +1,100 @@
+{
+  "title": "Achievements",
+  "subtitle": "{{unlocked}} of {{total}} unlocked",
+  "unlockedOn": "Unlocked {{date}}",
+  "unlocked": "Unlocked",
+  "locked": "Locked",
+  "progress": "{{progress}} of {{target}}",
+  "toast": "Achievement unlocked: {{name}}",
+  "intro": "Milestones you reach just by using Life OS. They're worked out from your history, so nothing extra to do.",
+  "groups": {
+    "tasks": "Tasks",
+    "seals": "Daily seal",
+    "focus": "Focus",
+    "habits": "Habits",
+    "goals": "Goals",
+    "journal": "Journal"
+  },
+  "items": {
+    "first_task": {
+      "name": "First step",
+      "description": "Finish your first task"
+    },
+    "tasks_10": {
+      "name": "Getting going",
+      "description": "Finish 10 tasks"
+    },
+    "tasks_50": {
+      "name": "On a roll",
+      "description": "Finish 50 tasks"
+    },
+    "tasks_100": {
+      "name": "Centurion",
+      "description": "Finish 100 tasks"
+    },
+    "tasks_500": {
+      "name": "Unstoppable",
+      "description": "Finish 500 tasks"
+    },
+    "first_seal": {
+      "name": "Signed and sealed",
+      "description": "Seal your first day"
+    },
+    "seals_3": {
+      "name": "Three in a row",
+      "description": "Seal 3 days in a row"
+    },
+    "seals_7": {
+      "name": "A sealed week",
+      "description": "Seal 7 days in a row"
+    },
+    "seals_30": {
+      "name": "A sealed month",
+      "description": "Seal 30 days in a row"
+    },
+    "focus_1h": {
+      "name": "First hour",
+      "description": "Focus for 1 hour in total"
+    },
+    "focus_10h": {
+      "name": "Deep worker",
+      "description": "Focus for 10 hours in total"
+    },
+    "focus_50h": {
+      "name": "Scholar",
+      "description": "Focus for 50 hours in total"
+    },
+    "focus_100h": {
+      "name": "Master of focus",
+      "description": "Focus for 100 hours in total"
+    },
+    "habit_7": {
+      "name": "One good week",
+      "description": "Keep a habit going for 7 days"
+    },
+    "habit_30": {
+      "name": "It sticks",
+      "description": "Keep a habit going for 30 days"
+    },
+    "habit_100": {
+      "name": "Second nature",
+      "description": "Keep a habit going for 100 days"
+    },
+    "first_goal": {
+      "name": "Goal reached",
+      "description": "Complete your first goal"
+    },
+    "goals_5": {
+      "name": "Achiever",
+      "description": "Complete 5 goals"
+    },
+    "journal_7": {
+      "name": "Dear diary",
+      "description": "Write in your journal on 7 days"
+    },
+    "journal_30": {
+      "name": "Storyteller",
+      "description": "Write in your journal on 30 days"
+    }
+  }
+}

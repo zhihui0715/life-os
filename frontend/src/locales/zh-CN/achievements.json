@@ -1,0 +1,100 @@
+{
+  "title": "成就",
+  "subtitle": "已解锁 {{unlocked}}/{{total}}",
+  "unlockedOn": "{{date}} 解锁",
+  "unlocked": "已解锁",
+  "locked": "未解锁",
+  "progress": "{{progress}}/{{target}}",
+  "toast": "解锁成就：{{name}}",
+  "intro": "只要使用 Life OS 就能达成的里程碑。它们根据你的记录自动计算，不需要额外操作。",
+  "groups": {
+    "tasks": "任务",
+    "seals": "每日印章",
+    "focus": "专注",
+    "habits": "习惯",
+    "goals": "目标",
+    "journal": "日记"
+  },
+  "items": {
+    "first_task": {
+      "name": "第一步",
+      "description": "完成第一个任务"
+    },
+    "tasks_10": {
+      "name": "开始起步",
+      "description": "完成 10 个任务"
+    },
+    "tasks_50": {
+      "name": "势如破竹",
+      "description": "完成 50 个任务"
+    },
+    "tasks_100": {
+      "name": "百战百胜",
+      "description": "完成 100 个任务"
+    },
+    "tasks_500": {
+      "name": "势不可挡",
+      "description": "完成 500 个任务"
+    },
+    "first_seal": {
+      "name": "盖上第一枚章",
+      "description": "第一次给一天盖章"
+    },
+    "seals_3": {
+      "name": "连续三天",
+      "description": "连续 3 天盖章"
+    },
+    "seals_7": {
+      "name": "盖章的一周",
+      "description": "连续 7 天盖章"
+    },
+    "seals_30": {
+      "name": "盖章的一个月",
+      "description": "连续 30 天盖章"
+    },
+    "focus_1h": {
+      "name": "第一个小时",
+      "description": "累计专注 1 小时"
+    },
+    "focus_10h": {
+      "name": "深度工作者",
+      "description": "累计专注 10 小时"
+    },
+    "focus_50h": {
+      "name": "学者",
+      "description": "累计专注 50 小时"
+    },
+    "focus_100h": {
+      "name": "专注大师",
+      "description": "累计专注 100 小时"
+    },
+    "habit_7": {
+      "name": "好的一周",
+      "description": "一个习惯坚持 7 天"
+    },
+    "habit_30": {
+      "name": "坚持下来了",
+      "description": "一个习惯坚持 30 天"
+    },
+    "habit_100": {
+      "name": "习惯成自然",
+      "description": "一个习惯坚持 100 天"
+    },
+    "first_goal": {
+      "name": "达成目标",
+      "description": "完成第一个目标"
+    },
+    "goals_5": {
+      "name": "成就者",
+      "description": "完成 5 个目标"
+    },
+    "journal_7": {
+      "name": "亲爱的日记",
+      "description": "在 7 天里写过日记"
+    },
+    "journal_30": {
+      "name": "讲故事的人",
+      "description": "在 30 天里写过日记"
+    }
+  }
+}
