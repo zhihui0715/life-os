@@ -51,6 +51,8 @@ TABLES = (
 # against their checksums like everything else, then left out.
 RETIRED_TABLES = {"ai_runs"}
 RETIRED_COLUMNS = {"user_settings": {"ai_enabled", "ai_monthly_token_budget", "report_emails", "report_emails_sent"}}
+# Secret links are never written to a backup file (it may be stored anywhere); after a restore you link them again.
+SECRET_COLUMNS = {"user_settings": {"calendar_feed_token", "google_ics_url"}}
 # Tables without user_id belong to the user through their parent row: table → (parent table, link column).
 CHILD_TABLES = {
     "task_tags": ("tasks", "task_id"),
@@ -67,7 +69,8 @@ def _table(name):
 
 def _columns(name):
     """Exported columns: everything except user_id, which is replaced by the restoring account's id."""
-    return [c for c in _table(name).columns if c.name != "user_id"]
+    secret = SECRET_COLUMNS.get(name, set())
+    return [c for c in _table(name).columns if c.name != "user_id" and c.name not in secret]
 
 
 def _owned(name, user_id):

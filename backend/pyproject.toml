@@ -16,6 +16,8 @@ dependencies = [
   "tzdata>=2025.2",  # timezone database (Windows has none built in)
   "python-dateutil>=2.9,<3",  # RFC 5545 recurrence rules (RRULE)
   "reportlab>=4.4,<5",  # the readable PDF report in Backup (pure Python, includes CJK fonts)
+  "icalendar>=6.1,<7",  # calendar files: the feed Google subscribes to, and reading a Google calendar
+  "recurring-ical-events>=3.3,<4",  # expands repeating events in a Google calendar
 ]
 
 [project.optional-dependencies]

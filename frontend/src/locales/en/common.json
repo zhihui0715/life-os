@@ -131,7 +131,8 @@
     "invalid": "This value is not valid.",
     "wrong_password": "This password is incorrect.",
     "password_too_short": "Use at least {{min}} characters.",
-    "password_mismatch": "The passwords don't match."
+    "password_mismatch": "The passwords don't match.",
+    "invalid_google_ics": "That isn't a Google Calendar iCal address. Copy the \"Secret address in iCal format\" from Google Calendar's settings."
   },
   "offline": {
     "title": "You're offline",

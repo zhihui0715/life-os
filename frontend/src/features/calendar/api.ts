@@ -24,13 +24,33 @@ export interface EventInput {
   category_id?: string | null
 }
 
+/** An event from a linked Google calendar: shown read-only (change it in Google). */
+export interface ExternalEvent {
+  id: string
+  title: string
+  all_day: boolean
+  starts_at: string
+  ends_at: string
+  start_date?: string
+  end_date?: string
+  busy: boolean
+  source: 'google'
+}
+
+export interface CalendarLinks {
+  /** The private address Google Calendar subscribes to; null when switched off */
+  feed_url: string | null
+  /** off: no Google calendar linked; error: linked, but it couldn't be read just now */
+  google: 'off' | 'ok' | 'error'
+}
+
 const CAL = ['calendar']
 const qs = (r: Range) => `start=${encodeURIComponent(r.start)}&end=${encodeURIComponent(r.end)}`
 
 export function useOccurrences(range: Range | null) {
   return useQuery({
     queryKey: [...CAL, 'occurrences', range],
-    queryFn: () => api<{ items: Occurrence[]; tasks: TaskMarker[] }>(`/calendar/occurrences?${qs(range!)}`),
+    queryFn: () => api<{ items: Occurrence[]; tasks: TaskMarker[]; external: ExternalEvent[] }>(`/calendar/occurrences?${qs(range!)}`),
     enabled: !!range,
     placeholderData: (prev) => prev, // keep showing the old week while the next one loads
   })
@@ -116,5 +136,29 @@ export function useCancelOccurrence() {
     mutationFn: ({ eventId, originalStart }: { eventId: string; originalStart: string }) =>
       api<void>(occurrenceUrl(eventId, originalStart), { method: 'DELETE' }),
     onSuccess: invalidate,
+  })
+}
+
+const LINKS_KEY = [...CAL, 'links']
+
+export function useCalendarLinks() {
+  return useQuery({ queryKey: LINKS_KEY, queryFn: () => api<CalendarLinks>('/calendar/links') })
+}
+
+/** start/stop the feed, or link/unlink a Google calendar. Linking changes what the calendar shows. */
+export function useCalendarLink() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (a: { kind: 'feed'; on: boolean } | { kind: 'google'; url: string | null }) =>
+      a.kind === 'feed'
+        ? api<CalendarLinks>('/calendar/links/feed', { method: a.on ? 'POST' : 'DELETE' })
+        : a.url
+          ? api<CalendarLinks>('/calendar/links/google', { method: 'PUT', body: { url: a.url } })
+          : api<CalendarLinks>('/calendar/links/google', { method: 'DELETE' }),
+    onSuccess: (links) => {
+      qc.setQueryData(LINKS_KEY, links)
+      void qc.invalidateQueries({ queryKey: [...CAL, 'occurrences'] })
+      void qc.invalidateQueries({ queryKey: ['planning'] })
+    },
   })
 }
