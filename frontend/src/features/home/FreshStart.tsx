@@ -16,13 +16,20 @@ import { useToast } from '../../components/ui/Toast'
 import { confetti } from '../../lib/confetti'
 import { addDays, todayInZone } from '../../lib/dates'
 import { errorMessage } from '../../lib/errors'
+import i18n from '../../lib/i18n'
 import { isQueued } from '../../lib/offline'
 import { play } from '../../lib/sound'
+import en from '../../locales/en/fresh.json'
+import zh from '../../locales/zh-CN/fresh.json'
 import { useMe } from '../auth/AuthProvider'
 import { TwoMinuteButton } from '../focus/TwoMinutes'
 import { useDayPlan } from '../planning/api'
 import { useCreateTask, useMoveToSomeday, useTask, useTaskAction } from '../tasks/api'
 import { useTaskTotal } from '../tasks/TaskList'
+
+// Loaded with this file (not at startup), like the landing page and reports.
+i18n.addResourceBundle('en', 'fresh', en, true, true)
+i18n.addResourceBundle('zh-CN', 'fresh', zh, true, true)
 
 const PICK_KEY = 'lifeos.oneThing'
 const VISIT_KEY = 'lifeos.lastVisit'
@@ -52,7 +59,7 @@ function write(key: string, value: unknown) {
 }
 
 export function OneThingCard() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('fresh')
   const today = todayInZone(useMe().settings.timezone)
   const [pick, setPick] = useState<Pick | null>(() => read<Pick>(PICK_KEY))
   const current = pick?.date === today ? pick : null
@@ -86,7 +93,7 @@ export function OneThingCard() {
 }
 
 function Chooser({ today, onPick }: { today: string; onPick: (p: Pick) => void }) {
-  const { t } = useTranslation()
+  const { t } = useTranslation('fresh')
   const toast = useToast()
   const plan = useDayPlan('today').data
   const create = useCreateTask()
@@ -156,7 +163,7 @@ function Chooser({ today, onPick }: { today: string; onPick: (p: Pick) => void }
 }
 
 function Picked({ pick, done, onChange }: { pick: Pick; done: boolean; onChange: () => void }) {
-  const { t } = useTranslation()
+  const { t } = useTranslation('fresh')
   const toast = useToast()
   const action = useTaskAction()
 
@@ -221,7 +228,7 @@ function useDaysAway(today: string): number | null {
 }
 
 export function WelcomeBack() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('fresh')
   const me = useMe()
   const toast = useToast()
   const today = todayInZone(me.settings.timezone)

@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
+import enFresh from '../locales/en/fresh.json'
 import enLanding from '../locales/en/landing.json'
 import enReports from '../locales/en/reports.json'
+import zhFresh from '../locales/zh-CN/fresh.json'
 import zhLanding from '../locales/zh-CN/landing.json'
 import zhReports from '../locales/zh-CN/reports.json'
 import { resources } from './i18n'
@@ -22,8 +24,8 @@ describe('translations', () => {
     })
   }
 
-  // the landing page and the reports load their own words, so they're not in `resources`
-  for (const [ns, en, zh] of [['landing', enLanding, zhLanding], ['reports', enReports, zhReports]] as const) {
+  // the landing page, the reports and Home's fresh-start card load their own words, so they're not in `resources`
+  for (const [ns, en, zh] of [['landing', enLanding, zhLanding], ['reports', enReports, zhReports], ['fresh', enFresh, zhFresh]] as const) {
     it(`"${ns}" has the same keys in English and Chinese, none empty`, () => {
       expect([...new Set(keys(zh))].sort()).toEqual([...new Set(keys(en))].sort())
       expect(JSON.stringify([en, zh])).not.toContain('""')

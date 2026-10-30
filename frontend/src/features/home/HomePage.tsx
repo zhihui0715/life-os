@@ -1,5 +1,5 @@
 import { CalendarCheck, NotebookPen, SlidersHorizontal, Sun } from 'lucide-react'
-import { useState, type ReactNode } from 'react'
+import { Suspense, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
@@ -7,17 +7,16 @@ import { Button } from '../../components/ui/Button'
 import { Avatar } from '../../components/ui/Avatar'
 import { cn } from '../../components/ui/cn'
 import { SunArt } from '../../components/ui/Illustrations'
-import { EmptyState, GroupSection, PageHeader } from '../../components/ui/states'
+import { EmptyState, GroupSection, PageHeader, Skeleton } from '../../components/ui/states'
 import { useToast } from '../../components/ui/Toast'
 import { useAllDone } from '../../lib/celebrate'
+import { lazyWithReload } from '../../lib/lazyPage'
 import type { Category, DashboardSectionKey, Task } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
 import { useCategories } from '../tasks/api'
 import { QuickAddInput } from '../tasks/QuickAddInput'
-import { TaskDrawer } from '../tasks/TaskDrawer'
 import { TaskList, useTaskTotal } from '../tasks/TaskList'
 import { CustomizeDialog } from './CustomizeDialog'
-import { OneThingCard, WelcomeBack } from './FreshStart'
 import { BalanceSection, FocusSection, GoalsSection, LearningSection, ScheduleSection, ViewAll } from './DashboardSections'
 import { HabitsTodayCard, MoodCheckInCard } from './TodayCards'
 
@@ -25,6 +24,12 @@ function greetingKey(timeZone: string) {
   const hour = Number(new Intl.DateTimeFormat('en-US', { timeZone, hour: 'numeric', hourCycle: 'h23' }).format(new Date()))
   return hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening'
 }
+
+// Loaded just after Home's first paint, so the first download stays within the performance budget
+// (the task editor brings the forms library with it).
+const TaskDrawer = lazyWithReload(() => import('../tasks/TaskDrawer').then((m) => ({ default: m.TaskDrawer })))
+const OneThingCard = lazyWithReload(() => import('./FreshStart').then((m) => ({ default: m.OneThingCard })))
+const WelcomeBack = lazyWithReload(() => import('./FreshStart').then((m) => ({ default: m.WelcomeBack })))
 
 /** Sections that need the full width on large screens. */
 const WIDE: DashboardSectionKey[] = ['tasks']
@@ -69,7 +74,9 @@ export function HomePage() {
         }
       />
 
-      <OneThingCard />
+      <Suspense fallback={<Skeleton className="mb-4 h-36 rounded-2xl" />}>
+        <OneThingCard />
+      </Suspense>
       <div className="mb-3">
         <QuickAddInput view="today" />
       </div>
@@ -87,9 +94,13 @@ export function HomePage() {
         ))}
       </div>
 
-      <TaskDrawer task={open} categories={categories} onClose={() => setOpen(null)} onOpenTask={setOpen} />
+      <Suspense fallback={null}>
+        <TaskDrawer task={open} categories={categories} onClose={() => setOpen(null)} onOpenTask={setOpen} />
+      </Suspense>
       <CustomizeDialog open={customizing} onClose={() => setCustomizing(false)} />
-      <WelcomeBack />
+      <Suspense fallback={null}>
+        <WelcomeBack />
+      </Suspense>
     </>
   )
 }

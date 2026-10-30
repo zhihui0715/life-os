@@ -1,5 +1,5 @@
 import { Search, X } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
@@ -7,12 +7,15 @@ import { cn } from '../../components/ui/cn'
 import { Card, PageHeader } from '../../components/ui/states'
 import { useToast } from '../../components/ui/Toast'
 import { useAllDone } from '../../lib/celebrate'
+import { lazyWithReload } from '../../lib/lazyPage'
 import { play } from '../../lib/sound'
 import type { Task, TaskFilters, TaskView } from '../../lib/types'
 import { useCategories } from './api'
 import { QuickAddInput } from './QuickAddInput'
-import { TaskDrawer } from './TaskDrawer'
 import { TaskList, useTaskTotal } from './TaskList'
+
+// Loaded after the first paint: the editor brings the forms library with it.
+const TaskDrawer = lazyWithReload(() => import('./TaskDrawer').then((m) => ({ default: m.TaskDrawer })))
 
 const VIEWS: TaskView[] = ['inbox', 'today', 'upcoming', 'overdue', 'unscheduled', 'all', 'completed', 'archived']
 
@@ -129,7 +132,9 @@ export function TasksPage() {
         <TaskList filters={filters} categories={categories} onOpen={setOpen} />
       </Card>
 
-      <TaskDrawer task={open} categories={categories} onClose={() => setOpen(null)} onOpenTask={setOpen} />
+      <Suspense fallback={null}>
+        <TaskDrawer task={open} categories={categories} onClose={() => setOpen(null)} onOpenTask={setOpen} />
+      </Suspense>
     </>
   )
 }
