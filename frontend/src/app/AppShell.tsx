@@ -23,6 +23,7 @@ const STORAGE_KEY = 'lifeos.sidebarCollapsed'
 
 // The Academia scene is its own chunk: only people using that theme download it
 const StudyScene = lazyWithReload(() => import('../components/academia/StudyScene'))
+const AchievementWatcher = lazyWithReload(() => import('../features/achievements/AchievementWatcher'))
 const subscribeLook = (notify: () => void) => {
   const mo = new MutationObserver(notify)
   mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-look'] })
@@ -252,6 +253,9 @@ export function AppShell() {
       <CreateSheets sheet={sheet} setSheet={setSheet} />
       <FocusWidget />
       <PomodoroEngine />
+      <Suspense fallback={null}>
+        <AchievementWatcher />
+      </Suspense>
     </div>
   )
 }

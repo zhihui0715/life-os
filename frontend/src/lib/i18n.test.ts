@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
+import enAchievements from '../locales/en/achievements.json'
 import enFresh from '../locales/en/fresh.json'
 import enLanding from '../locales/en/landing.json'
 import enReports from '../locales/en/reports.json'
 import enSignup from '../locales/en/signup.json'
+import zhAchievements from '../locales/zh-CN/achievements.json'
 import zhFresh from '../locales/zh-CN/fresh.json'
 import zhLanding from '../locales/zh-CN/landing.json'
 import zhReports from '../locales/zh-CN/reports.json'
@@ -26,12 +28,13 @@ describe('translations', () => {
     })
   }
 
-  // the landing, sign-up and reports pages and Home's fresh-start card load their own words, so they're not in `resources`
+  // the landing, sign-up and reports pages, Home's fresh-start cards and achievements load their own words, so they're not in `resources`
   for (const [ns, en, zh] of [
     ['landing', enLanding, zhLanding],
     ['reports', enReports, zhReports],
     ['signup', enSignup, zhSignup],
     ['fresh', enFresh, zhFresh],
+    ['achievements', enAchievements, zhAchievements],
   ] as const) {
     it(`"${ns}" has the same keys in English and Chinese, none empty`, () => {
       expect([...new Set(keys(zh))].sort()).toEqual([...new Set(keys(en))].sort())

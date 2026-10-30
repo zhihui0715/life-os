@@ -37,6 +37,7 @@ def create_app(config_name: str | None = None) -> Flask:
     limiter.init_app(app)
 
     from app import models  # noqa: F401  (registers every table for Alembic)
+    from app.modules.achievements.routes import bp as achievements_bp
     from app.modules.activity.routes import activity_bp, focus_bp
     from app.modules.auth.routes import bp as auth_bp
     from app.modules.backup.routes import bp as backup_bp
@@ -53,7 +54,7 @@ def create_app(config_name: str | None = None) -> Flask:
     from app.modules.tasks.routes import bp as tasks_bp
     from app.modules.tasks.routes import tags_bp
 
-    for bp in (health_bp, auth_bp, settings_bp, categories_bp, tasks_bp, tags_bp, goals_bp, calendar_bp, habits_bp, journal_bp, activity_bp, focus_bp, insights_bp, backup_bp, planning_bp, graph_bp, reports_bp):
+    for bp in (health_bp, auth_bp, settings_bp, categories_bp, tasks_bp, tags_bp, goals_bp, calendar_bp, habits_bp, journal_bp, activity_bp, focus_bp, insights_bp, backup_bp, planning_bp, graph_bp, reports_bp, achievements_bp):
         app.register_blueprint(bp)
 
     register_error_handlers(app)
