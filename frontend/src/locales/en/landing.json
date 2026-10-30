@@ -10,7 +10,7 @@
   "hero": {
     "title": "One notebook for your whole life",
     "body": "Life OS keeps your tasks, calendar, goals, habits, focus sessions and journal in one quiet place, on your own server, online or off.",
-    "cta": "Sign in",
+    "cta": "Create account",
     "today": "Today",
     "date": "Saturday 24 October",
     "t1": "Draft chapter 3",
@@ -266,7 +266,7 @@
   "cta": {
     "title": "Your notebook is waiting",
     "body": "One account on your own server. It works offline, installs on your phone, and exports a full backup whenever you like.",
-    "button": "Sign in",
+    "button": "Create account",
     "scholar": "Rembrandt’s etching of a scholar standing at his desk, turned towards a glowing disc in the window."
   },
   "footer": {

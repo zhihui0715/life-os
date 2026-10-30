@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 import { z } from 'zod'
 
 import { LanguageSwitcher } from '../../app/LanguageSwitcher'
@@ -50,6 +51,12 @@ export function LoginPage() {
             {login.isPending ? t('auth.signingIn') : t('auth.signIn')}
           </Button>
         </form>
+        <p className="text-subtle mt-5 text-center">
+          {t('auth.noAccount')}{' '}
+          <Link to="/signup" className="text-accent font-semibold">
+            {t('auth.createAccount')}
+          </Link>
+        </p>
       </Card>
       <div className="mt-6">
         <LanguageSwitcher />

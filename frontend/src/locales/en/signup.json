@@ -1,0 +1,11 @@
+{
+  "title": "Create your account",
+  "subtitle": "Your own private workspace, free.",
+  "name": "Your name",
+  "passwordHint": "At least {{min}} characters.",
+  "confirmPassword": "Confirm password",
+  "signUp": "Create account",
+  "signingUp": "Creating account…",
+  "haveAccount": "Already have an account?",
+  "emailTaken": "This email is already registered. Try signing in."
+}
