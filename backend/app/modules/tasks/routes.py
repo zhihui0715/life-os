@@ -35,6 +35,11 @@ def create_task():
     return _out(task), 201
 
 
+@bp.post("/someday")
+def move_overdue_to_someday():
+    return {"moved": service.move_overdue_to_someday(current_user())}
+
+
 @bp.get("/<task_id>")
 def get_task(task_id):
     return _out(_get(task_id))

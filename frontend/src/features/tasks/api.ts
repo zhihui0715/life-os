@@ -6,6 +6,7 @@ import { isQueued, sendOrQueue, type Queued } from '../../lib/offline'
 import type { Category, Page, TagSummary, Task, TaskFilters, TaskStatus } from '../../lib/types'
 
 export interface TaskInput {
+  id?: string // only on create, when the caller needs the id before the server answers (e.g. offline)
   title?: string
   notes?: string | null
   status?: Exclude<TaskStatus, 'done'>
@@ -127,5 +128,19 @@ export function useDeleteTask() {
   return useMutation({
     mutationFn: (id: string) => api<void>(`/tasks/${id}`, { method: 'DELETE' }),
     onSuccess: invalidate,
+  })
+}
+
+export function useTask(id: string | null) {
+  return useQuery({ queryKey: [...TASKS, 'one', id], queryFn: () => api<Task>(`/tasks/${id}`), enabled: !!id })
+}
+
+/** Fresh start after time away: every overdue task loses its missed date and moves to Someday. Nothing is deleted. */
+export function useMoveToSomeday() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => api<{ moved: number }>('/tasks/someday', { method: 'POST' }),
+    onSuccess: () =>
+      Promise.all([qc.invalidateQueries({ queryKey: TASKS }), qc.invalidateQueries({ queryKey: ['goals'] }), qc.invalidateQueries({ queryKey: ['planning'] })]),
   })
 }

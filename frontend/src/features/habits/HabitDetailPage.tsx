@@ -72,7 +72,11 @@ export function HabitDetailPage() {
       {h.description && <p className="text-muted mb-4 whitespace-pre-line">{h.description}</p>}
 
       <div className="stagger mb-6 grid grid-cols-3 gap-3">
-        <Stat label={t(`stats.streak_${s.unit}`, { count: s.current_streak })} value={String(s.current_streak)} />
+        <Stat
+          label={t(`stats.streak_${s.unit}`, { count: s.current_streak })}
+          value={String(s.current_streak)}
+          help={s.unit === 'days' ? `${t('stats.restDays', { count: s.rest_days })}. ${t('stats.restHelp')}` : undefined}
+        />
         <Stat label={t(`stats.best_${s.unit}`, { count: s.best_streak })} value={String(s.best_streak)} />
         <Stat
           label={s.consistency == null ? t('stats.noData') : t('stats.consistency', { value: Math.round(s.consistency * 100) })}

@@ -91,3 +91,27 @@ def test_week_start_follows_user_setting():
     wed = MON + timedelta(days=2)
     assert week_start(wed, 1) == MON
     assert week_start(wed, 7) == MON - timedelta(days=1)  # Sunday-start week
+
+
+def test_seven_days_in_a_row_earn_a_rest_day_that_covers_a_miss():
+    stats = compute(DAILY, days(MON, "ddddddd"), MON, MON + timedelta(days=6))
+    assert stats.rest_days == 1
+    # Day 8 missed: the rest day is used, the streak survives (but doesn't grow).
+    stats = compute(DAILY, days(MON, "ddddddd.dd"), MON, MON + timedelta(days=9))
+    assert (stats.current_streak, stats.best_streak, stats.rest_days) == (9, 9, 0)
+
+
+def test_a_miss_without_a_rest_day_breaks_the_streak_and_loses_saved_days():
+    stats = compute(DAILY, days(MON, "ddddddd..d"), MON, MON + timedelta(days=9))  # 1 saved, 2 missed
+    assert (stats.current_streak, stats.best_streak, stats.rest_days) == (1, 7, 0)
+
+
+def test_rest_days_are_capped():
+    stats = compute(DAILY, days(MON, "d" * 28), MON, MON + timedelta(days=27))
+    assert stats.rest_days == 2
+
+
+def test_weekly_habits_have_no_rest_days():
+    three_a_week = [Schedule(MON, "x_per_week", 0, 3)]
+    stats = compute(three_a_week, days(MON, "ddd...." * 3), MON, MON + timedelta(days=20))
+    assert stats.rest_days == 0

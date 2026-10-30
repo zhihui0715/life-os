@@ -179,5 +179,29 @@
     "habit": "Habit",
     "journal": "Journal entry",
     "tomato": "Tomato timer"
+  },
+  "oneThing": {
+    "eyebrow": "One thing today",
+    "question": "What's one thing you'll do today?",
+    "type": "Type one small thing",
+    "orType": "…or type your own",
+    "pick": "Pick",
+    "nudge": "Just start. Two minutes is enough. You can stop after that.",
+    "done": "Done",
+    "change": "Change",
+    "doneTitle": "Done. That's today's win.",
+    "doneToast": "Nice! Your one thing is done.",
+    "another": "Pick another"
+  },
+  "welcomeBack": {
+    "title": "Welcome back, {{name}}",
+    "body": "Good to see you. No catching up needed. Let's start small.",
+    "overdue_one": "{{count}} task from before is past its date. Move it to Someday so today starts clean? Nothing is deleted.",
+    "overdue_other": "{{count}} tasks from before are past their dates. Move them to Someday so today starts clean? Nothing is deleted.",
+    "fresh": "Fresh start",
+    "keep": "Keep as they are",
+    "go": "Let's go",
+    "moved_one": "Moved {{count}} task to Someday",
+    "moved_other": "Moved {{count}} tasks to Someday"
   }
 }

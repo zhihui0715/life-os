@@ -52,7 +52,10 @@
     "consistencyHelp_days": "Last 30 days: done ÷ (scheduled − skipped). Based on {{count}} days.",
     "consistencyHelp_weeks": "Last 4 full weeks that met the target. Based on {{count}} weeks.",
     "noData": "Not enough data yet",
-    "thisWeek": "{{done}}/{{target}} this week"
+    "thisWeek": "{{done}}/{{target}} this week",
+    "restDays_one": "{{count}} rest day saved",
+    "restDays_other": "{{count}} rest days saved",
+    "restHelp": "Every 7 days in a row earns a rest day (up to 2). If you miss a day, a rest day keeps your streak alive."
   },
   "history": {
     "title": "Last 12 weeks",

@@ -247,6 +247,8 @@ export interface HabitStats {
   eligible: number
   done_this_week: number
   target_this_week: number | null
+  /** Saved rest days (day-based habits): each covers one missed day without breaking the streak */
+  rest_days: number
 }
 
 export interface Habit {

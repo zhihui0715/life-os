@@ -9,7 +9,7 @@
     "today": "Today",
     "upcoming": "Upcoming",
     "overdue": "Overdue",
-    "unscheduled": "No date",
+    "unscheduled": "Someday",
     "completed": "Completed",
     "archived": "Archived"
   },
@@ -35,8 +35,8 @@
       "body": "You're on top of things."
     },
     "unscheduled": {
-      "title": "Every task has a date",
-      "body": "Tasks without a due date or deadline appear here."
+      "title": "Nothing for someday",
+      "body": "Tasks without a date wait here until you're ready for them."
     },
     "completed": {
       "title": "No completed tasks yet",

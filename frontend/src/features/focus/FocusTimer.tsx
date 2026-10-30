@@ -17,6 +17,7 @@ import { useMe } from '../auth/AuthProvider'
 import { useTaskList } from '../tasks/api'
 import { focusedNow, useCurrentFocus, useFocusAction, useFocusSessions } from './api'
 import { Tomato } from './Tomato'
+import { TWO_MINUTES } from './TwoMinutes'
 import { useStartTomato } from './usePomodoroEngine'
 
 const LENGTHS = [15, 25, 45, 60, 90]
@@ -182,7 +183,7 @@ export function FocusTimer() {
       </div>
       )}
       <p className={cn('mb-4 text-sm', over ? 'text-success font-medium' : 'text-subtle')}>
-        {over ? t('timer.overtime') : session.state === 'paused' ? t('timer.paused') : t('timer.running')}
+        {over ? t(session.planned_minutes === TWO_MINUTES ? 'twoMinutes.over' : 'timer.overtime') : session.state === 'paused' ? t('timer.paused') : t('timer.running')}
       </p>
       <div className="flex gap-2">
         {session.state === 'running' ? (

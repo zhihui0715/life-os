@@ -50,7 +50,9 @@
     "consistencyHelp_days": "最近 30 天：完成 ÷（计划 − 跳过）。基于 {{count}} 天。",
     "consistencyHelp_weeks": "最近 4 个完整周中达标的比例。基于 {{count}} 周。",
     "noData": "数据还不够",
-    "thisWeek": "本周 {{done}}/{{target}}"
+    "thisWeek": "本周 {{done}}/{{target}}",
+    "restDays_other": "已存 {{count}} 天休息日",
+    "restHelp": "连续完成 7 天可获得 1 天休息日（最多存 2 天）。漏掉一天时，休息日会帮你保住连续记录。"
   },
   "history": {
     "title": "最近 12 周",

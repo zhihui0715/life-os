@@ -135,6 +135,7 @@ def habit_to_dict(h: Habit, user, logs: dict) -> dict:
             "eligible": stats.eligible,
             "done_this_week": stats.done_this_week,
             "target_this_week": stats.target_this_week,
+            "rest_days": stats.rest_days,
         },
         "last7": [
             {"date": (today - timedelta(days=i)).isoformat(),

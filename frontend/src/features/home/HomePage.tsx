@@ -17,6 +17,7 @@ import { QuickAddInput } from '../tasks/QuickAddInput'
 import { TaskDrawer } from '../tasks/TaskDrawer'
 import { TaskList, useTaskTotal } from '../tasks/TaskList'
 import { CustomizeDialog } from './CustomizeDialog'
+import { OneThingCard, WelcomeBack } from './FreshStart'
 import { BalanceSection, FocusSection, GoalsSection, LearningSection, ScheduleSection, ViewAll } from './DashboardSections'
 import { HabitsTodayCard, MoodCheckInCard } from './TodayCards'
 
@@ -68,6 +69,7 @@ export function HomePage() {
         }
       />
 
+      <OneThingCard />
       <div className="mb-3">
         <QuickAddInput view="today" />
       </div>
@@ -87,6 +89,7 @@ export function HomePage() {
 
       <TaskDrawer task={open} categories={categories} onClose={() => setOpen(null)} onOpenTask={setOpen} />
       <CustomizeDialog open={customizing} onClose={() => setCustomizing(false)} />
+      <WelcomeBack />
     </>
   )
 }

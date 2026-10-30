@@ -18,8 +18,10 @@ test('offline: open, read today, act, reconnect, sync once', async ({ page, cont
   await apiCall(request, 'POST', '/habits', { name: 'Walk', start_date: today() })
 
   // Online visit: installs the service worker and saves today's data on the device.
+  // The task's checkbox, not its title: Home can also suggest it as today's "one thing".
+  const payRent = page.getByRole('checkbox', { name: 'Mark “Pay rent” complete' })
   await page.goto('/')
-  await expect(page.getByText('Pay rent')).toBeVisible()
+  await expect(payRent).toBeVisible()
   await expect(page.getByText('Walk')).toBeVisible()
   await waitForServiceWorker(page)
   await page.waitForTimeout(1500) // the offline copy is written at most once a second
@@ -28,10 +30,10 @@ test('offline: open, read today, act, reconnect, sync once', async ({ page, cont
   await context.setOffline(true)
   await page.reload()
   await expect(page.getByText("You're offline")).toBeVisible()
-  await expect(page.getByText('Pay rent')).toBeVisible()
+  await expect(payRent).toBeVisible()
   await expect(page.getByText('Not available offline.').first()).toBeVisible() // e.g. goals: honest, not "empty"
 
-  await page.getByRole('checkbox', { name: 'Mark “Pay rent” complete' }).click()
+  await payRent.click()
   await page.getByRole('checkbox', { name: 'Mark “Walk” done today' }).click()
   const quick = page.getByLabel('New task title').first()
   await quick.fill('Call the bank')
