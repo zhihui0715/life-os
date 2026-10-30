@@ -7,16 +7,18 @@ import { Button } from '../../components/ui/Button'
 import { cn } from '../../components/ui/cn'
 import { Segmented } from '../../components/ui/Segments'
 import { EmptyState, ListSkeleton } from '../../components/ui/states'
+import { useToast } from '../../components/ui/Toast'
 import { addDays, formatInstant, todayInZone, utcIsoToWallTime, wallTimeToUtcIso } from '../../lib/dates'
 import { play } from '../../lib/sound'
 import type { Occurrence, TaskMarker } from '../../lib/types'
-import type { Range } from './api'
+import type { ExternalEvent, Range } from './api'
 
 const KIND_COLOR: Record<string, string> = {
   appointment: 'var(--accent-fill)',
   task_block: 'var(--success-fill)',
   preference: 'var(--border-strong)',
   marker: 'var(--warning-fill)',
+  google: 'var(--tint-insights)',
 }
 const SWIPE_PX = 50
 
@@ -42,7 +44,7 @@ interface Item {
 interface Props {
   tz: string
   weekStart: number
-  data?: { items: Occurrence[]; tasks: TaskMarker[] }
+  data?: { items: Occurrence[]; tasks: TaskMarker[]; external?: ExternalEvent[] }
   loading: boolean
   clashing: Set<string>
   onRange: (r: Range) => void
@@ -60,6 +62,7 @@ export function MobileAgenda({ tz, weekStart, data, loading, clashing, onRange, 
   const lang = i18n.language
   const today = todayInZone(tz)
   const [selected, setSelected] = useState(today)
+  const toast = useToast()
   const [mode, setMode] = useState<'day' | 'month'>('day')
   const [slide, setSlide] = useState<'left' | 'right' | null>(null)
   const touch = useRef<number | null>(null)
@@ -97,6 +100,23 @@ export function MobileAgenda({ tz, weekStart, data, loading, clashing, onRange, 
         put(utcIsoToWallTime(o.starts_at, tz).slice(0, 10), item)
       }
     }
+    for (const g of data?.external ?? []) {
+      const item: Item = {
+        key: g.id,
+        title: g.title,
+        color: KIND_COLOR.google,
+        allDay: g.all_day,
+        starts_at: g.starts_at,
+        ends_at: g.ends_at,
+        clash: false,
+        onOpen: () => toast(t('google.event')), // read-only here: change it in Google Calendar
+      }
+      if (g.all_day && g.start_date && g.end_date) {
+        for (let d = g.start_date; d <= g.end_date; d = addDays(d, 1)) put(d, { ...item, key: `${g.id}-${d}` })
+      } else {
+        put(utcIsoToWallTime(g.starts_at, tz).slice(0, 10), item)
+      }
+    }
     for (const m of data?.tasks ?? []) {
       const day = m.kind === 'due' ? m.date! : utcIsoToWallTime(m.at!, tz).slice(0, 10)
       put(day, {
@@ -112,7 +132,7 @@ export function MobileAgenda({ tz, weekStart, data, loading, clashing, onRange, 
     }
     for (const list of map.values()) list.sort((a, b) => Number(b.allDay) - Number(a.allDay) || (a.starts_at ?? '').localeCompare(b.starts_at ?? ''))
     return map
-  }, [data, clashing, tz, t, onEdit, onOpenTask])
+  }, [data, clashing, tz, t, onEdit, onOpenTask, toast])
 
   const shift = (dir: 1 | -1) => {
     play('tap')

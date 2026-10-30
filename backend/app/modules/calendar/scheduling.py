@@ -18,6 +18,7 @@ from app.common.models import utcnow
 from app.common.timeutil import user_zone
 from app.extensions import db
 from app.modules.auth.models import DEFAULT_WORKING_HOURS, WEEKDAYS
+from app.modules.calendar.links import google_busy
 from app.modules.calendar.service import Occ, occurrences
 from app.modules.tasks.models import Task
 
@@ -84,6 +85,7 @@ def free_slots(user, start: datetime, end: datetime, min_minutes: int = 30, occs
         return []
     occs = occs if occs is not None else occurrences(user, start, end)
     busy = [Interval(o.starts_at, o.ends_at) for o in occs if o.busy and o.event.id != ignore_event_id]
+    busy += [Interval(s, e) for s, e in google_busy(user, start, end)]  # a linked Google calendar is busy time too
     return [s for s in _subtract(_working_windows(user, start, end), busy) if s.minutes >= min_minutes]
 
 

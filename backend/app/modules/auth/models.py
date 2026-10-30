@@ -9,6 +9,7 @@ from sqlalchemy import (
     Integer,
     SmallInteger,
     String,
+    Text,
     Uuid,
     true,
 )
@@ -89,6 +90,11 @@ class UserSettings(db.Model):
     weekly_learning_target_min: Mapped[int | None] = mapped_column(Integer)  # NULL = no target set
     # Home sections in order: [{"key": "tasks", "visible": true}, ...]. NULL = DEFAULT_DASHBOARD.
     dashboard_layout: Mapped[list | None] = mapped_column(JSONB)
+    # Calendar links (both are secrets, like passwords: never logged, left out of backups).
+    # The random part of your subscribe-from-Google feed URL; NULL = feed switched off.
+    calendar_feed_token: Mapped[str | None] = mapped_column(String(64), unique=True)
+    # Google Calendar's "secret address in iCal format", whose events Life OS shows; NULL = not linked.
+    google_ics_url: Mapped[str | None] = mapped_column(Text)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=utcnow, onupdate=utcnow
     )

@@ -129,6 +129,18 @@ export function CalendarPage() {
       classNames: [`ev-${o.kind}`, clashing.has(`${o.event_id}|${o.original_start}`) ? 'ev-clash' : ''],
       extendedProps: { occ: o },
     }))
+    for (const g of occ.data?.external ?? []) {
+      items.push({
+        id: g.id,
+        title: g.title,
+        start: g.all_day ? g.start_date : g.starts_at,
+        end: g.all_day ? addDays(g.end_date!, 1) : g.ends_at,
+        allDay: g.all_day,
+        editable: false, // change it in Google Calendar
+        classNames: ['ev-google'],
+        extendedProps: { google: true },
+      })
+    }
     for (const m of occ.data?.tasks ?? []) {
       items.push({
         id: `marker-${m.kind}-${m.task_id}`,

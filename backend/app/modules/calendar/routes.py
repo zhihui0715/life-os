@@ -1,9 +1,12 @@
-from flask import Blueprint
+from flask import Blueprint, Response, url_for
+from pydantic import Field
 
 from app.common.auth import current_user
 from app.common.ownership import get_owned_or_404
-from app.common.validation import parse_body, parse_query
-from app.modules.calendar import scheduling, service
+from app.common.errors import not_found
+from app.common.validation import InputModel, parse_body, parse_query
+from app.extensions import limiter
+from app.modules.calendar import links, scheduling, service
 from app.modules.calendar.models import ScheduleEvent
 from app.modules.calendar.schemas import (
     EventCreate,
@@ -23,6 +26,64 @@ def _event(event_id) -> ScheduleEvent:
     return get_owned_or_404(ScheduleEvent, event_id, "Event")
 
 
+# ---------- links with Google Calendar (calendar/links.py) ----------
+
+class GoogleLink(InputModel):
+    url: str = Field(min_length=1, max_length=2_000)
+
+
+def _links(user) -> dict:
+    token = user.settings.calendar_feed_token
+    return {
+        "feed_url": url_for("calendar.feed", token=token, _external=True) if token else None,
+        "google": links.google_status(user),
+    }
+
+
+@bp.get("/links")
+def get_links():
+    return _links(current_user())
+
+
+@bp.post("/links/feed")
+def start_feed():
+    """Creates the feed, or replaces its address (the old one stops working at once)."""
+    user = current_user()
+    links.new_feed_token(user)
+    return _links(user)
+
+
+@bp.delete("/links/feed")
+def stop_feed():
+    user = current_user()
+    links.stop_feed(user)
+    return _links(user)
+
+
+@bp.put("/links/google")
+def link_google():
+    user = current_user()
+    links.set_google_url(user, parse_body(GoogleLink).url)
+    return _links(user)
+
+
+@bp.delete("/links/google")
+def unlink_google():
+    user = current_user()
+    links.set_google_url(user, None)
+    return _links(user)
+
+
+@bp.get("/feed/<token>.ics")
+@limiter.limit("60 per hour")
+def feed(token: str):
+    """Public on purpose (Google fetches it without signing in): the random token is the key."""
+    user = links.feed_owner(token)
+    if user is None or not user.is_active:
+        raise not_found("Feed")
+    return Response(links.feed_ics(user), mimetype="text/calendar", headers={"Cache-Control": "private, max-age=300"})
+
+
 @bp.get("/occurrences")
 def list_occurrences():
     q = parse_query(RangeQuery)
@@ -30,6 +91,7 @@ def list_occurrences():
     return {
         "items": [service.occurrence_to_dict(o) for o in service.occurrences(user, q.start, q.end)],
         "tasks": service.task_markers(user, q.start, q.end),
+        "external": links.google_events(user, q.start, q.end),
     }
 
 

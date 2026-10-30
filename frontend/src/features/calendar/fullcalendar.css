@@ -101,6 +101,18 @@
   color: var(--warning);
   font-weight: 600;
 }
+/* From a linked Google calendar: read-only, so quieter than your own events */
+.fc .ev-google {
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-strong);
+  border-left: 3px solid var(--tint-insights);
+  cursor: default;
+}
+.fc .ev-google .fc-event-main,
+.fc .ev-google .fc-event-title,
+.fc .ev-google .fc-event-time {
+  color: var(--text);
+}
 .fc .ev-clash {
   outline: 2px solid var(--danger);
   outline-offset: 1px;

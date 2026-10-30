@@ -19,6 +19,7 @@ import { AppearanceCard } from './AppearanceCard'
 import { PasswordForm } from './PasswordForm'
 import { ReminderCard } from './ReminderCard'
 import { ScoreSettingsCard } from './ScoreSettingsCard'
+import { GoogleCalendarCard } from './GoogleCalendarCard'
 import { WorkingHoursCard } from './WorkingHoursCard'
 
 function timezones(current: string): string[] {
@@ -104,6 +105,7 @@ export function SettingsPage() {
       <SoundCard />
       <ReminderCard />
       <WorkingHoursCard />
+      <GoogleCalendarCard />
       <ScoreSettingsCard />
       <BackupCard />
 

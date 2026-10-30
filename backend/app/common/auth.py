@@ -11,7 +11,7 @@ from flask import g, request, session
 from app.common.errors import ApiError
 from app.modules.auth.service import find_session
 
-PUBLIC_ENDPOINTS = {"auth.login", "auth.signup", "health.health"}
+PUBLIC_ENDPOINTS = {"auth.login", "auth.signup", "health.health", "calendar.feed"}  # the feed's URL token is its key
 CSRF_EXEMPT_ENDPOINTS = {"auth.login", "auth.signup"}  # no session exists yet; SameSite + JSON-only also protect it
 SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
 
