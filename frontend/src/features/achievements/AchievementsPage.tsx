@@ -67,7 +67,7 @@ function stairSteps(items: Achievement[], t: TFunction<'achievements'>): Step[] 
     .filter((a) => a.unlocked)
     .sort((a, b) => (a.unlocked_on ?? '￿').localeCompare(b.unlocked_on ?? '￿'))
   const todo = items.filter((a) => !a.unlocked).sort((a, b) => b.progress / b.target - a.progress / a.target)
-  return [...done, ...todo].map((a) => ({ key: a.key, name: t(`items.${a.key}.name`), tint: tint(a.group), unlocked: a.unlocked }))
+  return [...done, ...todo].map((a) => ({ key: a.key, name: t(`items.${a.key}.name`), tint: tint(a.group), unlocked: a.unlocked, date: a.unlocked_on }))
 }
 
 function Badge({ achievement: a, icon: Icon, tint }: { achievement: Achievement; icon: LucideIcon; tint: string }) {
