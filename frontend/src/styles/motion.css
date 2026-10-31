@@ -357,7 +357,29 @@ dialog[data-closing]::backdrop {
   }
 }
 
+/* Analytics (components/ui/Sparkline.tsx): trend lines draw themselves in, rings sweep up to their value */
+.spark-draw {
+  stroke-dasharray: 1;
+  animation: spark-draw 1100ms var(--ease-out) both;
+}
+@keyframes spark-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+.ring-fill {
+  transition: stroke-dashoffset 700ms var(--ease-out);
+  animation: ring-in 1000ms var(--ease-out) both;
+}
+@keyframes ring-in {
+  from {
+    stroke-dashoffset: var(--c);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .spark-draw,
+  .ring-fill,
   .page-enter,
   .stagger > *,
   .animate-pop,

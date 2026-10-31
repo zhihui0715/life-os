@@ -7,7 +7,7 @@ type Size = 'sm' | 'md' | 'icon'
 
 // iOS button styles: filled (primary), gray (secondary), plain (ghost), destructive tinted (danger)
 const variants: Record<Variant, string> = {
-  primary: 'bg-accent-fill text-on-accent hover:brightness-110 shadow-[0_1px_2px_rgb(0_0_0/0.12)]',
+  primary: 'glass-glow bg-accent-fill text-on-accent hover:brightness-110 shadow-[0_1px_2px_rgb(0_0_0/0.12)]',
   secondary: 'bg-sunken text-fg hover:bg-border',
   ghost: 'text-accent hover:bg-accent-soft',
   danger: 'bg-danger-soft text-danger hover:bg-danger hover:text-white',

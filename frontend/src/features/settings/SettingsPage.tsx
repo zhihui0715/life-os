@@ -12,6 +12,7 @@ import { api } from '../../lib/api'
 import { errorMessage } from '../../lib/errors'
 import { LOCALES } from '../../lib/i18n'
 import { onSoundChange, setSoundEnabled, soundEnabled } from '../../lib/sound'
+import { GLASS_THEMES } from '../../lib/theme'
 import type { Me, UserSettings } from '../../lib/types'
 import { ME_KEY, useAuth, useMe } from '../auth/AuthProvider'
 import { BackupCard } from './BackupCard'
@@ -68,11 +69,21 @@ export function SettingsPage() {
           <Field label={t('theme.label')}>
             {(a) => (
               <Select {...a} value={s.theme} onChange={(e) => save.mutate({ theme: e.target.value as UserSettings['theme'] })}>
-                {(['system', 'light', 'dark', 'academia'] as const).map((v) => (
-                  <option key={v} value={v}>
-                    {t(`theme.${v}`)}
-                  </option>
-                ))}
+                <optgroup label={t('theme.glass')}>
+                  {GLASS_THEMES.map((v) => (
+                    <option key={v} value={v}>
+                      {t(`theme.${v}`)}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label={t('theme.classic')}>
+                  {(['system', 'light', 'dark'] as const).map((v) => (
+                    <option key={v} value={v}>
+                      {t(`theme.${v}`)}
+                    </option>
+                  ))}
+                </optgroup>
+                <option value="academia">{t('theme.academia')}</option>
               </Select>
             )}
           </Field>

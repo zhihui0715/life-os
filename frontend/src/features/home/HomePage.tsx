@@ -18,6 +18,7 @@ import { QuickAddInput } from '../tasks/QuickAddInput'
 import { TaskList, useTaskTotal } from '../tasks/TaskList'
 import { CustomizeDialog } from './CustomizeDialog'
 import { BalanceSection, FocusSection, GoalsSection, LearningSection, ScheduleSection, ViewAll } from './DashboardSections'
+import { PulseStrip } from './PulseStrip'
 import { HabitsTodayCard, MoodCheckInCard } from './TodayCards'
 
 function greetingKey(timeZone: string) {
@@ -78,6 +79,7 @@ export function HomePage() {
         }
       />
 
+      <PulseStrip />
       <Suspense fallback={<Skeleton className="mb-4 h-36 rounded-2xl" />}>
         <OneThingCard />
       </Suspense>

@@ -113,7 +113,7 @@ class SettingsPatch(InputModel):
     locale: Literal["en", "zh-CN"] | None = None
     timezone: str | None = Field(default=None, max_length=64)
     week_start: int | None = Field(default=None, ge=1, le=7)
-    theme: Literal["system", "light", "dark", "academia"] | None = None
+    theme: Literal["system", "light", "dark", "academia", "aurora", "midnight", "sunset", "ocean", "forest", "rose", "mono", "cyber"] | None = None
     accent: str | None = None
     background: str | None = None
     avatar: str | None = Field(default=None, max_length=16)

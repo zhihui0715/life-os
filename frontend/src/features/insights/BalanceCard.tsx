@@ -5,6 +5,7 @@ import { cn } from '../../components/ui/cn'
 import { Card } from '../../components/ui/states'
 import type { Overview } from '../../lib/types'
 import { ProgressBar } from '../../components/ui/ProgressBar'
+import { Ring } from '../../components/ui/Sparkline'
 
 /** Signed change vs the previous period, with an icon so direction is never colour-only. */
 export function Delta({ now, before, unit = '' }: { now: number | null; before: number | null; unit?: string }) {
@@ -52,10 +53,14 @@ export function BalanceCard({ data }: { data: Overview }) {
           <p className="text-muted mt-1 text-sm">{t('score.noDataHelp')}</p>
         </div>
       ) : (
-        <div className="my-3 flex flex-wrap items-end gap-x-3 gap-y-1">
-          <span className="font-display text-[64px] leading-none font-bold tracking-tight tabular-nums">{Math.round(s.value)}</span>
-          <span className="text-subtle mb-1.5">/ 100</span>
-          <span className="mb-2"><Delta now={s.value} before={data.previous.score} /></span>
+        <div className="my-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <Ring value={s.value} size={124} stroke={10} color="var(--series-1)">
+            <span className="flex flex-col items-center">
+              <span className="font-display text-[44px] leading-none font-bold tracking-tight tabular-nums">{Math.round(s.value)}</span>
+              <span className="text-subtle text-xs">/ 100</span>
+            </span>
+          </Ring>
+          <Delta now={s.value} before={data.previous.score} />
         </div>
       )}
       <p className="text-subtle mb-4 text-xs">

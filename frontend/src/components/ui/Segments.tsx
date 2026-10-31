@@ -136,7 +136,7 @@ export function SectionTitle({ children, className }: { children: ReactNode; cla
 /** A figure set large with its label underneath (stats rows on detail pages). */
 export function Stat({ value, label, help, tone }: { value: ReactNode; label: string; help?: string; tone?: string }) {
   return (
-    <div className="bg-surface shadow-card rounded-[18px] p-4 dark:shadow-none">
+    <div className="glass-card bg-surface shadow-card rounded-[18px] p-4 dark:shadow-none">
       <p className="font-display text-[28px] leading-none font-bold tracking-tight tabular-nums" style={tone ? { color: tone } : undefined}>
         {value}
       </p>

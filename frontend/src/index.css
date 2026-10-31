@@ -4,8 +4,7 @@
 @source not './features/landing';
 @import '@fontsource-variable/inter';
 @import './styles/tokens.css';
-@import './styles/accents.css';
-@import './styles/backgrounds.css';
+@import './styles/glass.css';
 @import './styles/motion.css';
 
 /* dark: follows the app's own theme setting, not only the OS */
@@ -15,6 +14,7 @@
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
+  --color-solid: var(--surface-solid);
   --color-sunken: var(--surface-sunken);
   --color-raised: var(--surface-raised);
   --color-bar: var(--bar);

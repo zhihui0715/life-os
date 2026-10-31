@@ -20,7 +20,9 @@ from app.common.models import IdMixin, TimestampMixin, utcnow
 from app.extensions import db
 
 LOCALES = ("en", "zh-CN")
-THEMES = ("system", "light", "dark", "academia")
+# Glass palettes (frontend/src/styles/glass.css) are the default look; system/light/dark is "Classic", the solid iOS look.
+GLASS_THEMES = ("aurora", "midnight", "sunset", "ocean", "forest", "rose", "mono", "cyber")
+THEMES = ("system", "light", "dark", "academia", *GLASS_THEMES)
 # Appearance (frontend/src/lib/theme.ts draws them): the tint colour, and what sits behind the cards.
 ACCENTS = ("blue", "indigo", "purple", "pink", "red", "orange", "yellow", "green", "teal", "graphite")
 BACKGROUNDS = (
@@ -79,7 +81,7 @@ class UserSettings(db.Model):
         String(64), nullable=False, default=DEFAULT_TIMEZONE, server_default=DEFAULT_TIMEZONE
     )
     week_start: Mapped[int] = mapped_column(SmallInteger, nullable=False, default=1, server_default="1")
-    theme: Mapped[str] = mapped_column(String(10), nullable=False, default="system", server_default="system")
+    theme: Mapped[str] = mapped_column(String(10), nullable=False, default="aurora", server_default="aurora")
     accent: Mapped[str] = mapped_column(String(12), nullable=False, default="blue", server_default="blue")
     background: Mapped[str] = mapped_column(String(20), nullable=False, default="plain", server_default="plain")
     avatar: Mapped[str | None] = mapped_column(String(16))  # a book character ("book-1" … "book-8") shown in the greeting; NULL = initial
