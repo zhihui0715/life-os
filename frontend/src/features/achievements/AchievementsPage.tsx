@@ -1,4 +1,5 @@
 import { BookOpen, CheckSquare, Flame, Lock, Stamp, Target, Timer, type LucideIcon } from 'lucide-react'
+import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import './i18n'
@@ -8,6 +9,7 @@ import { Card, ErrorState, ListSkeleton, PageHeader } from '../../components/ui/
 import { formatDay, formatMinutes } from '../../lib/dates'
 import { errorMessage } from '../../lib/errors'
 import { useAchievements, type Achievement, type AchievementGroup } from './api'
+import { Stairs, type Step } from './Stairs'
 
 export const GROUPS: { group: AchievementGroup; icon: LucideIcon; tint: string }[] = [
   { group: 'tasks', icon: CheckSquare, tint: 'var(--tint-tasks)' },
@@ -33,7 +35,7 @@ export function AchievementsPage() {
       ) : (
         <>
           <p className="text-muted mb-3 text-sm">{t('intro')}</p>
-          <ProgressBar value={(data.unlocked / data.total) * 100} size="md" label={t('subtitle', { unlocked: data.unlocked, total: data.total })} className="mb-6" />
+          <Stairs steps={stairSteps(data.items, t)} label={t('subtitle', { unlocked: data.unlocked, total: data.total })} />
           <div className="flex flex-col gap-6">
             {GROUPS.map(({ group, icon, tint }) => (
               <section key={group} aria-labelledby={`ach-${group}`}>
@@ -56,6 +58,16 @@ export function AchievementsPage() {
       )}
     </>
   )
+}
+
+/** One stair per achievement: the unlocked ones in the order you reached them, then the rest, closest first. */
+function stairSteps(items: Achievement[], t: TFunction<'achievements'>): Step[] {
+  const tint = (g: AchievementGroup) => GROUPS.find((x) => x.group === g)?.tint ?? 'var(--accent-fill)'
+  const done = items
+    .filter((a) => a.unlocked)
+    .sort((a, b) => (a.unlocked_on ?? '￿').localeCompare(b.unlocked_on ?? '￿'))
+  const todo = items.filter((a) => !a.unlocked).sort((a, b) => b.progress / b.target - a.progress / a.target)
+  return [...done, ...todo].map((a) => ({ key: a.key, name: t(`items.${a.key}.name`), tint: tint(a.group), unlocked: a.unlocked }))
 }
 
 function Badge({ achievement: a, icon: Icon, tint }: { achievement: Achievement; icon: LucideIcon; tint: string }) {

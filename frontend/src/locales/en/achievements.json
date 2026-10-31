@@ -7,6 +7,10 @@
   "progress": "{{progress}} of {{target}}",
   "toast": "Achievement unlocked: {{name}}",
   "intro": "Milestones you reach just by using Life OS. They're worked out from your history, so nothing extra to do.",
+  "stairs": {
+    "next": "Next step: {{name}}",
+    "summit": "You made it to the top!"
+  },
   "groups": {
     "tasks": "Tasks",
     "seals": "Daily seal",

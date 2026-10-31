@@ -7,6 +7,10 @@
   "progress": "{{progress}}/{{target}}",
   "toast": "解锁成就：{{name}}",
   "intro": "只要使用 Life OS 就能达成的里程碑。它们根据你的记录自动计算，不需要额外操作。",
+  "stairs": {
+    "next": "下一级台阶：{{name}}",
+    "summit": "你登顶了！"
+  },
   "groups": {
     "tasks": "任务",
     "seals": "每日印章",
