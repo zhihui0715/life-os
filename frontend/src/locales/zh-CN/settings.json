@@ -6,10 +6,20 @@
   },
   "theme": {
     "label": "主题",
-    "system": "跟随系统",
-    "light": "浅色",
-    "dark": "深色",
-    "academia": "学院（图书馆与羊皮纸）"
+    "system": "经典 · 跟随系统",
+    "light": "经典 · 浅色",
+    "dark": "经典 · 深色",
+    "academia": "学院（图书馆与羊皮纸）",
+    "glass": "玻璃",
+    "classic": "经典",
+    "aurora": "极光",
+    "sunset": "日落",
+    "rose": "玫瑰",
+    "mono": "素白",
+    "midnight": "午夜",
+    "ocean": "深海",
+    "forest": "森林",
+    "cyber": "赛博"
   },
   "timezone": {
     "label": "时区",
@@ -163,6 +173,20 @@
       "book-6": "学者",
       "book-7": "图书管理员",
       "book-8": "犯困的读者"
+    },
+    "glass": {
+      "title": "玻璃主题",
+      "body": "磨砂玻璃面板，背后是缓缓流动的光。每个主题都有自己的配色。",
+      "light": "浅色",
+      "dark": "深色",
+      "accentNote": "玻璃主题自带配色。切换到经典主题即可选择强调色和背景。"
+    },
+    "classic": {
+      "title": "经典",
+      "body": "iOS 风格的实色卡片，可自选强调色和背景。",
+      "system": "跟随系统",
+      "light": "浅色",
+      "dark": "深色"
     }
   },
   "password": {

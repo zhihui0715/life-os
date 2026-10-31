@@ -6,10 +6,20 @@
   },
   "theme": {
     "label": "Theme",
-    "system": "Match system",
-    "light": "Light",
-    "dark": "Dark",
-    "academia": "Academia (library & parchment)"
+    "system": "Classic · match system",
+    "light": "Classic · light",
+    "dark": "Classic · dark",
+    "academia": "Academia (library & parchment)",
+    "glass": "Glass",
+    "classic": "Classic",
+    "aurora": "Aurora",
+    "sunset": "Sunset",
+    "rose": "Rose",
+    "mono": "Mono",
+    "midnight": "Midnight",
+    "ocean": "Ocean",
+    "forest": "Forest",
+    "cyber": "Cyber"
   },
   "timezone": {
     "label": "Timezone",
@@ -164,6 +174,20 @@
       "book-6": "The Scholar",
       "book-7": "The Librarian",
       "book-8": "The Sleepy Reader"
+    },
+    "glass": {
+      "title": "Glass themes",
+      "body": "Frosted panes over slowly drifting light. Each theme brings its own colours.",
+      "light": "Light",
+      "dark": "Dark",
+      "accentNote": "Glass themes bring their own colours. Switch to Classic to choose an accent and background."
+    },
+    "classic": {
+      "title": "Classic",
+      "body": "Solid iOS-style cards, with your own accent colour and background.",
+      "system": "Match system",
+      "light": "Light",
+      "dark": "Dark"
     }
   },
   "password": {

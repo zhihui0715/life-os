@@ -115,7 +115,7 @@ export function Dialog({ open, onClose, title, children, footer, placement = 'ce
         <div
           ref={panel}
           className={cn(
-            'bg-surface shadow-pop flex flex-col overflow-hidden',
+            'glass-panel bg-surface shadow-pop flex flex-col overflow-hidden',
             'max-h-[calc(100dvh-env(safe-area-inset-top)-12px)] rounded-t-[22px] pb-[env(safe-area-inset-bottom)]',
             placement === 'center' ? 'md:max-h-[85dvh] md:rounded-[22px] md:pb-0' : 'h-full md:max-h-none md:rounded-none md:rounded-l-[22px] md:pb-0',
           )}

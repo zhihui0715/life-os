@@ -6,6 +6,7 @@
   --surface: #ffffff;
   --surface-sunken: #ececf1; /* filled controls, segmented tracks */
   --surface-raised: #ffffff;
+  --surface-solid: var(--surface); /* always opaque: rings around chart dots, tooltips (glass makes --surface see-through) */
   --border: #e3e3e8; /* separators */
   --border-strong: #c7c7cc;
   --bar: rgb(249 249 251 / 0.9); /* frosted chrome: tab bar, compact nav bar */

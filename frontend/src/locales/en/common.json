@@ -75,7 +75,20 @@
       "goals": "Goals",
       "learning": "Learning this week"
     },
-    "layoutSaved": "Home layout saved"
+    "layoutSaved": "Home layout saved",
+    "pulse": {
+      "label": "This week at a glance",
+      "balance": "Life balance",
+      "tasks": "Tasks on time",
+      "habits": "Habit consistency",
+      "focus": "Focus time",
+      "week": "this week",
+      "completed": "{{count}} completed",
+      "checks": "{{done}} of {{eligible}} check-ins",
+      "sessions_one": "{{count}} session",
+      "sessions_other": "{{count}} sessions",
+      "noData": "No data yet"
+    }
   },
   "comingSoon": {
     "title": "{{feature}} is not built yet",

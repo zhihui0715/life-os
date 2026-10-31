@@ -1,0 +1,147 @@
+/* Glass (Settings → Theme): the default look. Each palette is a slow-drifting mesh of colour lights over a ground,
+   and the app's surfaces are frosted panes over it: translucent fill, background blur, a bright top edge and a soft
+   coloured shadow. Four palettes are light (Aurora, Sunset, Rose, Mono) and four dark (Midnight, Ocean, Forest, Cyber);
+   lib/theme.ts sets data-theme from the palette. A palette brings its own accent, so the accent picker is for Classic.
+   The palettes' own values (ground, lights, accent, chart series) live in lib/theme.ts, which sets only the active
+   one on <html>, so the stylesheet stays small. Text sits on panes that are at least half opaque, and the text tokens are a step stronger than Classic's, so pairs
+   stay ≥ 4.5:1 wherever the lights drift. With reduced transparency, panes turn solid. */
+
+/* ---------- shared: light glass ---------- */
+html[data-look='glass'][data-theme='light'] {
+  --bg: var(--ground);
+  --surface: rgb(255 255 255 / 0.58);
+  --surface-raised: rgb(255 255 255 / 0.84);
+  --surface-sunken: rgb(70 70 110 / 0.08);
+  --surface-solid: var(--solid);
+  --border: rgb(70 70 110 / 0.11);
+  --border-strong: rgb(70 70 110 / 0.24);
+  --bar: rgb(255 255 255 / 0.55);
+  --sidebar: rgb(255 255 255 / 0.36);
+
+  --text: #14141c;
+  --text-muted: #383848;
+  --text-subtle: #545466;
+
+  --glass-edge: inset 0 1px 0 rgb(255 255 255 / 0.85), inset 0 0 0 1px rgb(255 255 255 / 0.5);
+  --shadow-sm: var(--glass-edge), 0 12px 32px -14px color-mix(in srgb, var(--glow) 38%, rgb(30 20 60 / 0.3));
+  --shadow-lg: var(--glass-edge), 0 30px 70px -20px color-mix(in srgb, var(--glow) 40%, rgb(20 10 50 / 0.4));
+  --shadow-float: var(--glass-edge), 0 14px 34px -10px color-mix(in srgb, var(--glow) 35%, rgb(20 10 50 / 0.3));
+
+  --chart-grid: rgb(70 70 110 / 0.1);
+  --chart-axis: #545466;
+  --chart-muted: rgb(70 70 110 / 0.22);
+  --grain-opacity: 0.05;
+}
+
+/* ---------- shared: dark glass ---------- */
+html[data-look='glass'][data-theme='dark'] {
+  --bg: var(--ground);
+  --surface: rgb(255 255 255 / 0.065);
+  --surface-raised: color-mix(in srgb, var(--solid) 88%, transparent);
+  --surface-sunken: rgb(255 255 255 / 0.08);
+  --surface-solid: var(--solid);
+  --border: rgb(255 255 255 / 0.09);
+  --border-strong: rgb(255 255 255 / 0.2);
+  --bar: color-mix(in srgb, var(--ground) 62%, transparent);
+  --sidebar: rgb(255 255 255 / 0.035);
+
+  --text: #f4f5fb;
+  --text-muted: #cfd1de;
+  --text-subtle: #a3a7bc;
+
+  --glass-edge: inset 0 1px 0 rgb(255 255 255 / 0.1), inset 0 0 0 1px rgb(255 255 255 / 0.07);
+  --shadow-sm: var(--glass-edge), 0 16px 40px -16px rgb(0 0 0 / 0.7);
+  --shadow-lg: var(--glass-edge), 0 30px 80px -20px rgb(0 0 0 / 0.85), 0 0 60px -30px var(--glow);
+  --shadow-float: var(--glass-edge), 0 14px 40px -10px rgb(0 0 0 / 0.7);
+
+  --chart-grid: rgb(255 255 255 / 0.07);
+  --chart-axis: #a3a7bc;
+  --chart-muted: rgb(255 255 255 / 0.18);
+  --grain-opacity: 0.07;
+}
+
+/* ---------- the backdrop: four lights drifting over the ground, plus a fine grain so the gradients don't band ---------- */
+html[data-look='glass'] body {
+  background: transparent;
+}
+html[data-look='glass'] body::before,
+html[data-look='glass'] body::after {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+}
+html[data-look='glass'] body::before {
+  inset: -10%;
+  background:
+    radial-gradient(38% 48% at 14% 12%, var(--blob-1), transparent 70%),
+    radial-gradient(34% 44% at 88% 14%, var(--blob-2), transparent 70%),
+    radial-gradient(44% 50% at 72% 88%, var(--blob-3), transparent 70%),
+    radial-gradient(40% 42% at 10% 86%, var(--blob-4), transparent 70%),
+    var(--ground);
+  animation: glass-drift 48s ease-in-out infinite alternate;
+}
+html[data-look='glass'] body::after {
+  inset: 0;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+@keyframes glass-drift {
+  50% {
+    transform: translate3d(3%, -2%, 0) scale(1.06) rotate(2deg);
+  }
+  100% {
+    transform: translate3d(-2%, 3%, 0) scale(1.03) rotate(-1.5deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-look='glass'] body::before {
+    animation: none;
+  }
+}
+
+/* ---------- panes ----------
+   .glass-card / .glass-panel are set on the shared primitives (Card, Dialog, tooltips); any other card-like surface
+   (bg-surface with a card or float shadow) is frosted the same way, so pages don't each need to opt in. */
+html[data-look='glass'] :is(.glass-card, .glass-panel, .bg-surface.shadow-card, .bg-surface.shadow-float, .app-sidebar, .material) {
+  -webkit-backdrop-filter: blur(var(--glass-blur, 22px)) saturate(170%);
+  backdrop-filter: blur(var(--glass-blur, 22px)) saturate(170%);
+}
+html[data-look='glass'] :is(.glass-card, .bg-surface.shadow-card) {
+  box-shadow: var(--shadow-sm);
+}
+html[data-look='glass'] :is(.glass-panel, .bg-surface.shadow-float) {
+  background: var(--surface-raised);
+  --glass-blur: 40px;
+}
+html[data-look='glass'] .app-sidebar {
+  box-shadow: inset -1px 0 0 var(--border);
+}
+html[data-look='glass'] dialog::backdrop {
+  background: rgb(10 8 30 / 0.28);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+@media (max-width: 767px) {
+  html[data-look='glass'] {
+    --glass-blur: 16px; /* lighter on phones */
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  html[data-look='glass'] {
+    --surface: var(--solid);
+    --surface-raised: var(--solid);
+    --sidebar: var(--solid);
+    --bar: var(--solid);
+  }
+  html[data-look='glass'] :is(.glass-card, .glass-panel, .bg-surface.shadow-card, .bg-surface.shadow-float, .app-sidebar, .material) {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* A soft glow behind the accent: primary buttons and the stat tiles' highlights */
+html[data-look='glass'] .glass-glow {
+  box-shadow: 0 8px 24px -8px color-mix(in srgb, var(--glow) 70%, transparent);
+}

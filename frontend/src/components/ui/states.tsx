@@ -104,7 +104,7 @@ export function PageHeader({ title, subtitle, actions, icon }: { title: string; 
 }
 
 export function Card({ className, children }: { className?: string; children: ReactNode }) {
-  return <section className={cn('bg-surface rounded-[18px] shadow-card dark:shadow-none', className)}>{children}</section>
+  return <section className={cn('glass-card bg-surface rounded-[18px] shadow-card dark:shadow-none', className)}>{children}</section>
 }
 
 /**

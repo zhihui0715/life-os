@@ -1,0 +1,4 @@
+/* Classic's own pieces (accent colours, backgrounds). Glass palettes and Academia bring their own colours and
+   backdrops, so this loads on demand, only when Classic is on screen (lib/theme.ts). */
+@import './accents.css';
+@import './backgrounds.css';

@@ -75,7 +75,20 @@
       "goals": "目标",
       "learning": "本周学习"
     },
-    "layoutSaved": "首页布局已保存"
+    "layoutSaved": "首页布局已保存",
+    "pulse": {
+      "label": "本周概览",
+      "balance": "生活平衡",
+      "tasks": "按时完成",
+      "habits": "习惯坚持",
+      "focus": "专注时长",
+      "week": "本周",
+      "completed": "已完成 {{count}} 项",
+      "checks": "{{eligible}} 次中完成 {{done}} 次",
+      "sessions_one": "{{count}} 次专注",
+      "sessions_other": "{{count}} 次专注",
+      "noData": "暂无数据"
+    }
   },
   "comingSoon": {
     "title": "{{feature}}尚未开发",

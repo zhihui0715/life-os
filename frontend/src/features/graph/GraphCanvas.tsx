@@ -81,7 +81,7 @@ export function GraphCanvas({ nodes, links, selected, dimmed, onSelect, layout, 
       readColours()
       sky.set(scene())
     })
-    mo.observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-accent', 'data-bg', 'data-look'] })
+    mo.observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-accent', 'data-bg', 'data-look', 'data-palette'] })
 
     const byId = new Map(nodes.map((n) => [n.id, n]))
     const simLinks: SimLink[] = links.filter((l) => byId.has(l.source) && byId.has(l.target)).map((l) => ({ ...l }))
