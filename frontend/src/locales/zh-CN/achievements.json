@@ -9,7 +9,9 @@
   "intro": "只要使用 Life OS 就能达成的里程碑。它们根据你的记录自动计算，不需要额外操作。",
   "stairs": {
     "next": "下一级台阶：{{name}}",
-    "summit": "你登顶了！"
+    "summit": "你登顶了！",
+    "today": "今天",
+    "ahead": "待解锁"
   },
   "groups": {
     "tasks": "任务",
