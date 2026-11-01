@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { LogOut } from 'lucide-react'
+import { Compass, LogOut } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -15,6 +15,7 @@ import { onSoundChange, setSoundEnabled, soundEnabled } from '../../lib/sound'
 import { GLASS_THEMES } from '../../lib/theme'
 import type { Me, UserSettings } from '../../lib/types'
 import { ME_KEY, useAuth, useMe } from '../auth/AuthProvider'
+import { startTour } from '../help/help'
 import { BackupCard } from './BackupCard'
 import { AppearanceCard } from './AppearanceCard'
 import { PasswordForm } from './PasswordForm'
@@ -119,6 +120,7 @@ export function SettingsPage() {
       <GoogleCalendarCard />
       <ScoreSettingsCard />
       <BackupCard />
+      <HelpCard />
 
       <Card className="p-5">
         <h2 className="mb-1 text-[17px] font-semibold tracking-tight">{t('sections.account')}</h2>
@@ -130,6 +132,20 @@ export function SettingsPage() {
         </Button>
       </Card>
     </>
+  )
+}
+
+function HelpCard() {
+  const { t } = useTranslation('help')
+  return (
+    <Card className="mb-4 p-5">
+      <h2 className="text-[17px] font-semibold tracking-tight">{t('card.title')}</h2>
+      <p className="text-subtle mt-0.5 mb-4 text-[13px]">{t('card.body')}</p>
+      <Button size="sm" onClick={startTour}>
+        <Compass size={15} aria-hidden />
+        {t('tourCta')}
+      </Button>
+    </Card>
   )
 }
 

@@ -11,6 +11,8 @@ setup('sign in', async ({ page }) => {
   await page.getByLabel('Password', { exact: true }).fill(E2E_USER.password)
   await page.getByRole('button', { name: 'Sign in' }).click()
   await expect(page.getByRole('heading', { name: /Good (morning|afternoon|evening)/ })).toBeVisible()
+  // the first-visit walkthrough would cover the page in every other test (help.spec.ts covers it)
+  await page.evaluate(() => localStorage.setItem('lifeos.tourSeen', '1'))
   await page.context().storageState({ path: 'e2e/.auth/user.json' })
 })
 

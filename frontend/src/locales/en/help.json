@@ -1,0 +1,56 @@
+{
+  "open": "Help",
+  "tourCta": "Take the tour",
+  "card": {
+    "title": "Help",
+    "body": "Replay the walkthrough of the main places in Life OS."
+  },
+  "tour": {
+    "label": "Walkthrough",
+    "step": "Step {{n}} of {{total}}",
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip",
+    "done": "Got it",
+    "welcome": {
+      "title": "Welcome to Life OS",
+      "body": "Tasks, calendar, habits and goals in one place. Here's a quick look around; it takes about a minute."
+    },
+    "quickAdd": {
+      "title": "Add anything",
+      "body": "Tap + to capture a task, event, habit or note from any page. Sorting can wait."
+    },
+    "home": {
+      "title": "Home",
+      "body": "Your day at a glance: what's due, today's habits and the daily seal. Customize which sections show."
+    },
+    "tasks": {
+      "title": "Tasks",
+      "body": "Everything you need to do, by Today, Upcoming and Someday. Open a task for subtasks, tags and goals."
+    },
+    "calendar": {
+      "title": "Calendar",
+      "body": "Drag tasks onto your week, or let the app suggest a free time that fits."
+    },
+    "plan": {
+      "title": "Plan",
+      "body": "Order today's work in the morning, and do a short weekly review on Sundays."
+    },
+    "habits": {
+      "title": "Habits",
+      "body": "Check in each day. Streaks grow, and rest days keep one missed day from breaking them."
+    },
+    "focus": {
+      "title": "Focus",
+      "body": "Tomato timers for deep work. Stuck? Start with just two minutes."
+    },
+    "insights": {
+      "title": "Insights",
+      "body": "Your Life Balance Score and the trends behind it."
+    },
+    "help": {
+      "title": "Want to see this again?",
+      "body": "Tap Help any time to replay this tour. You'll also find it in Settings."
+    }
+  }
+}

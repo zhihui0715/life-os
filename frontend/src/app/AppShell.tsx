@@ -1,4 +1,4 @@
-import { ChevronRight, MoreHorizontal, PanelLeftClose, PanelLeftOpen, Plus } from 'lucide-react'
+import { ChevronRight, CircleHelp, MoreHorizontal, PanelLeftClose, PanelLeftOpen, Plus } from 'lucide-react'
 import { Suspense, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet, useLocation } from 'react-router'
@@ -10,6 +10,8 @@ import { Dialog } from '../components/ui/Dialog'
 import { Switch } from '../components/ui/Switch'
 import { FocusWidget } from '../features/focus/FocusWidget'
 import { usePomodoroEngine } from '../features/focus/usePomodoroEngine'
+import { startTour } from '../features/help/help'
+import { HelpRoot } from '../features/help/HelpRoot'
 import { lazyWithReload } from '../lib/lazyPage'
 import { notifyBlocker, onPrefsChange, readPrefs, setRemindersEnabled, startReminders } from '../lib/reminders'
 import { onSoundChange, play, setSoundEnabled, soundEnabled } from '../lib/sound'
@@ -100,6 +102,7 @@ export function AppShell() {
         <div className="px-3 pb-3">
           <button
             type="button"
+            data-tour="quick-add"
             onClick={openQuickAdd}
             aria-label={t('actions.quickAdd')}
             className={cn(
@@ -119,6 +122,7 @@ export function AppShell() {
               to={to}
               end={to === '/'}
               title={t(`nav.${key}`)}
+              data-tour={`nav-${key}`}
               onClick={() => play('tab')}
               className={({ isActive }) =>
                 cn(
@@ -132,6 +136,19 @@ export function AppShell() {
             </NavLink>
           ))}
         </nav>
+        <button
+          type="button"
+          data-tour="help"
+          title={t('help:open')}
+          onClick={() => {
+            play('tap')
+            startTour()
+          }}
+          className="pressable text-muted hover:bg-fg/[0.04] hover:text-fg mx-3 mb-1 flex h-10 items-center gap-3 rounded-[10px] px-3 text-[15px] font-medium"
+        >
+          <CircleHelp size={19} strokeWidth={2.1} aria-hidden className="shrink-0" />
+          <span className={collapsed ? 'sr-only' : 'sr-only lg:not-sr-only'}>{t('help:open')}</span>
+        </button>
         <NavLink
           to="/settings"
           className={cn('pressable mx-3 mb-1 flex items-center gap-2.5 rounded-xl p-1.5 hover:bg-fg/[0.04]', collapsed ? 'justify-center' : 'justify-center lg:justify-start')}
@@ -185,6 +202,7 @@ export function AppShell() {
               key={to}
               to={to}
               end={to === '/'}
+              data-tour={`nav-${key}`}
               onClick={() => play('tab')}
               className={({ isActive }) =>
                 cn(
@@ -207,6 +225,7 @@ export function AppShell() {
           ))}
           <button
             type="button"
+            data-tour="nav-more"
             onClick={() => {
               play('tap')
               setMoreOpen(true)
@@ -247,6 +266,23 @@ export function AppShell() {
             </NavLink>
           ))}
         </div>
+        <button
+          type="button"
+          onClick={() => {
+            play('tap')
+            setMoreOpen(false)
+            startTour()
+          }}
+          className="bg-sunken/60 active:bg-fg/[0.06] mt-4 flex h-[52px] w-full items-center gap-3.5 rounded-2xl px-3.5 text-left"
+        >
+          <span className="bg-accent flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[8px] text-white">
+            <CircleHelp size={17} strokeWidth={2.2} aria-hidden />
+          </span>
+          <span className="flex flex-1 items-center justify-between text-[16px] font-medium">
+            {t('help:open')}
+            <ChevronRight size={18} className="text-border-strong" aria-hidden />
+          </span>
+        </button>
         <QuickToggles />
       </Dialog>
 
@@ -256,6 +292,7 @@ export function AppShell() {
       <Suspense fallback={null}>
         <AchievementWatcher />
       </Suspense>
+      <HelpRoot />
     </div>
   )
 }
