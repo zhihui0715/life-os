@@ -110,6 +110,7 @@ export function CreateMenu({ sheet, setSheet }: { sheet: Sheet; setSheet: (s: Sh
 
       <button
         type="button"
+        data-tour="create-menu"
         aria-label={t('actions.quickAdd')}
         aria-haspopup="menu"
         aria-expanded={open}

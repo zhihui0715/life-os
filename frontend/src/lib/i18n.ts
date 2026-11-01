@@ -12,6 +12,7 @@ import enFocus from '../locales/en/focus.json'
 import enJournal from '../locales/en/journal.json'
 import enPlanning from '../locales/en/planning.json'
 import enHabits from '../locales/en/habits.json'
+import enHelp from '../locales/en/help.json'
 import enGoals from '../locales/en/goals.json'
 import enGraph from '../locales/en/graph.json'
 import enSettings from '../locales/en/settings.json'
@@ -23,6 +24,7 @@ import zhFocus from '../locales/zh-CN/focus.json'
 import zhJournal from '../locales/zh-CN/journal.json'
 import zhPlanning from '../locales/zh-CN/planning.json'
 import zhHabits from '../locales/zh-CN/habits.json'
+import zhHelp from '../locales/zh-CN/help.json'
 import zhGoals from '../locales/zh-CN/goals.json'
 import zhGraph from '../locales/zh-CN/graph.json'
 import zhSettings from '../locales/zh-CN/settings.json'
@@ -32,8 +34,8 @@ export const LOCALES = ['en', 'zh-CN'] as const
 export type Locale = (typeof LOCALES)[number]
 
 export const resources = {
-  en: { common: enCommon, tasks: enTasks, goals: enGoals, calendar: enCalendar, habits: enHabits, journal: enJournal, focus: enFocus, insights: enInsights, settings: enSettings, planning: enPlanning, graph: enGraph },
-  'zh-CN': { common: zhCommon, tasks: zhTasks, goals: zhGoals, calendar: zhCalendar, habits: zhHabits, journal: zhJournal, focus: zhFocus, insights: zhInsights, settings: zhSettings, planning: zhPlanning, graph: zhGraph },
+  en: { common: enCommon, tasks: enTasks, goals: enGoals, calendar: enCalendar, habits: enHabits, journal: enJournal, focus: enFocus, insights: enInsights, settings: enSettings, planning: enPlanning, graph: enGraph, help: enHelp },
+  'zh-CN': { common: zhCommon, tasks: zhTasks, goals: zhGoals, calendar: zhCalendar, habits: zhHabits, journal: zhJournal, focus: zhFocus, insights: zhInsights, settings: zhSettings, planning: zhPlanning, graph: zhGraph, help: zhHelp },
 } as const
 
 const STORAGE_KEY = 'lifeos.locale'
@@ -52,7 +54,7 @@ i18n.use(initReactI18next).init({
   resources,
   lng: detectLocale(),
   fallbackLng: 'en',
-  ns: ['common', 'tasks', 'goals', 'calendar', 'habits', 'journal', 'focus', 'insights', 'settings', 'planning', 'graph'],
+  ns: ['common', 'tasks', 'goals', 'calendar', 'habits', 'journal', 'focus', 'insights', 'settings', 'planning', 'graph', 'help'],
   defaultNS: 'common',
   interpolation: { escapeValue: false }, // React already escapes output
 })
