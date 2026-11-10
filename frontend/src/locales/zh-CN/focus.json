@@ -12,6 +12,10 @@
     "length": "专注时长",
     "break": "休息",
     "minutes": "{{count}} 分钟",
+    "custom": "自定义",
+    "customLabel": "{{label}}（分钟）",
+    "minutesUnit": "分钟",
+    "range": "{{min}}–{{max}}",
     "running": "专注中",
     "paused": "已暂停",
     "overtime": "时间到了——准备好就结束吧",
@@ -22,6 +26,20 @@
     "stopBody": "你专注了 {{time}}。达到计划时长 80% 的专注算作完成。",
     "markComplete": "仍然算作完成",
     "rule": "专注时间不包括暂停。达到计划的 80% 即为完成；较短的专注仍会计入用时。"
+  },
+  "sound": {
+    "title": "背景声音",
+    "volume": "音量",
+    "hint": "计时和休息时播放，暂停计时时也会暂停。设置保存在这台设备上。",
+    "kinds": {
+      "off": "关闭",
+      "rain": "雨声",
+      "waves": "海浪",
+      "fire": "壁炉",
+      "brown": "褐噪音",
+      "tick": "时钟",
+      "tones": "舒缓音"
+    }
   },
   "widget": "专注计时：剩余 {{time}}",
   "today": "今天的专注",

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useToast } from '../../components/ui/Toast'
+import { setAmbienceActive } from '../../lib/ambience'
 import { confetti } from '../../lib/confetti'
 import { todayInZone } from '../../lib/dates'
 import { breakAfter, pomodoro, updatePomodoro, usePomodoro } from '../../lib/pomodoro'
@@ -28,6 +29,11 @@ export function usePomodoroEngine() {
   const st = usePomodoro()
   const ending = useRef<string | null>(null)
   const doneToday = sessions.data?.completed_count ?? 0
+
+  // Background sound: on while a session counts down or a break runs; fades out on pause and at 0:00
+  const soundOn = (session?.state === 'running' && remaining > 0) || !!st.rest
+  useEffect(() => setAmbienceActive(soundOn), [soundOn])
+  useEffect(() => () => setAmbienceActive(false), [])
 
   // A tomato stopped some other way (Stop button, another device) is no longer the tomato.
   useEffect(() => {

@@ -54,6 +54,11 @@ function audio() {
   return ctx
 }
 
+/** The app's one AudioContext (shared with the focus ambience), resumed if the browser suspended it. */
+export function audioContext() {
+  return audio()
+}
+
 interface Tone {
   freq: number
   to?: number // glide target
