@@ -12,6 +12,10 @@
     "length": "Focus length",
     "break": "Break",
     "minutes": "{{count}} min",
+    "custom": "Custom",
+    "customLabel": "{{label}} in minutes",
+    "minutesUnit": "min",
+    "range": "{{min}}–{{max}}",
     "running": "Focusing",
     "paused": "Paused",
     "overtime": "Time's up — stop when you're ready",
@@ -22,6 +26,20 @@
     "stopBody": "You focused for {{time}}. Sessions of at least 80% of the plan count as completed.",
     "markComplete": "Count it as completed anyway",
     "rule": "Focused time excludes pauses. ≥ 80% of the plan = completed; shorter sessions still count as time spent."
+  },
+  "sound": {
+    "title": "Background sound",
+    "volume": "Volume",
+    "hint": "Plays while the timer counts down and during breaks, and pauses with the timer. Saved on this device.",
+    "kinds": {
+      "off": "Off",
+      "rain": "Rain",
+      "waves": "Waves",
+      "fire": "Fireplace",
+      "brown": "Brown noise",
+      "tick": "Clock",
+      "tones": "Calm tones"
+    }
   },
   "widget": "Focus timer: {{time}} left",
   "today": "Today's sessions",

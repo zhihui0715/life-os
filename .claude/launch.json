@@ -5,6 +5,7 @@
       "name": "backend",
       "runtimeExecutable": "backend/.venv/Scripts/python.exe",
       "runtimeArgs": ["-m", "flask", "--app", "backend/wsgi.py", "run", "--port", "5000"],
+      "env": { "DISABLE_SQLALCHEMY_CEXT_RUNTIME": "1" },
       "port": 5000
     },
     {

@@ -6,7 +6,7 @@ import { Button } from '../../components/ui/Button'
 import { cn } from '../../components/ui/cn'
 import { ConfirmDialog } from '../../components/ui/Dialog'
 import { Field, Input, Select } from '../../components/ui/Field'
-import { ChoiceChip, Segmented } from '../../components/ui/Segments'
+import { Segmented } from '../../components/ui/Segments'
 import { useToast } from '../../components/ui/Toast'
 import { Card } from '../../components/ui/states'
 import { formatMinutes, todayInZone } from '../../lib/dates'
@@ -16,6 +16,7 @@ import type { FocusSession } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
 import { useTaskList } from '../tasks/api'
 import { focusedNow, useCurrentFocus, useFocusAction, useFocusSessions } from './api'
+import { AmbiencePicker, MinutesPicker } from './TimerControls'
 import { Tomato } from './Tomato'
 import { TWO_MINUTES } from './TwoMinutes'
 import { useStartTomato } from './usePomodoroEngine'
@@ -26,6 +27,9 @@ const TOMATO_FOCUS = [15, 25, 45, 50]
 const TOMATO_SHORT = [3, 5, 10]
 const TOMATO_LONG = [15, 20, 30]
 const MODE_KEY = 'lifeos.focusMode'
+// The server's limits for a session (planned_minutes 1–240, break_minutes 0–60)
+const MAX_FOCUS = 240
+const MAX_BREAK = 60
 
 export function clock(seconds: number) {
   const s = Math.max(0, Math.round(seconds))
@@ -113,6 +117,7 @@ export function FocusTimer() {
         </div>
         {mode === 'tomato' ? (
           <>
+            <AmbiencePicker preview className="mt-4" />
             <Button variant="primary" className="mt-5 w-full justify-center sm:w-auto" disabled={tomato.pending || current.isPending} onClick={() => tomato.start(taskId || null, fail)}>
               <span aria-hidden>🍅</span>
               {t('tomato.start', { count: pomo.prefs.focus })}
@@ -121,26 +126,11 @@ export function FocusTimer() {
           </>
         ) : (
         <>
-        <fieldset className="mt-4">
-          <legend className="text-muted mb-2 px-1 text-[13px] font-medium">{t('timer.length')}</legend>
-          <div className="flex flex-wrap gap-2">
-            {LENGTHS.map((m) => (
-              <ChoiceChip key={m} selected={planned === m} onClick={() => setPlanned(m)}>
-                {t('timer.minutes', { count: m })}
-              </ChoiceChip>
-            ))}
-          </div>
-        </fieldset>
-        <fieldset className="mt-3">
-          <legend className="text-muted mb-2 px-1 text-[13px] font-medium">{t('timer.break')}</legend>
-          <div className="flex flex-wrap gap-2">
-            {BREAKS.map((m) => (
-              <ChoiceChip key={m} selected={breakMin === m} onClick={() => setBreakMin(m)}>
-                {t('timer.minutes', { count: m })}
-              </ChoiceChip>
-            ))}
-          </div>
-        </fieldset>
+        <div className="mt-4 flex flex-col gap-3">
+          <MinutesPicker label={t('timer.length')} values={LENGTHS} value={planned} onChange={setPlanned} min={1} max={MAX_FOCUS} />
+          <MinutesPicker label={t('timer.break')} values={BREAKS} value={breakMin} onChange={setBreakMin} min={0} max={MAX_BREAK} />
+          <AmbiencePicker preview />
+        </div>
         <Button variant="primary" className="mt-5 w-full justify-center sm:w-auto" disabled={action.isPending || current.isPending}
           onClick={() => action.mutate({ kind: 'start', planned_minutes: planned, break_minutes: breakMin, task_id: taskId || null, label: taskId ? null : label || null },
             { onSuccess: () => toast(t('toast.started')), onError: fail })}>
@@ -199,6 +189,7 @@ export function FocusTimer() {
           <Square size={14} aria-hidden />{t('timer.stop')}
         </Button>
       </div>
+      <AmbiencePicker className="border-border mt-5 max-w-md border-t pt-4" />
 
       <ConfirmDialog
         open={stopping}
@@ -234,17 +225,8 @@ function TomatoSetup() {
   const { t } = useTranslation('focus')
   const { prefs } = usePomodoro()
   const set = (p: Partial<PomodoroPrefs>) => updatePomodoro((s) => ({ prefs: { ...s.prefs, ...p } }))
-  const row = (label: string, values: number[], value: number, key: keyof PomodoroPrefs) => (
-    <fieldset>
-      <legend className="text-muted mb-2 px-1 text-[13px] font-medium">{label}</legend>
-      <div className="flex flex-wrap gap-2">
-        {values.map((m) => (
-          <ChoiceChip key={m} selected={value === m} onClick={() => set({ [key]: m })}>
-            {t('timer.minutes', { count: m })}
-          </ChoiceChip>
-        ))}
-      </div>
-    </fieldset>
+  const row = (label: string, values: number[], value: number, key: 'focus' | 'short' | 'long') => (
+    <MinutesPicker label={label} values={values} value={value} onChange={(m) => set({ [key]: m })} min={1} max={key === 'focus' ? MAX_FOCUS : MAX_BREAK} />
   )
   return (
     <div className="mb-5 flex flex-col items-center gap-5 sm:flex-row sm:items-start">
@@ -313,6 +295,7 @@ function BreakCard({ onNext, pending }: { onNext: () => void; pending: boolean }
             <SkipForward size={15} aria-hidden />
             {t('tomato.skip')}
           </Button>
+          <AmbiencePicker className="border-border mt-5 max-w-md border-t pt-4 text-left" />
         </>
       ) : (
         <>
