@@ -8,7 +8,7 @@ import { useSyncExternalStore } from 'react'
 
 import { audioContext } from './sound'
 
-export const AMBIENCES = ['off', 'rain', 'waves', 'fire', 'brown', 'tick', 'tones'] as const
+export const AMBIENCES = ['off', 'piano', 'rain', 'waves', 'fire', 'brown', 'tick', 'tones'] as const
 export type Ambience = (typeof AMBIENCES)[number]
 
 export interface AmbiencePrefs {
@@ -74,7 +74,7 @@ function gainFor(volume: number) {
   return volume * volume * 0.9
 }
 
-function output(c: AudioContext) {
+function output(c: BaseAudioContext) {
   if (!bus) {
     bus = c.createGain()
     bus.gain.value = gainFor(prefs.volume)
@@ -111,6 +111,11 @@ function sync() {
   const want = (timerActive || previewing) && prefs.kind !== 'off' ? prefs.kind : null
   if (current && current.kind === want) return
   if (current) stopCurrent()
+  if (want === 'piano' && !pianoData) {
+    audioContext() // create/resume it now, inside the tap, so the browser lets it play once the piece is ready
+    void preparePiano().then(sync)
+    return
+  }
   if (want) start(want)
 }
 
@@ -164,7 +169,7 @@ if (typeof window !== 'undefined') {
 type Source = AudioScheduledSourceNode
 const cache = new Map<string, AudioBuffer>()
 
-function buffer(c: AudioContext, key: string, seconds: number, fill: (data: Float32Array, rate: number) => void) {
+function buffer(c: BaseAudioContext, key: string, seconds: number, fill: (data: Float32Array, rate: number) => void) {
   const hit = cache.get(key)
   if (hit && hit.sampleRate === c.sampleRate) return hit
   const b = c.createBuffer(1, Math.floor(c.sampleRate * seconds), c.sampleRate)
@@ -173,7 +178,7 @@ function buffer(c: AudioContext, key: string, seconds: number, fill: (data: Floa
   return b
 }
 
-function loop(c: AudioContext, b: AudioBuffer, to: AudioNode) {
+function loop(c: BaseAudioContext, b: AudioBuffer, to: AudioNode) {
   const src = c.createBufferSource()
   src.buffer = b
   src.loop = true
@@ -218,7 +223,7 @@ function bursts(perSecond: number, minMs: number, maxMs: number, minGain: number
   }
 }
 
-function filter(c: AudioContext, type: BiquadFilterType, freq: number, q = 0.7) {
+function filter(c: BaseAudioContext, type: BiquadFilterType, freq: number, q = 0.7) {
   const f = c.createBiquadFilter()
   f.type = type
   f.frequency.value = freq
@@ -226,14 +231,14 @@ function filter(c: AudioContext, type: BiquadFilterType, freq: number, q = 0.7) 
   return f
 }
 
-function gain(c: AudioContext, value: number) {
+function gain(c: BaseAudioContext, value: number) {
   const g = c.createGain()
   g.gain.value = value
   return g
 }
 
 /** A slow sine that moves an AudioParam up and down by `depth` around its value. */
-function lfo(c: AudioContext, param: AudioParam, hz: number, depth: number): Source {
+function lfo(c: BaseAudioContext, param: AudioParam, hz: number, depth: number): Source {
   const osc = c.createOscillator()
   osc.frequency.value = hz
   const amt = gain(c, depth)
@@ -242,7 +247,138 @@ function lfo(c: AudioContext, param: AudioParam, hz: number, depth: number): Sou
   return osc
 }
 
-const BUILDERS: Record<Exclude<Ambience, 'off'>, (c: AudioContext, out: AudioNode) => Source[]> = {
+// ---- piano ------------------------------------------------------------------------------------------------
+
+/** Deterministic random numbers, so the piece is the same every time. */
+function seeded(seed: number) {
+  return () => {
+    seed = (seed + 0x6d2b79f5) | 0
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+const midiHz = (m: number) => 440 * 2 ** ((m - 69) / 12)
+
+/**
+ * A slow piano piece, written straight into a buffer: Am – F – C – G, twice (48 s), a broken chord in the left hand
+ * and a sparse melody over it. Each note is a few slightly stretched harmonics (like a real string) that fade at
+ * their own rates, higher ones faster. Note tails run past the end wrap round to the start, so the loop is seamless.
+ */
+const PIANO_RATE = 44100
+const PIANO_SECONDS = 48
+
+/** The score: [midi note, start (s), velocity]. */
+function pianoScore() {
+  const rand = seeded(7)
+  const CHORD_SECONDS = 6
+  const chords = [
+    { hand: [45, 52, 57, 60], tune: [69, 72, 76, 74, 67] }, // Am
+    { hand: [41, 48, 53, 57], tune: [69, 72, 77, 74, 65] }, // F
+    { hand: [48, 55, 60, 64], tune: [67, 72, 76, 74, 79] }, // C
+    { hand: [43, 50, 55, 59], tune: [67, 71, 74, 79, 62] }, // G
+  ]
+  const notes: [number, number, number][] = []
+  for (let bar = 0; bar < PIANO_SECONDS / CHORD_SECONDS; bar++) {
+    const { hand, tune } = chords[bar % 4]
+    const t0 = bar * CHORD_SECONDS
+    ;[0, 1, 2, 3, 2, 1].forEach((k, i) => notes.push([hand[k], t0 + i + (rand() - 0.5) * 0.03, i === 0 ? 0.32 : 0.2 + rand() * 0.05]))
+    const slots = [0, 1.5, 3, 4.5].filter(() => rand() < 0.65)
+    let last = -1
+    for (const s of slots) {
+      let m = tune[Math.floor(rand() * tune.length)]
+      if (m === last) m = tune[(tune.indexOf(m) + 1) % tune.length]
+      last = m
+      notes.push([m, t0 + s + 0.02 + rand() * 0.04, 0.3 + rand() * 0.12])
+    }
+  }
+  return notes
+}
+
+let pianoData: Float32Array | null = null
+let pianoJob: Promise<Float32Array> | null = null
+
+/**
+ * Composes the piece once, a few notes at a time with pauses in between, so the page never freezes while it is
+ * written (it takes about half a second in all).
+ */
+export function preparePiano(): Promise<Float32Array> {
+  pianoJob ??= (async () => {
+    const data = new Float32Array(PIANO_RATE * PIANO_SECONDS)
+    const notes = pianoScore()
+    for (let i = 0; i < notes.length; i++) {
+      pianoNote(data, PIANO_RATE, ...notes[i])
+      await new Promise((r) => setTimeout(r, 0))
+    }
+    let peak = 0
+    for (let i = 0; i < data.length; i++) peak = Math.max(peak, Math.abs(data[i]))
+    if (peak > 0) for (let i = 0; i < data.length; i++) data[i] *= 0.8 / peak
+    pianoData = data
+    return data
+  })()
+  return pianoJob
+}
+
+function pianoNote(data: Float32Array, rate: number, midi: number, at: number, velocity: number) {
+  const len = data.length
+  {
+    const f = midiHz(midi)
+    const start = Math.floor(at * rate)
+    const n = Math.floor(Math.min(5, 2.5 + 220 / f) * rate)
+    const attack = Math.floor(0.004 * rate)
+    const base = 0.35 + f / 650
+    for (let h = 1; h <= 5; h++) {
+      const fh = f * h * Math.sqrt(1 + 0.0004 * h * h)
+      if (fh > rate / 2.2) break
+      const w = (2 * Math.PI * fh) / rate
+      const cw = Math.cos(w)
+      const sw = Math.sin(w)
+      const decay = Math.exp(-(base * (1 + 0.7 * (h - 1))) / rate)
+      let x = 1, y = 0, amp = velocity / h ** 1.4
+      for (let i = 0; i < n; i++) {
+        const env = i < attack ? i / attack : 1
+        data[(start + i) % len] += y * amp * env
+        const nx = x * cw - y * sw
+        y = x * sw + y * cw
+        x = nx
+        amp *= decay
+      }
+    }
+  }
+}
+
+/** A soft room: two channels of decaying noise, for a ConvolverNode. */
+function room(c: BaseAudioContext) {
+  const key = 'room'
+  const hit = cache.get(key)
+  if (hit && hit.sampleRate === c.sampleRate) return hit
+  const b = c.createBuffer(2, Math.floor(c.sampleRate * 2.8), c.sampleRate)
+  for (let ch = 0; ch < 2; ch++) {
+    const d = b.getChannelData(ch)
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length) ** 3
+  }
+  cache.set(key, b)
+  return b
+}
+
+const BUILDERS: Record<Exclude<Ambience, 'off'>, (c: BaseAudioContext, out: AudioNode) => Source[]> = {
+  // A slow, quiet piano piece in a small room
+  piano: (c, out) => {
+    const soft = filter(c, 'lowpass', 4200)
+    soft.connect(out)
+    const dry = gain(c, 0.75)
+    dry.connect(soft)
+    const verb = c.createConvolver()
+    verb.buffer = room(c)
+    const wet = gain(c, 0.35)
+    verb.connect(wet).connect(soft)
+    const piece = c.createBuffer(1, pianoData!.length, PIANO_RATE)
+    piece.copyToChannel(pianoData!, 0)
+    const src = loop(c, piece, dry)
+    src.connect(verb)
+    return [src]
+  },
   // Steady hiss of rain plus scattered drops
   rain: (c, out) => {
     const hiss = gain(c, 0.55)
@@ -330,4 +466,12 @@ const BUILDERS: Record<Exclude<Ambience, 'off'>, (c: AudioContext, out: AudioNod
     })
     return sources
   },
+}
+
+/** Renders `seconds` of a sound offline (no speakers needed): for tests and for listening to a sound as a file. */
+export async function renderAmbience(kind: Exclude<Ambience, 'off'>, seconds: number, sampleRate = 44100) {
+  if (kind === 'piano') await preparePiano()
+  const c = new OfflineAudioContext(2, Math.floor(seconds * sampleRate), sampleRate)
+  BUILDERS[kind](c, c.destination)
+  return c.startRendering()
 }
