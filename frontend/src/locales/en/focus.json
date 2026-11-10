@@ -27,6 +27,15 @@
     "markComplete": "Count it as completed anyway",
     "rule": "Focused time excludes pauses. ≥ 80% of the plan = completed; shorter sessions still count as time spent."
   },
+  "grow": {
+    "seed": "Planting the seed",
+    "sprout": "Sprouting",
+    "leaves": "Growing leaves",
+    "bloom": "In bloom",
+    "fruit": "A tomato appears",
+    "ripening": "Ripening",
+    "ripe": "Ripe!"
+  },
   "sound": {
     "title": "Background sound",
     "volume": "Volume",

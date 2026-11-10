@@ -17,6 +17,7 @@ import { useMe } from '../auth/AuthProvider'
 import { useTaskList } from '../tasks/api'
 import { focusedNow, useCurrentFocus, useFocusAction, useFocusSessions } from './api'
 import { AmbiencePicker, MinutesPicker } from './TimerControls'
+import { growthStage } from './growth'
 import { Tomato } from './Tomato'
 import { TWO_MINUTES } from './TwoMinutes'
 import { useStartTomato } from './usePomodoroEngine'
@@ -145,35 +146,27 @@ export function FocusTimer() {
   }
 
   const progress = Math.min(1, focused / (session.planned_minutes * 60))
-  const R = 88
-  const C = 2 * Math.PI * R
   return (
     <Card className="flex flex-col items-center p-5">
       <p className="text-muted text-sm font-medium">{session.task_title ?? session.label ?? t('timer.noTask')}</p>
-      {pomo.tomatoId === session.id ? (
-        <div className="my-3 flex flex-col items-center">
-          <Tomato progress={progress} mood={over ? 'done' : session.state === 'paused' ? 'paused' : 'running'} size={220} />
-          <div className="-mt-2 flex flex-col items-center" role="timer" aria-live="off">
-            <span className="font-display text-[52px] leading-none font-light tracking-tight tabular-nums">{clock(over ? focused : remaining)}</span>
-            <span className="text-subtle mt-1 text-xs">{t('timer.remaining')}</span>
-          </div>
-          <TomatoRow />
+      <div className="my-3 flex flex-col items-center">
+        <Tomato progress={progress} mood={over ? 'done' : session.state === 'paused' ? 'paused' : 'running'} size={220} />
+        {/* a thin bar under the pot: the same progress, for an exact read at a glance */}
+        <div className="bg-sunken mt-1 h-1 w-40 overflow-hidden rounded-full" aria-hidden>
+          <div className={cn('h-full rounded-full transition-[width] duration-1000 ease-linear motion-reduce:transition-none', over ? 'bg-success-fill' : 'bg-accent-fill')} style={{ width: `${progress * 100}%` }} />
         </div>
-      ) : (
-      <div className="relative my-5 h-60 w-60">
-        <svg viewBox="0 0 200 200" className="h-full w-full -rotate-90" aria-hidden>
-          <circle cx="100" cy="100" r={R} fill="none" stroke="var(--surface-sunken)" strokeWidth="12" />
-          <circle cx="100" cy="100" r={R} fill="none" stroke={over ? 'var(--success)' : 'var(--accent)'} strokeWidth="12" strokeLinecap="round"
-            strokeDasharray={C} strokeDashoffset={C * (1 - progress)} className="transition-[stroke-dashoffset] duration-1000 ease-linear motion-reduce:transition-none" />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center" role="timer" aria-live="off">
+        <div className="mt-3 flex flex-col items-center" role="timer" aria-live="off">
           <span className="font-display text-[52px] leading-none font-light tracking-tight tabular-nums">{clock(over ? focused : remaining)}</span>
-          <span className="text-subtle text-xs">{over ? t('timer.planned', { count: session.planned_minutes }) : t('timer.remaining')}</span>
+          <span className="text-subtle mt-1 text-xs">{over ? t('timer.planned', { count: session.planned_minutes }) : t('timer.remaining')}</span>
         </div>
+        {pomo.tomatoId === session.id && <TomatoRow />}
       </div>
-      )}
       <p className={cn('mb-4 text-sm', over ? 'text-success font-medium' : 'text-subtle')}>
-        {over ? t(session.planned_minutes === TWO_MINUTES ? 'twoMinutes.over' : 'timer.overtime') : session.state === 'paused' ? t('timer.paused') : t('timer.running')}
+        {over
+          ? t(session.planned_minutes === TWO_MINUTES ? 'twoMinutes.over' : 'timer.overtime')
+          : session.state === 'paused'
+            ? t('timer.paused')
+            : <><span aria-hidden>🌱 </span>{t(`grow.${growthStage(progress)}`)}</>}
       </p>
       <div className="flex gap-2">
         {session.state === 'running' ? (

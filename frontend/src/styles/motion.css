@@ -192,6 +192,49 @@
     transform: translate(8px, -14px) scale(1.15);
   }
 }
+/* the growing plant: a slow breeze, a falling petal, twinkling stars */
+@keyframes tomato-plant {
+  0%,
+  100% {
+    transform: rotate(-1.2deg);
+  }
+  50% {
+    transform: rotate(1.2deg);
+  }
+}
+@keyframes tomato-petal {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg);
+  }
+  40% {
+    transform: translate(10px, 30px) rotate(70deg);
+  }
+  75% {
+    opacity: 0.9;
+    transform: translate(-2px, 58px) rotate(150deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(6px, 74px) rotate(200deg);
+  }
+}
+@keyframes tomato-twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes tomato-fade {
+  from {
+    opacity: 0;
+  }
+}
 @keyframes flame {
   0% {
     transform: scale(0.4) translateY(10px);
