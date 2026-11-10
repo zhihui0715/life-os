@@ -33,6 +33,7 @@
     "hint": "Plays while the timer counts down and during breaks, and pauses with the timer. Saved on this device.",
     "kinds": {
       "off": "Off",
+      "piano": "Piano",
       "rain": "Rain",
       "waves": "Waves",
       "fire": "Fireplace",

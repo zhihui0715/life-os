@@ -92,7 +92,7 @@ export function MinutesPicker({
   )
 }
 
-const ICONS: Record<Ambience, string> = { off: '🔇', rain: '🌧️', waves: '🌊', fire: '🔥', brown: '🌫️', tick: '🕰️', tones: '🎵' }
+const ICONS: Record<Ambience, string> = { off: '🔇', piano: '🎹', rain: '🌧️', waves: '🌊', fire: '🔥', brown: '🌫️', tick: '🕰️', tones: '🎵' }
 
 /**
  * Background sound for the timer. Before a session (`preview`), picking a sound plays a few seconds of it;
