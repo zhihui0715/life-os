@@ -46,7 +46,7 @@ test('download a backup, then check it restores (preview only)', async ({ page }
   expect(download.suggestedFilename()).toMatch(/^life-os-backup-\d{4}-\d{2}-\d{2}\.json$/)
   const file = await download.path()
 
-  await page.locator('input[type=file]').setInputFiles(file)
+  await page.locator('input[type=file][accept="application/json,.json"]').setInputFiles(file) // the backup picker, not Import's
   const dialog = page.getByRole('dialog', { name: 'Check before restoring' })
   await expect(dialog).toBeVisible()
   await expect(dialog.getByText('The file is complete and undamaged')).toBeVisible()
@@ -104,6 +104,7 @@ test('search everything with Ctrl+K and open a result', async ({ page, request }
   await apiCall(request, 'POST', '/tasks', { title: 'Renew passport', status: 'todo', notes: 'Bring two photos' })
   await apiCall(request, 'POST', '/goals', { title: 'Travel to Japan', description: 'Passport first' })
   await page.goto('/')
+  await expect(page.getByRole('heading', { name: /Good (morning|afternoon|evening)/ })).toBeVisible() // the app is listening
   await page.keyboard.press('Control+k')
   const box = page.getByRole('combobox', { name: 'Search' })
   await box.fill('passport')
