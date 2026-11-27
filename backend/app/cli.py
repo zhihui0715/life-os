@@ -10,6 +10,22 @@ from app.modules.auth.service import create_user, set_password
 
 
 def register_cli(app) -> None:
+    @app.cli.command("push-keys")
+    def push_keys_cmd():
+        """Make the key pair for reminders when the app is closed. Paste both into the host's settings, once."""
+        import base64
+
+        from cryptography.hazmat.primitives import serialization
+        from py_vapid import Vapid01
+
+        vapid = Vapid01()
+        vapid.generate_keys()
+        raw_private = vapid.private_key.private_numbers().private_value.to_bytes(32, "big")
+        raw_public = vapid.public_key.public_bytes(serialization.Encoding.X962, serialization.PublicFormat.UncompressedPoint)
+        b64 = lambda b: base64.urlsafe_b64encode(b).decode().rstrip("=")  # noqa: E731
+        click.echo(f"VAPID_PUBLIC_KEY={b64(raw_public)}")
+        click.echo(f"VAPID_PRIVATE_KEY={b64(raw_private)}")
+
     @app.cli.command("create-user")
     @click.option("--email", prompt=True)
     @click.option("--name", "display_name", prompt="Display name")

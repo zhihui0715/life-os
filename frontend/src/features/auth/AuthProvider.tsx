@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, type ReactNode } from 'react'
 
 import { api, ApiError, setCsrfToken } from '../../lib/api'
 import { clearOfflineData, setOfflineUser } from '../../lib/offline'
+import { disablePush } from '../../lib/push'
 import i18n from '../../lib/i18n'
 import { landingStylesLoaded } from '../../lib/landingStyles'
 import { setLook, setTheme } from '../../lib/theme'
@@ -67,6 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function logout() {
     try {
+      await disablePush().catch(() => undefined) // a shared device stops getting this account's reminders
       await api('/auth/logout', { method: 'POST' })
     } finally {
       // Mark logged-out first (the login screen is watching this entry), then drop every other cached

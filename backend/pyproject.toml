@@ -18,6 +18,7 @@ dependencies = [
   "reportlab>=4.4,<5",  # the readable PDF report in Backup (pure Python, includes CJK fonts)
   "icalendar>=6.1,<7",  # calendar files: the feed Google subscribes to, and reading a Google calendar
   "recurring-ical-events>=3.3,<4",  # expands repeating events in a Google calendar
+  "pywebpush>=2.0,<3",  # reminders that reach a phone with the app closed (Web Push)
 ]
 
 [project.optional-dependencies]

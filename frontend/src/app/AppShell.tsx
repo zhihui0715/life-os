@@ -13,6 +13,7 @@ import { usePomodoroEngine } from '../features/focus/usePomodoroEngine'
 import { startTour } from '../features/help/help'
 import { HelpRoot } from '../features/help/HelpRoot'
 import { lazyWithReload } from '../lib/lazyPage'
+import { startPushSync } from '../lib/push'
 import { notifyBlocker, onPrefsChange, readPrefs, setRemindersEnabled, startReminders } from '../lib/reminders'
 import { onSoundChange, play, setSoundEnabled, soundEnabled } from '../lib/sound'
 import { useMe } from '../features/auth/AuthProvider'
@@ -400,6 +401,7 @@ function useReminderLoop() {
   const ctx = useRef({ t, timeZone: me.settings.timezone, weekStart: me.settings.week_start, locale: me.settings.locale as string })
   ctx.current = { t, timeZone: me.settings.timezone, weekStart: me.settings.week_start, locale: me.settings.locale }
   useEffect(() => startReminders(() => ctx.current), [])
+  useEffect(() => startPushSync(), []) // the server's copy of this device's reminder settings follows changes
 }
 
 /** The tomato clock ticks every second; running it in its own component keeps the rest of the shell still. */
