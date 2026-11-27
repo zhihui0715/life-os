@@ -78,13 +78,15 @@
     "milestone": "里程碑",
     "tags": "标签",
     "tagsHelp": "用逗号分隔，例如：考试, 网络",
-    "noGoal": "无目标"
+    "noGoal": "无目标",
+    "repeatHelp": "从截止日期算起。完成后会自动出现下一个。"
   },
   "meta": {
     "due": "{{date}} 到期",
     "deadline": "截止 {{date}}",
     "overdue": "已逾期",
-    "completedOn": "{{date}} 完成"
+    "completedOn": "{{date}} 完成",
+    "repeats": "重复"
   },
   "actions": {
     "complete": "将“{{title}}”标记为完成",

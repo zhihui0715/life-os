@@ -10,7 +10,7 @@ import binascii
 import json
 from datetime import datetime, time, timedelta
 
-from sqlalchemy import and_, false, func, not_, or_, select
+from sqlalchemy import and_, delete, false, func, not_, or_, select
 
 from app.common.errors import ApiError
 from app.common.models import utcnow
@@ -18,7 +18,9 @@ from app.common.ownership import get_owned_or_404
 from app.common.timeutil import user_today, user_zone
 from app.extensions import db
 from app.modules.activity.service import tracked_minutes
+from app.modules.activity.models import ActivityLog
 from app.modules.calendar.models import ScheduleEvent
+from app.modules.calendar.recurrence import next_date
 from app.modules.categories.models import Category
 from app.modules.goals.models import Goal, GoalMilestone
 from app.modules.goals.service import sync_progress
@@ -78,6 +80,8 @@ def task_to_dict(t: Task, user, now: datetime | None = None, counts: dict | None
         "subtasks_done": sub_done,
         "subtasks_total": sub_total,
         "position": t.position,
+        "rrule": t.rrule,
+        "repeated_from_id": str(t.repeated_from_id) if t.repeated_from_id else None,
         "is_overdue": overdue,
         "completed_at": _iso(t.completed_at),
         "archived_at": _iso(t.archived_at),
@@ -322,12 +326,23 @@ def _set_tags(user, task: Task, names: list[str]) -> None:
     task.tags = tags
 
 
+def _check_repeat(rrule, due_date, parent_task_id) -> None:
+    """Checked before anything is written, so a refused change leaves the task as it was."""
+    if rrule is None:
+        return
+    if parent_task_id is not None:
+        raise _rule("Subtasks can't repeat. Make the main task repeat instead.")
+    if due_date is None:
+        raise _rule("A repeating task needs a due date: the repeat is counted from it.")
+
+
 # ---------- writes ----------
 
 def create_task(user, data: TaskCreate) -> Task:
     if data.id and db.session.get(Task, data.id):
         raise ApiError(409, "conflict", "A task with this id already exists.")
     _check_category(data.category_id)
+    _check_repeat(data.rrule, data.due_date, data.parent_task_id)
     values = data.model_dump(exclude_none=True, exclude={"goal_id", "milestone_id", "parent_task_id", "tags"})
     task = Task(user_id=user.id, **values)
     _apply_links(user, task, data.model_dump(include={"goal_id", "milestone_id", "parent_task_id"}, exclude_none=True))
@@ -353,6 +368,8 @@ def update_task(user, task: Task, data: TaskPatch) -> Task:
         raise _rule("Reopen a completed task before changing its status.")
     if "category_id" in changes:
         _check_category(changes["category_id"])
+    _check_repeat(changes.get("rrule", task.rrule), changes.get("due_date", task.due_date),
+                  changes.get("parent_task_id", task.parent_task_id))
 
     old_goal = task.goal_id
     links = {k: changes.pop(k) for k in ("goal_id", "milestone_id", "parent_task_id") if k in changes}
@@ -367,19 +384,75 @@ def update_task(user, task: Task, data: TaskPatch) -> Task:
     return task
 
 
-def complete_task(task: Task) -> Task:
+def _next_copy(task: Task) -> Task | None:
+    """The task this one repeated into, if it still exists."""
+    return db.session.scalar(select(Task).where(Task.repeated_from_id == task.id))
+
+
+def _repeat(user, task: Task) -> None:
+    """Completing a repeating task: the next one appears on the rule's next day after the due date — or after today,
+    when the task was late, so finishing yesterday's daily task doesn't leave another one already overdue. It is a
+    fresh copy (same title, notes, priority, estimate, links and tags; subtasks unticked) and carries the repeat on."""
+    if not task.rrule or task.due_date is None or task.parent_task_id is not None or _next_copy(task):
+        return
+    due = next_date(task.rrule, task.due_date, max(task.due_date, user_today(user)))
+    if due is None:  # the repeat has ended
+        return
+    now = utcnow()
+    shift = due - task.due_date
+    deadline = None
+    if task.deadline is not None:  # same time of day, the same number of days later
+        zone = user_zone(user)
+        deadline = (task.deadline.astimezone(zone) + shift).astimezone(task.deadline.tzinfo)
+    copy = Task(
+        user_id=task.user_id, title=task.title, notes=task.notes, status="todo", priority=task.priority,
+        due_date=due, deadline=deadline, estimate_minutes=task.estimate_minutes, category_id=task.category_id,
+        goal_id=task.goal_id, milestone_id=task.milestone_id, position=task.position, rrule=task.rrule,
+        repeated_from_id=task.id, tags=list(task.tags), created_at=now, updated_at=now,
+    )
+    db.session.add(copy)
+    db.session.flush()
+    subtasks = db.session.scalars(
+        select(Task).where(Task.parent_task_id == task.id, Task.archived_at.is_(None)).order_by(Task.position)
+    ).all()
+    for sub in subtasks:
+        db.session.add(Task(
+            user_id=sub.user_id, title=sub.title, notes=sub.notes, status="todo", priority=sub.priority,
+            estimate_minutes=sub.estimate_minutes, category_id=sub.category_id, parent_task_id=copy.id,
+            position=sub.position, tags=list(sub.tags), created_at=now, updated_at=now,
+        ))
+
+
+def _untouched(task: Task) -> bool:
+    """Nothing has happened to it since it was made: not edited, ticked, timed or put on the calendar."""
+    family = [task, *db.session.scalars(select(Task).where(Task.parent_task_id == task.id))]
+    ids = [t.id for t in family]
+    return (
+        all(t.updated_at == t.created_at and t.status != "done" and t.archived_at is None for t in family)
+        and not db.session.scalar(select(func.count()).select_from(ActivityLog).where(ActivityLog.task_id.in_(ids)))
+        and not db.session.scalar(select(func.count()).select_from(ScheduleEvent).where(ScheduleEvent.task_id.in_(ids)))
+    )
+
+
+def complete_task(user, task: Task) -> Task:
     if task.status != "done":
         task.status = "done"
         task.completed_at = utcnow()
+        _repeat(user, task)
         sync_progress(task.goal_id)
         db.session.commit()
     return task
 
 
 def reopen_task(task: Task) -> Task:
+    """Undoing a completion also takes back the next copy it made — unless you've already started on that one."""
     if task.status == "done":
         task.status = "todo"
         task.completed_at = None
+        copy = _next_copy(task)
+        if copy is not None and _untouched(copy):
+            db.session.execute(delete(Task).where(Task.parent_task_id == copy.id))
+            db.session.delete(copy)
         sync_progress(task.goal_id)
         db.session.commit()
     return task

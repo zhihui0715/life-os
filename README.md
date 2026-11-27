@@ -3,11 +3,11 @@
 A private, bilingual (English / 简体中文) personal management system: tasks, calendar, goals, habits, journal and insights.
 Architecture and decisions: [`docs/00-architecture-plan.md`](docs/00-architecture-plan.md).
 
-**Current stage: 9 — Quality & deployment.** All planned features are built: tasks, goals, calendar, habits, journal,
+**Live at https://life-os-f0mc.onrender.com** (Render + Neon, deployed from `main`). All planned features are built: tasks (including repeating tasks), goals, calendar, habits, journal,
 focus timer and activity log, a customizable Home dashboard, Insights, Plan my day and a guided weekly review,
 reminders, backup & restore with a readable PDF report, and an installable app that works offline for the essentials. Browser tests, accessibility checks,
-a security review, performance budgets and a production container are in place; CI runs them all. What's left is
-choosing a host and deploying: see [`docs/04-deployment.md`](docs/04-deployment.md).
+a security review, performance budgets and a production container are in place; CI runs them all. Hosting and
+deploying: see [`docs/04-deployment.md`](docs/04-deployment.md).
 
 ## Requirements (Windows)
 
@@ -90,9 +90,6 @@ Nothing is replaced until you confirm. A restore replaces the account's data wit
 which days), focus time, habits, goal progress, where the time went and how the journal felt. Step back through older
 periods and download any of them as a PDF; Settings → Backup has one-tap PDFs of today, this week and this month.
 
-Each report is sent once, from 07:00 in your own time zone (`--hour` changes that). *Send me last week's now* in
-Settings checks the setup.
-
 ## Install it & use it offline
 
 The installable version is the **built** app (the dev server on :5173 deliberately has no service worker):
@@ -145,6 +142,15 @@ This week, Later) pull work together by time. Colour shows urgency; overdue task
 round "now" instead, nearer = sooner. Filter to one goal or tag, a priority, or without subtasks. Drag, pinch or
 scroll to zoom, tap a dot to light up its neighbours, and open it from the card. The same tasks are also available
 as a list under the graph.
+
+## Repeating tasks
+
+Give a task a **Repeat** (every day, every weekday, every week on its day, every month on its date) in the New task
+sheet or the task's editor; it's counted from the due date (picking a repeat fills in today if there isn't one), and
+ends never or on a date. Completing it makes the next one, with the same notes, priority, estimate, goal and tags and
+its subtasks unticked, on the next repeat day after the due date — or after today, if it was late. Ticking it back
+open takes that next one back too, unless you've already changed, timed or scheduled it. Subtasks can't repeat on
+their own. Rules: `backend/app/modules/tasks/service.py` (`_repeat`).
 
 ## Planning and reminders
 

@@ -58,7 +58,7 @@ def update_task(task_id):
 
 @bp.post("/<task_id>/complete")
 def complete_task(task_id):
-    return _out(service.complete_task(_get(task_id)))
+    return _out(service.complete_task(current_user(), _get(task_id)))
 
 
 @bp.post("/<task_id>/reopen")

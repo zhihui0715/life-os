@@ -60,6 +60,8 @@ export interface Task {
   subtasks_done: number
   subtasks_total: number
   position: number
+  rrule: string | null // repeat rule (top-level tasks with a due date); completing makes the next one
+  repeated_from_id: string | null // set on a task that a repeating task made
   is_overdue: boolean
   completed_at: string | null
   archived_at: string | null

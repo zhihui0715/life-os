@@ -2,14 +2,26 @@ import uuid
 from datetime import date
 from typing import Annotated, Literal
 
-from pydantic import AwareDatetime, Field, StringConstraints
+from pydantic import AwareDatetime, Field, StringConstraints, field_validator
 
 from app.common.validation import InputModel, QueryModel
+from app.modules.calendar.recurrence import normalise_rrule
 
 # "done" is reached only through POST /complete, so the completion rules always run.
 OpenStatus = Literal["inbox", "todo", "in_progress"]
 TaskView = Literal["all", "inbox", "today", "upcoming", "overdue", "unscheduled", "completed", "archived"]
 TagName = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=40)]
+
+
+def _check_rrule(v):
+    """Same rules as calendar repeats, but a task repeats forever or until a date: each copy is its own task, so a
+    fixed number of times (COUNT) has nothing to count down on."""
+    if v is None or v == "":
+        return None
+    rule = normalise_rrule(v)  # ValueError becomes a 422 field error
+    if "COUNT=" in rule:
+        raise ValueError("A repeating task ends on a date (UNTIL), not after a number of times.")
+    return rule
 
 
 class TaskCreate(InputModel):
@@ -26,6 +38,12 @@ class TaskCreate(InputModel):
     milestone_id: uuid.UUID | None = None  # the goal is filled in from the milestone if not given
     parent_task_id: uuid.UUID | None = None  # makes this a subtask (one level only)
     tags: list[TagName] = Field(default_factory=list, max_length=10)
+    rrule: str | None = None  # repeat rule, e.g. "FREQ=WEEKLY;BYDAY=MO"; needs a due date
+
+    @field_validator("rrule")
+    @classmethod
+    def valid_rrule(cls, v):
+        return _check_rrule(v)
 
 
 class TaskPatch(InputModel):
@@ -45,6 +63,12 @@ class TaskPatch(InputModel):
     parent_task_id: uuid.UUID | None = None
     tags: list[TagName] | None = Field(default=None, max_length=10)  # replaces the whole tag list
     position: int | None = None
+    rrule: str | None = None  # null or "" stops the repeat
+
+    @field_validator("rrule")
+    @classmethod
+    def valid_rrule(cls, v):
+        return _check_rrule(v)
     # Optimistic concurrency: the updated_at the client last saw (docs/02-api-conventions.md §6).
     if_updated_at: AwareDatetime | None = None
 

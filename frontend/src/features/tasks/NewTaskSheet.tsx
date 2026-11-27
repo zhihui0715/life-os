@@ -1,4 +1,4 @@
-import { CalendarDays, Flag, Hash, Target, Timer } from 'lucide-react'
+import { CalendarDays, Flag, Hash, Repeat, Target, Timer } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -13,6 +13,7 @@ import { errorMessage } from '../../lib/errors'
 import { isQueued } from '../../lib/offline'
 import { play } from '../../lib/sound'
 import { useMe } from '../auth/AuthProvider'
+import { buildRRule, NO_REPEAT, type RepeatFreq } from '../calendar/rrule'
 import { useGoals } from '../goals/api'
 import { useCreateTask } from './api'
 
@@ -59,6 +60,7 @@ export function NewTaskSheet({ open, onClose }: { open: boolean; onClose: () => 
   const [priority, setPriority] = useState(3)
   const [estimate, setEstimate] = useState<number | null>(null)
   const [goalId, setGoalId] = useState('')
+  const [repeat, setRepeat] = useState<RepeatFreq>('none')
   const [again, setAgain] = useState(false)
   const [added, setAdded] = useState(0)
 
@@ -72,6 +74,7 @@ export function NewTaskSheet({ open, onClose }: { open: boolean; onClose: () => 
       setPriority(3)
       setEstimate(null)
       setGoalId('')
+      setRepeat('none')
     }
   }
   const close = () => {
@@ -95,6 +98,8 @@ export function NewTaskSheet({ open, onClose }: { open: boolean; onClose: () => 
         estimate_minutes: estimate,
         goal_id: goalId || null,
         tags,
+        // a repeat needs the due date it's counted from
+        rrule: due ? buildRRule({ ...NO_REPEAT, freq: repeat }, due) : null,
       },
       {
         onSuccess: (r) => {
@@ -198,6 +203,19 @@ export function NewTaskSheet({ open, onClose }: { open: boolean; onClose: () => 
             {due ? t('sheet.dueOn', { date: formatDay(due, i18n.language, { weekday: 'long' }) }) : t('sheet.inbox')}
           </p>
         </Row>
+
+        {due && (
+          <Row icon={<Repeat size={16} className="text-[var(--tint-calendar)]" />} label={t('calendar:repeat.label')}>
+            <div className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {(['none', 'daily', 'weekdays', 'weekly', 'monthly'] as const).map((f) => (
+                <Chip key={f} on={repeat === f} onClick={() => setRepeat(f)}>
+                  {t(`calendar:repeat.${f}`)}
+                </Chip>
+              ))}
+            </div>
+            {repeat !== 'none' && <p className="text-subtle mt-1.5 text-[12px]">{t('fields.repeatHelp')}</p>}
+          </Row>
+        )}
 
         <Row icon={<Flag size={16} className="text-[var(--tint-calendar)]" />} label={t('priority.label')}>
           <div className="grid grid-cols-4 gap-2">

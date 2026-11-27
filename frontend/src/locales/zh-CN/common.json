@@ -90,10 +90,6 @@
       "noData": "暂无数据"
     }
   },
-  "comingSoon": {
-    "title": "{{feature}}尚未开发",
-    "body": "该模块计划在路线图的第 {{stage}} 阶段完成。目前这里不会保存任何数据。"
-  },
   "auth": {
     "title": "欢迎回来",
     "subtitle": "登录你的个人工作区。",

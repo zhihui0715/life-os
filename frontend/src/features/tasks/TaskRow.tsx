@@ -1,4 +1,4 @@
-import { AlertCircle, CalendarClock, Clock, Flag, ListChecks, Target } from 'lucide-react'
+import { AlertCircle, CalendarClock, Clock, Flag, ListChecks, Repeat, Target } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -75,6 +75,7 @@ export function TaskRow({ task, category, goal, onOpen }: Props) {
             <span className="inline-flex items-center gap-1">
               <CalendarClock size={12} aria-hidden />
               {t('meta.due', { date: formatDay(task.due_date, lang, { weekday: 'short' }) })}
+              {task.rrule && <Repeat size={12} className="text-accent ml-0.5" aria-label={t('meta.repeats')} role="img" />}
             </span>
           )}
           {task.deadline && (
