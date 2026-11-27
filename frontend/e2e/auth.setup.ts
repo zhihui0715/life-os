@@ -44,3 +44,20 @@ setup('landing page leads to sign in', async ({ page }) => {
   await expect(page).toHaveURL(/\/login$/)
   await expect(page.getByLabel('Password', { exact: true })).toBeVisible()
 })
+
+// Signing in after the landing page must not leave its stylesheet behind: on a computer the sidebar keeps its labels
+// and the phone tab bar stays hidden (lib/landingStyles.ts).
+setup('signing in from the landing page keeps the desktop layout', async ({ browser }) => {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+  await page.goto('/')
+  await page.evaluate(() => localStorage.setItem('lifeos.tourSeen', '1'))
+  await page.getByRole('button', { name: 'Sign in' }).first().click()
+  await page.getByLabel('Email').fill(E2E_USER.email)
+  await page.getByLabel('Password', { exact: true }).fill(E2E_USER.password)
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: /Good (morning|afternoon|evening)/ })).toBeVisible()
+  const sidebar = page.locator('aside.app-sidebar')
+  await expect(sidebar.getByText('Habits', { exact: true })).toBeVisible()
+  await expect(page.locator('nav.material')).toBeHidden()
+  await page.close()
+})

@@ -8,6 +8,7 @@
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { gzipSync } from 'node:zlib'
 
 const BUDGET = {
@@ -17,7 +18,7 @@ const BUDGET = {
   precacheTotal: 1.2 * 1024 * 1024, // everything the service worker stores for offline use (compressed)
 }
 
-const dist = new URL('../dist/', import.meta.url).pathname.replace(/^\/([A-Z]:)/, '$1')
+const dist = fileURLToPath(new URL('../dist/', import.meta.url)) // decodes spaces in the path, Windows drive letters too
 const gz = (file) => gzipSync(readFileSync(join(dist, file))).length
 const kb = (n) => `${(n / 1024).toFixed(1)} kB`
 

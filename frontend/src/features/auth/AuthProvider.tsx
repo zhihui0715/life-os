@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, type ReactNode } from 'react'
 import { api, ApiError, setCsrfToken } from '../../lib/api'
 import { clearOfflineData, setOfflineUser } from '../../lib/offline'
 import i18n from '../../lib/i18n'
+import { landingStylesLoaded } from '../../lib/landingStyles'
 import { setLook, setTheme } from '../../lib/theme'
 import type { Me } from '../../lib/types'
 
@@ -40,6 +41,8 @@ function useSignInMutation<B>(path: string) {
       // Signing in (maybe as someone else): drop any data cached for the previous session before showing pages.
       qc.removeQueries({ predicate: (q) => q.queryKey[0] !== ME_KEY[0] })
       qc.setQueryData(ME_KEY, me)
+      // The landing page's stylesheet would override the app's layout: start the app on a fresh page instead.
+      if (landingStylesLoaded()) window.location.reload()
     },
   })
 }
