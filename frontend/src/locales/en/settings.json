@@ -91,7 +91,7 @@
   },
   "reminders": {
     "label": "Reminders",
-    "help": "Notifications from Life OS while it's open — in a browser tab, or the installed app on a computer. On a phone they arrive while the app is open. Saved on this device.",
+    "help": "Notifications from Life OS — while it's open, and with “Also when Life OS is closed” on, from the server too (that's how they reach a phone). Saved on this device.",
     "denied": "Notifications are blocked for this site. Allow them in your browser's site settings, then switch this on again.",
     "events": "Before events",
     "off": "Off",
@@ -108,7 +108,14 @@
       "insecure": "Notifications need a secure address. This page was opened over plain http:// (for example a computer's network address on your phone), so the browser won't allow them. Open Life OS at its https:// address, or on the computer itself at localhost.",
       "install-ios": "On iPhone and iPad, notifications only work in the installed app: tap Share, then \"Add to Home Screen\", open Life OS from the new icon and switch this on there.",
       "unsupported": "This browser can't show notifications."
-    }
+    },
+    "pushLabel": "Also when Life OS is closed",
+    "pushHelp": "Sent by the server, so they reach this device even when the app is closed. They can arrive up to 15 minutes early.",
+    "pushNotSetUp": "Not set up on this server yet.",
+    "pushUnsupported": "This browser can't receive reminders while Life OS is closed.",
+    "pushFailed": "Couldn't switch this on. Check your connection and try again.",
+    "pushTest": "Test from the server",
+    "pushTestSent": "Test sent. It should arrive in a few seconds."
   },
   "appearance": {
     "title": "Appearance",

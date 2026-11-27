@@ -179,9 +179,11 @@ to an outside service.
   tomorrow or drop), reflect (went well / to improve / one lesson), and set next week's top 3. Saved per week.
 - **Reminders** (Settings → Reminders, per device): notifications before events and deadlines, a habit nudge, a
   morning "Plan your day" and an end-of-week review reminder. They come from the app while it's open (a tab, or the
-  installed app on a computer); on a phone they arrive while the app is open. Sounds and reminders also have one-tap
-  switches under **More** on a phone. Phones only allow notifications on a secure (https) address, and an iPhone only
-  in the app added to the Home Screen; the switch says which is in the way.
+  installed app on a computer). Switch on **Also when Life OS is closed** and the server sends them too, so they
+  reach a phone with the app closed (they can arrive up to 15 minutes early; set-up:
+  [`docs/04-deployment.md` §3.2](docs/04-deployment.md)). Sounds and reminders also have one-tap switches under
+  **More** on a phone. Phones only allow notifications on a secure (https) address, and an iPhone only in the app
+  added to the Home Screen; the switch says which is in the way.
 
 ## Project layout
 

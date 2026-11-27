@@ -47,6 +47,7 @@ def create_app(config_name: str | None = None) -> Flask:
     from app.modules.graph.routes import bp as graph_bp
     from app.modules.search.routes import bp as search_bp
     from app.modules.imports.routes import bp as imports_bp
+    from app.modules.push.routes import bp as push_bp
     from app.modules.habits.routes import bp as habits_bp
     from app.modules.insights.routes import bp as insights_bp
     from app.modules.journal.routes import bp as journal_bp
@@ -56,7 +57,7 @@ def create_app(config_name: str | None = None) -> Flask:
     from app.modules.tasks.routes import bp as tasks_bp
     from app.modules.tasks.routes import tags_bp
 
-    for bp in (health_bp, auth_bp, settings_bp, categories_bp, tasks_bp, tags_bp, goals_bp, calendar_bp, habits_bp, journal_bp, activity_bp, focus_bp, insights_bp, backup_bp, planning_bp, graph_bp, reports_bp, achievements_bp, search_bp, imports_bp):
+    for bp in (health_bp, auth_bp, settings_bp, categories_bp, tasks_bp, tags_bp, goals_bp, calendar_bp, habits_bp, journal_bp, activity_bp, focus_bp, insights_bp, backup_bp, planning_bp, graph_bp, reports_bp, achievements_bp, search_bp, imports_bp, push_bp):
         app.register_blueprint(bp)
 
     register_error_handlers(app)

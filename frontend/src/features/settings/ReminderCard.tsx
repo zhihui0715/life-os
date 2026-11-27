@@ -1,4 +1,4 @@
-import { BellRing } from 'lucide-react'
+import { BellRing, Cloud } from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -6,6 +6,9 @@ import { Button } from '../../components/ui/Button'
 import { ChoiceChip } from '../../components/ui/Segments'
 import { Switch } from '../../components/ui/Switch'
 import { Card } from '../../components/ui/states'
+import { useToast } from '../../components/ui/Toast'
+import { errorMessage } from '../../lib/errors'
+import { currentSubscription, disablePush, enablePush, pushConfig, pushSupported, sendTestPush } from '../../lib/push'
 import { notify, notifyBlocker, onPrefsChange, readPrefs, remindersSupported, setRemindersEnabled, writePrefs, type ReminderPrefs } from '../../lib/reminders'
 
 const LEADS = [0, 5, 10, 15, 30]
@@ -57,6 +60,7 @@ export function ReminderCard() {
           <TimeRow label={t('reminders.plan')} value={prefs.planAt} onChange={(v) => change({ planAt: v })} />
           <TimeRow label={t('reminders.habits')} value={prefs.habitsAt} onChange={(v) => change({ habitsAt: v })} />
           <TimeRow label={t('reminders.review')} value={prefs.reviewAt} onChange={(v) => change({ reviewAt: v })} />
+          <PushRow />
           <div>
             <Button size="sm" onClick={() => void notify(t('reminders.testTitle'), t('reminders.testBody'), '/settings', 'test')}>
               <BellRing size={14} aria-hidden />
@@ -66,6 +70,69 @@ export function ReminderCard() {
         </div>
       )}
     </Card>
+  )
+}
+
+/** "Also when Life OS is closed": the server sends this device's reminders through the browser's push service. */
+function PushRow() {
+  const { t } = useTranslation('settings')
+  const toast = useToast()
+  const [state, setState] = useState<'loading' | 'unsupported' | 'not-set-up' | 'off' | 'on'>('loading')
+  const [busy, setBusy] = useState(false)
+
+  useEffect(() => {
+    let live = true
+    void (async () => {
+      if (!pushSupported()) return live && setState('unsupported')
+      const cfg = await pushConfig().catch(() => null)
+      if (!cfg?.enabled) return live && setState('not-set-up')
+      const sub = await currentSubscription()
+      if (live) setState(sub ? 'on' : 'off')
+    })()
+    return () => {
+      live = false
+    }
+  }, [])
+
+  const toggle = async (on: boolean) => {
+    setBusy(true)
+    try {
+      if (on) await enablePush()
+      else await disablePush()
+      setState(on ? 'on' : 'off')
+    } catch {
+      toast(t('reminders.pushFailed'), 'error')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  if (state === 'loading') return null
+  return (
+    <div className="bg-sunken/60 rounded-2xl p-3.5">
+      <div className="flex items-center gap-3">
+        <Cloud size={18} className="text-accent shrink-0" aria-hidden />
+        <span id="push-label" className="min-w-0 flex-1 text-[15px] font-medium">{t('reminders.pushLabel')}</span>
+        <Switch checked={state === 'on'} onChange={(on) => void toggle(on)} labelledBy="push-label" disabled={busy || state === 'unsupported' || state === 'not-set-up'} />
+      </div>
+      <p className="text-subtle mt-1.5 text-[12.5px]">
+        {state === 'unsupported' ? t('reminders.pushUnsupported') : state === 'not-set-up' ? t('reminders.pushNotSetUp') : t('reminders.pushHelp')}
+      </p>
+      {state === 'on' && (
+        <Button
+          size="sm"
+          className="mt-2.5"
+          onClick={() =>
+            void sendTestPush()
+              .then(() => toast(t('reminders.pushTestSent')))
+              .catch((e) => toast(errorMessage(t, e), 'error'))
+          }
+        >
+          <Cloud size={14} aria-hidden />
+          {t('reminders.pushTest')}
+        </Button>
+      )}
+    </div>
   )
 }
 

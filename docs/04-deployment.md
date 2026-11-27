@@ -27,6 +27,9 @@ Phone / laptop ──HTTPS──▶  Host's proxy (TLS)  ──▶  Container: g
 | `SECRET_KEY` | 64 random hex characters | `python -c "import secrets; print(secrets.token_hex(32))"`. Never reuse the development one. Changing it signs everyone out. |
 | `TRUST_PROXY` | `true` | The host's HTTPS proxy sits in front: needed for real client IPs (rate limiting) and HTTPS detection |
 | `PORT` | set by most hosts | default 8000 |
+| `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` | from `flask push-keys` | Optional: reminders when the app is closed (§3.2). Make them once; changing them means each device switches reminders off and on again. |
+| `PUSH_CRON_SECRET` | a long random string | Optional: the key the scheduler sends to `/api/v1/push/tick` (§3.2) |
+| `VAPID_SUBJECT` | `mailto:you@example.com` | Optional: a contact for the browsers' push services; defaults to the site's address |
 
 `APP_ENV=production` and `FRONTEND_DIST` are already set inside the image.
 
@@ -72,6 +75,28 @@ sites' current limits.
    only; the last line puts it back so later commands use your local database again. `flask set-password` works the
    same way.
 5. Continue with steps 5–6 above (sign in, install on the phone, move your data across).
+
+### 3.2 Reminders when the app is closed (free)
+
+The server sends reminders through the browsers' push services (Web Push). A free server sleeps when nobody visits,
+so an outside scheduler wakes it every 15 minutes; each call sends whatever is due, once. Reminders before a time
+(events, deadlines) look one call ahead, so they arrive on time or up to 15 minutes early.
+
+1. **Keys** (once). On your computer, in `backend/`: `.venv/Scripts/flask push-keys`. It prints `VAPID_PUBLIC_KEY`
+   and `VAPID_PRIVATE_KEY`. Make a scheduler key too: `python -c "import secrets; print(secrets.token_urlsafe(32))"`.
+2. **Render** → the life-os service → *Environment* → add `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` and
+   `PUSH_CRON_SECRET` (the scheduler key) → *Save* (it redeploys).
+3. **cron-job.org** (free): create a cron job.
+   - URL: `https://<your-app>.onrender.com/api/v1/push/tick`, request method **POST**.
+   - Advanced → Headers: `Authorization` = `Bearer <the scheduler key>`.
+   - Schedule: every 15 minutes, **only 07:00–23:00** in your time zone. Each call wakes the database too; keeping
+     nights quiet keeps Neon's free compute hours well within its monthly allowance.
+   - Its test run should answer `{"devices": 0, "sent": 0}` (or how many it sent). `401` means the key doesn't match.
+4. **On each device**: Settings → Reminders → on, then **Also when Life OS is closed** → *Test from the server*.
+   iPhone: only in the app added to the Home Screen (iOS 16.4 or later).
+
+A device that's uninstalled or blocks notifications is removed the next time a reminder to it fails. Signing out
+turns it off on that device.
 
 **Updates:** push to `main` → CI must be green (§6) → redeploy. Migrations run automatically on start. Open apps
 show *A new version is ready → Reload*.

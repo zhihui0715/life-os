@@ -40,6 +40,13 @@ class Config:
     # True when running behind the host's HTTPS proxy (it sets X-Forwarded-For / X-Forwarded-Proto).
     TRUST_PROXY = os.environ.get("TRUST_PROXY", "").lower() in ("1", "true", "yes")
 
+    # Reminders when the app is closed (Web Push). Make the keys with `flask push-keys`. Without them push stays off.
+    VAPID_PUBLIC_KEY = os.environ.get("VAPID_PUBLIC_KEY") or None
+    VAPID_PRIVATE_KEY = os.environ.get("VAPID_PRIVATE_KEY") or None
+    VAPID_SUBJECT = os.environ.get("VAPID_SUBJECT") or None  # mailto: or https: contact for push services; default: this site
+    # The outside scheduler sends it as "Authorization: Bearer …" when it calls /api/v1/push/tick.
+    PUSH_CRON_SECRET = os.environ.get("PUSH_CRON_SECRET") or None
+
     RATELIMIT_ENABLED = True
     RATELIMIT_STORAGE_URI = "memory://"
     RATELIMIT_HEADERS_ENABLED = True
@@ -56,6 +63,10 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get("TEST_DATABASE_URL")
     SECRET_KEY = "test-secret-key"
     RATELIMIT_ENABLED = False
+    VAPID_PUBLIC_KEY = "test-public-key"
+    VAPID_PRIVATE_KEY = "test-private-key"  # tests replace the sender; nothing is really sent
+    VAPID_SUBJECT = "mailto:test@example.test"
+    PUSH_CRON_SECRET = "test-cron-secret"
 
 
 class ProductionConfig(Config):

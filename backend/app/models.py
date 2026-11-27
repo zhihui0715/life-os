@@ -10,3 +10,4 @@ from app.modules.tasks.models import Tag, Task, task_tags  # noqa: F401
 from app.modules.habits.models import Habit, HabitLog, HabitScheduleChange  # noqa: F401
 from app.modules.journal.models import JournalEntry  # noqa: F401
 from app.modules.planning.models import WeeklyReview  # noqa: F401
+from app.modules.push.models import PushSent, PushSubscription  # noqa: F401
