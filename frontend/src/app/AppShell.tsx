@@ -1,4 +1,4 @@
-import { ChevronRight, CircleHelp, MoreHorizontal, PanelLeftClose, PanelLeftOpen, Plus } from 'lucide-react'
+import { ChevronRight, CircleHelp, MoreHorizontal, PanelLeftClose, PanelLeftOpen, Plus, Search } from 'lucide-react'
 import { Suspense, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet, useLocation } from 'react-router'
@@ -26,6 +26,9 @@ const STORAGE_KEY = 'lifeos.sidebarCollapsed'
 // The Academia scene is its own chunk: only people using that theme download it
 const StudyScene = lazyWithReload(() => import('../components/academia/StudyScene'))
 const AchievementWatcher = lazyWithReload(() => import('../features/achievements/AchievementWatcher'))
+// Search loads the first time it's opened (Ctrl/⌘ K or the search button)
+const SearchDialog = lazyWithReload(() => import('../features/search/SearchDialog'))
+const SEARCH_KEYS = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘K' : 'Ctrl K'
 const subscribeLook = (notify: () => void) => {
   const mo = new MutationObserver(notify)
   mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-look'] })
@@ -49,6 +52,24 @@ export function AppShell() {
   const [collapsed, setCollapsed] = useState(readCollapsed)
   const [moreOpen, setMoreOpen] = useState(false)
   const [sheet, setSheet] = useState<Sheet>(null)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchUsed, setSearchUsed] = useState(false) // keeps the dialog mounted after first use, so it can animate closed
+  const openSearch = () => {
+    play('tap')
+    setSearchUsed(true)
+    setSearchOpen(true)
+  }
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setSearchUsed(true)
+        setSearchOpen(true)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
   useReminderLoop()
   const me = useMe()
   const academia = useSyncExternalStore(subscribeLook, isAcademia)
@@ -112,6 +133,19 @@ export function AppShell() {
           >
             <Plus size={18} strokeWidth={2.5} aria-hidden />
             <span className={collapsed ? 'sr-only' : 'sr-only lg:not-sr-only'}>{t('actions.quickAdd')}</span>
+          </button>
+          <button
+            type="button"
+            onClick={openSearch}
+            title={`${t('search.title')} (${SEARCH_KEYS})`}
+            aria-keyshortcuts="Control+K Meta+K"
+            className="pressable text-muted hover:bg-fg/[0.04] hover:text-fg mt-2 flex h-10 w-full items-center gap-3 rounded-[10px] px-3 text-[15px] font-medium"
+          >
+            <Search size={19} strokeWidth={2.1} aria-hidden className="shrink-0" />
+            <span className={collapsed ? 'sr-only' : 'sr-only lg:not-sr-only'}>{t('search.title')}</span>
+            <kbd className={cn('text-subtle border-border ml-auto rounded-md border px-1.5 font-sans text-[11px]', collapsed ? 'hidden' : 'hidden lg:inline')}>
+              {SEARCH_KEYS}
+            </kbd>
           </button>
         </div>
 
@@ -244,6 +278,22 @@ export function AppShell() {
       </div>
 
       <Dialog open={moreOpen} onClose={() => setMoreOpen(false)} title={t('nav.more')}>
+        <button
+          type="button"
+          onClick={() => {
+            setMoreOpen(false)
+            openSearch()
+          }}
+          className="bg-sunken/60 active:bg-fg/[0.06] mb-4 flex h-[52px] w-full items-center gap-3.5 rounded-2xl px-3.5 text-left"
+        >
+          <span className="bg-fg/70 flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[8px] text-white dark:bg-white/25">
+            <Search size={17} strokeWidth={2.2} aria-hidden />
+          </span>
+          <span className="flex flex-1 items-center justify-between text-[16px] font-medium">
+            {t('search.title')}
+            <ChevronRight size={18} className="text-border-strong" aria-hidden />
+          </span>
+        </button>
         {/* An iOS Settings-style grouped list with coloured app-section icons */}
         <div className="bg-sunken/60 stagger overflow-hidden rounded-2xl">
           {secondary.map(({ to, key, icon: Icon, tint }) => (
@@ -293,6 +343,11 @@ export function AppShell() {
         <AchievementWatcher />
       </Suspense>
       <HelpRoot />
+      {searchUsed && (
+        <Suspense fallback={null}>
+          <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
+        </Suspense>
+      )}
     </div>
   )
 }

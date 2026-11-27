@@ -10,7 +10,7 @@ import { useAllDone } from '../../lib/celebrate'
 import { lazyWithReload } from '../../lib/lazyPage'
 import { play } from '../../lib/sound'
 import type { Task, TaskFilters, TaskView } from '../../lib/types'
-import { useCategories } from './api'
+import { useCategories, useTask } from './api'
 import { QuickAddInput } from './QuickAddInput'
 import { TaskList, useTaskTotal } from './TaskList'
 
@@ -32,6 +32,17 @@ export function TasksPage() {
   const typingTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
   const categories = useCategories().data ?? []
   const [open, setOpen] = useState<Task | null>(null)
+  // ?task=<id> (from search) opens that task's editor once it has loaded, then leaves the URL
+  const linked = useTask(params.get('task'))
+  useEffect(() => {
+    if (!linked.data) return
+    setOpen(linked.data)
+    setParams((prev) => {
+      const next = new URLSearchParams(prev)
+      next.delete('task')
+      return next
+    }, { replace: true })
+  }, [linked.data, setParams])
 
   useEffect(() => setSearch(urlQ), [urlQ]) // URL changed from outside (link, back button)
   useEffect(() => () => clearTimeout(typingTimer.current), [])

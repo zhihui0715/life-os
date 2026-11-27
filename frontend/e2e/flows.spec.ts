@@ -99,3 +99,17 @@ test('the + button creates a task with a date, priority and tag', async ({ page,
   const found = await (await request.get(`/api/v1/tasks?view=all&q=${encodeURIComponent(title)}`)).json()
   expect(found.items[0]).toMatchObject({ title, priority: 2, tags: ['errands'], status: 'todo' })
 })
+
+test('search everything with Ctrl+K and open a result', async ({ page, request }) => {
+  await apiCall(request, 'POST', '/tasks', { title: 'Renew passport', status: 'todo', notes: 'Bring two photos' })
+  await apiCall(request, 'POST', '/goals', { title: 'Travel to Japan', description: 'Passport first' })
+  await page.goto('/')
+  await page.keyboard.press('Control+k')
+  const box = page.getByRole('combobox', { name: 'Search' })
+  await box.fill('passport')
+  await expect(page.getByRole('option', { name: /Renew passport/ })).toBeVisible()
+  await expect(page.getByRole('option', { name: /Travel to Japan/ })).toBeVisible()
+  await box.press('Enter') // the first result: the task
+  await expect(page).toHaveURL(/\/tasks/)
+  await expect(page.getByRole('dialog', { name: 'Edit task' }).getByLabel('Title')).toHaveValue('Renew passport')
+})
