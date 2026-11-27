@@ -7,6 +7,7 @@ import '../../styles/landing.css'
 import { LanguageSwitcher } from '../../app/LanguageSwitcher'
 import { createScene } from '../../lib/academia/scene'
 import i18n from '../../lib/i18n'
+import { markLandingStylesLoaded } from '../../lib/landingStyles'
 import { play } from '../../lib/sound'
 import { DARK_SCENES, SCENES, type Scene } from '../../lib/theme'
 import en from '../../locales/en/landing.json'
@@ -15,6 +16,7 @@ import zh from '../../locales/zh-CN/landing.json'
 // The page's words travel with the page (not in the app's first download)
 i18n.addResourceBundle('en', 'landing', en, true, true)
 i18n.addResourceBundle('zh-CN', 'landing', zh, true, true)
+markLandingStylesLoaded() // landing.css came with this module; signing in afterwards reloads (lib/landingStyles.ts)
 
 type Span = 'day' | 'week' | 'month'
 const ROOMS = ['tasks', 'calendar', 'goals', 'habits', 'focus', 'journal', 'insights', 'graph'] as const
