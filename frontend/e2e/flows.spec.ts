@@ -104,6 +104,7 @@ test('search everything with Ctrl+K and open a result', async ({ page, request }
   await apiCall(request, 'POST', '/tasks', { title: 'Renew passport', status: 'todo', notes: 'Bring two photos' })
   await apiCall(request, 'POST', '/goals', { title: 'Travel to Japan', description: 'Passport first' })
   await page.goto('/')
+  await expect(page.getByRole('heading', { name: /Good (morning|afternoon|evening)/ })).toBeVisible() // the app is listening
   await page.keyboard.press('Control+k')
   const box = page.getByRole('combobox', { name: 'Search' })
   await box.fill('passport')
