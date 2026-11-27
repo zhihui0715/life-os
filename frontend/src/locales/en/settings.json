@@ -199,5 +199,54 @@
     "save": "Change password",
     "saving": "Changing…",
     "changed": "Password changed. Other devices were signed out."
+  },
+  "import": {
+    "title": "Import from other apps",
+    "help": "Bring in a calendar file (.ics, from Google Calendar, Outlook or Apple Calendar), a Todoist CSV export, or Google Tasks' Tasks.json from Google Takeout. You'll see what will be added first; things already here are skipped.",
+    "choose": "Choose a file…",
+    "checking": "Reading file…",
+    "tooBig": "That file is larger than 10 MB. Split it into smaller files.",
+    "unreadable": "Life OS can't read this file. Use a calendar file (.ics), a Todoist CSV export or Google Tasks' Tasks.json.",
+    "previewTitle": "Check before importing",
+    "formats": {
+      "ics": "Calendar file (.ics)",
+      "todoist": "Todoist export (CSV)",
+      "google_tasks": "Google Tasks (Tasks.json)"
+    },
+    "newEvents_one": "{{count}} new event",
+    "newEvents_other": "{{count}} new events",
+    "newTasks_one": "{{count}} new task",
+    "newTasks_other": "{{count}} new tasks",
+    "subtasks_one": "{{count}} subtask",
+    "subtasks_other": "{{count}} subtasks",
+    "duplicates_one": "{{count}} already here, skipped",
+    "duplicates_other": "{{count}} already here, skipped",
+    "skipped_one": "{{count}} can't be imported",
+    "skipped_other": "{{count}} can't be imported",
+    "skippedWhy": "Why some can't be imported",
+    "more_one": "…and {{count}} more",
+    "more_other": "…and {{count}} more",
+    "repeats": "Repeats",
+    "nothingNew": "Everything in this file is already here.",
+    "add_one": "Add {{count}}",
+    "add_other": "Add {{count}}",
+    "adding": "Adding…",
+    "doneEvents_one": "Added {{count}} event",
+    "doneEvents_other": "Added {{count}} events",
+    "doneTasks_one": "Added {{count}} task",
+    "doneTasks_other": "Added {{count}} tasks",
+    "notes": {
+      "repeat_dropped": "its repeat can't be kept; the first one is added",
+      "skipped_dates_dropped": "skipped dates in the repeat come back",
+      "date_not_understood": "date not understood, added without one"
+    },
+    "reasons": {
+      "cancelled": "cancelled",
+      "changed_occurrence": "a changed date of a repeating event",
+      "no_start": "has no start time",
+      "already_done": "already done",
+      "too_long": "too long for one event",
+      "invalid": "not valid here"
+    }
   }
 }

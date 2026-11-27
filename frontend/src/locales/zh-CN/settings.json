@@ -198,5 +198,45 @@
     "save": "修改密码",
     "saving": "正在修改…",
     "changed": "密码已修改，其他设备已退出登录。"
+  },
+  "import": {
+    "title": "从其他应用导入",
+    "help": "导入日历文件（.ics，来自 Google 日历、Outlook 或 Apple 日历）、Todoist 导出的 CSV，或 Google Takeout 中 Google Tasks 的 Tasks.json。导入前会先显示将添加的内容；已有的会自动跳过。",
+    "choose": "选择文件…",
+    "checking": "正在读取文件…",
+    "tooBig": "文件超过 10 MB，请拆分成较小的文件。",
+    "unreadable": "Life OS 无法读取此文件。请使用日历文件（.ics）、Todoist 导出的 CSV 或 Google Tasks 的 Tasks.json。",
+    "previewTitle": "导入前确认",
+    "formats": {
+      "ics": "日历文件（.ics）",
+      "todoist": "Todoist 导出（CSV）",
+      "google_tasks": "Google Tasks（Tasks.json）"
+    },
+    "newEvents_other": "{{count}} 个新日程",
+    "newTasks_other": "{{count}} 个新任务",
+    "subtasks_other": "{{count}} 个子任务",
+    "duplicates_other": "{{count}} 个已存在，已跳过",
+    "skipped_other": "{{count}} 个无法导入",
+    "skippedWhy": "为什么有些无法导入",
+    "more_other": "…还有 {{count}} 个",
+    "repeats": "重复",
+    "nothingNew": "此文件中的内容都已存在。",
+    "add_other": "添加 {{count}} 个",
+    "adding": "正在添加…",
+    "doneEvents_other": "已添加 {{count}} 个日程",
+    "doneTasks_other": "已添加 {{count}} 个任务",
+    "notes": {
+      "repeat_dropped": "无法保留其重复规则，只添加第一次",
+      "skipped_dates_dropped": "重复中跳过的日期会恢复",
+      "date_not_understood": "无法识别日期，已不带日期添加"
+    },
+    "reasons": {
+      "cancelled": "已取消",
+      "changed_occurrence": "重复日程中单独修改的一次",
+      "no_start": "没有开始时间",
+      "already_done": "已完成",
+      "too_long": "单个日程时间过长",
+      "invalid": "在此无效"
+    }
   }
 }

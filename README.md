@@ -84,6 +84,21 @@ Nothing is replaced until you confirm. A restore replaces the account's data wit
 
 ⚠️ `docker compose down -v` deletes the database volume — all local data. Don't use it unless you mean to.
 
+## Import from other apps
+
+Settings → **Import from other apps** brings in:
+
+- **A calendar file (.ics)**: exported from Google Calendar, Outlook or Apple Calendar. Events keep their times and
+  repeats (daily, weekly, monthly, yearly); a repeat Life OS can't express (e.g. hourly) comes in as its first
+  occurrence. Cancelled events and single changed dates of a repeating event are left out.
+- **A Todoist CSV export**: tasks with their descriptions, priorities (p1 → Urgent, p2 → High), `@labels` as tags,
+  subtasks, and dates such as "Nov 28", "tomorrow", "every day", "every weekday" or "every monday" (repeating).
+- **Google Tasks' `Tasks.json`** from Google Takeout: open tasks with notes, due dates and subtasks; with several
+  lists, each task is tagged with its list's name.
+
+You see what will be added first; nothing changes until you confirm. Anything already here (same title and date) is
+skipped, so importing the same file twice adds nothing. Rules: `backend/app/modules/imports/service.py`.
+
 ## Reports
 
 **Reports** (in the menu) shows a day, a week or a month at a glance, next to the period before: tasks done (and on

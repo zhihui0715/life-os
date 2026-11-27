@@ -46,7 +46,7 @@ test('download a backup, then check it restores (preview only)', async ({ page }
   expect(download.suggestedFilename()).toMatch(/^life-os-backup-\d{4}-\d{2}-\d{2}\.json$/)
   const file = await download.path()
 
-  await page.locator('input[type=file]').setInputFiles(file)
+  await page.locator('input[type=file][accept="application/json,.json"]').setInputFiles(file) // the backup picker, not Import's
   const dialog = page.getByRole('dialog', { name: 'Check before restoring' })
   await expect(dialog).toBeVisible()
   await expect(dialog.getByText('The file is complete and undamaged')).toBeVisible()
@@ -114,4 +114,16 @@ test('search everything with Ctrl+K and open a result', async ({ page, request }
   await box.press('Enter') // the first result: the task
   await expect(page).toHaveURL(/\/tasks/)
   await expect(page.getByRole('dialog', { name: 'Edit task' }).getByLabel('Title', { exact: true })).toHaveValue(`Renew passport ${id}`)
+})
+
+test('import tasks from a Todoist export', async ({ page }) => {
+  const csv = 'TYPE,CONTENT,DESCRIPTION,PRIORITY,INDENT,AUTHOR,RESPONSIBLE,DATE,DATE_LANG,TIMEZONE\ntask,Pay the water bill @home,,4,1,Me,,every month,en,\n'
+  await page.goto('/settings')
+  await page.locator('input[type=file][accept*=".ics"]').setInputFiles({ name: 'todoist.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) })
+  const dialog = page.getByRole('dialog', { name: 'Check before importing' })
+  await expect(dialog.getByText('1 new task')).toBeVisible()
+  await dialog.getByRole('button', { name: 'Add 1' }).click()
+  await expect(page.getByText('Added 1 task')).toBeVisible()
+  await page.goto('/tasks?view=all')
+  await expect(page.getByText('Pay the water bill')).toBeVisible()
 })
