@@ -189,5 +189,23 @@
     "habit": "习惯",
     "journal": "日记",
     "tomato": "番茄钟"
+  },
+  "search": {
+    "title": "搜索",
+    "placeholder": "搜索任务、目标、习惯、日记、日程…",
+    "hint": "输入关键词，搜索你写下的一切。",
+    "searching": "搜索中…",
+    "empty": "没有与“{{q}}”匹配的内容。",
+    "done": "已完成",
+    "archived": "已归档",
+    "subtask": "子任务",
+    "repeats": "重复",
+    "groups": {
+      "tasks": "任务",
+      "goals": "目标",
+      "habits": "习惯",
+      "journal": "日记",
+      "events": "日程"
+    }
   }
 }

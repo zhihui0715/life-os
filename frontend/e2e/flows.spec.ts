@@ -99,3 +99,19 @@ test('the + button creates a task with a date, priority and tag', async ({ page,
   const found = await (await request.get(`/api/v1/tasks?view=all&q=${encodeURIComponent(title)}`)).json()
   expect(found.items[0]).toMatchObject({ title, priority: 2, tags: ['errands'], status: 'todo' })
 })
+
+test('search everything with Ctrl+K and open a result', async ({ page, request }) => {
+  const id = Date.now().toString(36) // unique words, so a retry's leftovers don't match twice
+  await apiCall(request, 'POST', '/tasks', { title: `Renew passport ${id}`, status: 'todo', notes: 'Bring two photos' })
+  await apiCall(request, 'POST', '/goals', { title: `Travel to Japan ${id}`, description: `Passport ${id} first` })
+  await page.goto('/')
+  await expect(page.getByRole('heading', { name: /Good (morning|afternoon|evening)/ })).toBeVisible() // the app is listening
+  await page.keyboard.press('Control+k')
+  const box = page.getByRole('combobox', { name: 'Search' })
+  await box.fill(`passport ${id}`)
+  await expect(page.getByRole('option', { name: new RegExp(`Renew passport ${id}`) })).toBeVisible()
+  await expect(page.getByRole('option', { name: new RegExp(`Travel to Japan ${id}`) })).toBeVisible()
+  await box.press('Enter') // the first result: the task
+  await expect(page).toHaveURL(/\/tasks/)
+  await expect(page.getByRole('dialog', { name: 'Edit task' }).getByLabel('Title', { exact: true })).toHaveValue(`Renew passport ${id}`)
+})

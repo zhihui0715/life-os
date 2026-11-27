@@ -192,5 +192,23 @@
     "habit": "Habit",
     "journal": "Journal entry",
     "tomato": "Tomato timer"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search tasks, goals, habits, journal, events…",
+    "hint": "Type to search everything you've written.",
+    "searching": "Searching…",
+    "empty": "Nothing matches “{{q}}”.",
+    "done": "Done",
+    "archived": "Archived",
+    "subtask": "Subtask",
+    "repeats": "Repeats",
+    "groups": {
+      "tasks": "Tasks",
+      "goals": "Goals",
+      "habits": "Habits",
+      "journal": "Journal",
+      "events": "Calendar"
+    }
   }
 }

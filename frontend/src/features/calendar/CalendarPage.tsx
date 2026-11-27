@@ -11,6 +11,7 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import { Plus } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router'
 
 import { Button } from '../../components/ui/Button'
 import { ConfirmDialog } from '../../components/ui/Dialog'
@@ -96,6 +97,9 @@ export function CalendarPage() {
   const toast = useToast()
   const when = useWhen()
   const categories = useCategories().data ?? []
+  // ?date=YYYY-MM-DD (from search) opens the calendar on that day's week
+  const [params] = useSearchParams()
+  const linkedDate = /^\d{4}-\d{2}-\d{2}$/.test(params.get('date') ?? '') ? params.get('date')! : undefined
 
   const [range, setRange] = useState<Range | null>(null)
   const occ = useOccurrences(range)
@@ -288,7 +292,8 @@ export function CalendarPage() {
             <ErrorState message={errorMessage(t, occ.error)} onRetry={() => occ.refetch()} />
           ) : (
             <FullCalendar
-              key={isMobile ? 'mobile' : 'desktop'}
+              key={`${isMobile ? 'mobile' : 'desktop'}-${linkedDate ?? ''}`}
+              initialDate={linkedDate}
               plugins={PLUGINS}
               timeZone={tz}
               locales={LOCALES}
