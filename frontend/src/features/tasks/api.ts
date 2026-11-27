@@ -19,6 +19,7 @@ export interface TaskInput {
   milestone_id?: string | null
   parent_task_id?: string | null
   tags?: string[]
+  rrule?: string | null
 }
 
 const TASKS = ['tasks']

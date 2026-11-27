@@ -90,10 +90,6 @@
       "noData": "No data yet"
     }
   },
-  "comingSoon": {
-    "title": "{{feature}} is not built yet",
-    "body": "This module is planned for stage {{stage}} of the roadmap. Nothing here stores data yet."
-  },
   "auth": {
     "title": "Welcome back",
     "subtitle": "Sign in to your personal workspace.",

@@ -7,7 +7,7 @@ convert each occurrence to UTC. Malaysia has no daylight saving, but travel or a
 
 import itertools
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 from dateutil.rrule import rrule, rrulestr
@@ -112,6 +112,14 @@ def series_end(starts_at: datetime, ends_at: datetime, tzid: str, rule_text: str
     if last is None:  # e.g. UNTIL before the first start: the series is empty
         return ends_at
     return _to_utc(last + wall_duration, tz)
+
+
+def next_date(rule_text: str, first: date, after: date) -> date | None:
+    """The first day of the series starting on `first` that falls strictly after `after`, or None once it has
+    ended (UNTIL). Used by repeating tasks, which repeat by whole days."""
+    rule = _rule(rule_text, datetime.combine(first, time.min))
+    nxt = rule.after(datetime.combine(after, time.max))
+    return nxt.date() if nxt else None
 
 
 def is_occurrence(starts_at: datetime, ends_at: datetime, tzid: str, rule_text: str, original_start: datetime) -> bool:

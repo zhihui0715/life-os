@@ -10,10 +10,12 @@ import { ConfirmDialog, Dialog } from '../../components/ui/Dialog'
 import { Field, Input, Select, Textarea } from '../../components/ui/Field'
 import { Card } from '../../components/ui/states'
 import { useToast } from '../../components/ui/Toast'
-import { utcIsoToWallTime, wallTimeToUtcIso } from '../../lib/dates'
+import { todayInZone, utcIsoToWallTime, wallTimeToUtcIso } from '../../lib/dates'
 import { errorMessage, fieldError } from '../../lib/errors'
 import type { Category, Task } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
+import { RepeatFields } from '../calendar/RepeatFields'
+import { buildRRule, NO_REPEAT, parseRRule, type RepeatChoice } from '../calendar/rrule'
 import { TwoMinuteButton } from '../focus/TwoMinutes'
 import { useGoal, useGoals } from '../goals/api'
 import { useDeleteTask, useTaskAction, useUpdateTask } from './api'
@@ -76,13 +78,18 @@ export function TaskDrawer({ task, categories, onClose, onOpenTask }: Props) {
   const action = useTaskAction()
   const remove = useDeleteTask()
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [repeat, setRepeat] = useState<RepeatChoice>({ ...NO_REPEAT })
 
   const { register, handleSubmit, reset, formState, control, setValue } = useForm<FormValues>({ resolver: zodResolver(schema) })
   const goalId = useWatch({ control, name: 'goal_id' })
+  const dueDate = useWatch({ control, name: 'due_date' })
   const goals = useGoals().data ?? []
   const milestones = useGoal(goalId || null).data?.milestones ?? []
   useEffect(() => {
-    if (task) reset(toForm(task, tz))
+    if (task) {
+      reset(toForm(task, tz))
+      setRepeat(parseRRule(task.rrule))
+    }
     update.reset()
     // eslint-disable-next-line react-hooks/exhaustive-deps -- reset only when a different task opens
   }, [task?.id, task?.updated_at])
@@ -113,6 +120,7 @@ export function TaskDrawer({ task, categories, onClose, onOpenTask }: Props) {
         category_id: v.category_id || null,
         ...(isSubtask ? {} : { goal_id: v.goal_id || null, milestone_id: v.milestone_id || null }),
         tags: parseTags(v.tags),
+        ...(isSubtask ? {} : { rrule: buildRRule(repeat, v.due_date) }),
       },
       {
         onSuccess: () => {
@@ -203,6 +211,18 @@ export function TaskDrawer({ task, categories, onClose, onOpenTask }: Props) {
           <Field label={t('fields.dueDate')} help={t('fields.dueDateHelp')} error={err('due_date')}>
             {(a) => <Input {...a} type="date" {...register('due_date')} />}
           </Field>
+          {!isSubtask && (
+            <RepeatFields
+              value={repeat}
+              allowCount={false}
+              help={repeat.freq === 'none' ? undefined : t('fields.repeatHelp')}
+              onChange={(r) => {
+                setRepeat(r)
+                // a repeat is counted from the due date: start from today if there isn't one yet
+                if (r.freq !== 'none' && !dueDate) setValue('due_date', todayInZone(tz), { shouldDirty: true })
+              }}
+            />
+          )}
           <Field label={t('fields.deadline')} help={t('fields.deadlineHelp')} error={err('deadline')}>
             {(a) => <Input {...a} type="datetime-local" {...register('deadline')} />}
           </Field>

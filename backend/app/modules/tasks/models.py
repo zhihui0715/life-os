@@ -55,6 +55,8 @@ class Task(IdMixin, OwnedMixin, TimestampMixin, db.Model):
         ),
         # A task is "done" exactly when it has a completion time — the two can never disagree.
         CheckConstraint("(status = 'done') = (completed_at IS NOT NULL)", name="done_has_completed_at"),
+        # A repeat is counted from the due date, so a repeating task always has one.
+        CheckConstraint("rrule IS NULL OR due_date IS NOT NULL", name="repeat_has_due_date"),
         Index("ix_tasks_user_status_due", "user_id", "status", "due_date"),
     )
 
@@ -78,6 +80,12 @@ class Task(IdMixin, OwnedMixin, TimestampMixin, db.Model):
         Uuid, ForeignKey("tasks.id", ondelete="RESTRICT"), index=True
     )
     position: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
+    # Repeating tasks (top-level only): an RRULE like the calendar's, read from the due date. Completing the task
+    # creates the next one, which points back here (checked at commit, so a restore can insert rows in any order).
+    rrule: Mapped[str | None] = mapped_column(String(300))
+    repeated_from_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid, ForeignKey("tasks.id", ondelete="SET NULL", deferrable=True, initially="DEFERRED"), index=True
+    )
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     archived_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 

@@ -13,6 +13,7 @@ import type { EventKind, Occurrence } from '../../lib/types'
 import { useMe } from '../auth/AuthProvider'
 import { useTaskList } from '../tasks/api'
 import { useArchiveEvent, useCancelOccurrence, useCreateEvent, useEditOccurrence, useEvent, useUpdateEvent, type EventInput } from './api'
+import { RepeatFields } from './RepeatFields'
 import { buildRRule, NO_REPEAT, parseRRule, type RepeatChoice } from './rrule'
 
 export type EventDialogMode =
@@ -295,47 +296,5 @@ export function EventDialog({ mode, onClose }: { mode: EventDialogMode | null; o
         </form>
       )}
     </Dialog>
-  )
-}
-
-function RepeatFields({ value, onChange }: { value: RepeatChoice; onChange: (r: RepeatChoice) => void }) {
-  const { t } = useTranslation('calendar')
-  const freqs = ['none', 'daily', 'weekdays', 'weekly', 'monthly', ...(value.freq === 'custom' ? ['custom'] : [])] as RepeatChoice['freq'][]
-  return (
-    <div className="flex flex-col gap-3">
-      <Field label={t('repeat.label')} help={value.freq === 'custom' ? value.custom : undefined}>
-        {(a) => (
-          <Select {...a} value={value.freq} onChange={(e) => onChange({ ...value, freq: e.target.value as RepeatChoice['freq'] })}>
-            {freqs.map((f) => (
-              <option key={f} value={f}>
-                {t(`repeat.${f}`)}
-              </option>
-            ))}
-          </Select>
-        )}
-      </Field>
-      {value.freq !== 'none' && value.freq !== 'custom' && (
-        <div className="flex flex-wrap items-end gap-3">
-          <Field label={t('repeat.ends')} className="min-w-32">
-            {(a) => (
-              <Select {...a} value={value.end} onChange={(e) => onChange({ ...value, end: e.target.value as RepeatChoice['end'] })}>
-                <option value="never">{t('repeat.never')}</option>
-                <option value="until">{t('repeat.until')}</option>
-                <option value="count">{t('repeat.count')}</option>
-              </Select>
-            )}
-          </Field>
-          {value.end === 'until' && (
-            <Input type="date" aria-label={t('repeat.until')} className="w-auto" value={value.until} onChange={(e) => onChange({ ...value, until: e.target.value })} />
-          )}
-          {value.end === 'count' && (
-            <label className="flex items-center gap-2 text-sm">
-              <Input type="number" min={1} max={1000} className="w-24" value={value.count} onChange={(e) => onChange({ ...value, count: Number(e.target.value) || 1 })} />
-              {t('repeat.times')}
-            </label>
-          )}
-        </div>
-      )}
-    </div>
   )
 }

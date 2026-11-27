@@ -79,13 +79,15 @@
     "milestone": "Milestone",
     "tags": "Tags",
     "tagsHelp": "Separate with commas, e.g. exam, networking",
-    "noGoal": "No goal"
+    "noGoal": "No goal",
+    "repeatHelp": "Counted from the due date. When you complete it, the next one appears."
   },
   "meta": {
     "due": "Due {{date}}",
     "deadline": "Deadline {{date}}",
     "overdue": "Overdue",
-    "completedOn": "Completed {{date}}"
+    "completedOn": "Completed {{date}}",
+    "repeats": "Repeats"
   },
   "actions": {
     "complete": "Mark “{{title}}” complete",
